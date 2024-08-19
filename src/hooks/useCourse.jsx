@@ -9,7 +9,7 @@ const useCourse = (filterFn) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('src/data/db.json');
+        const response = await fetch('data/db.json');
         const data = await response.json();
         const filteredCourses = filterFn ? data.courses.filter(filterFn) : data.courses;
         setCourses(filteredCourses);
