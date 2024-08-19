@@ -1,0 +1,16 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-50 text-gray-800;
+}
+
+.bg-sidebar-active {
+  background-color: #f0f4fc; /* Background color of the active link */
+  position: relative;
+  padding-right: 16px;
+  z-index: 2; /* Ensure it stays on top */
+  overflow: hidden;
+}
