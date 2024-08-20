@@ -1,14 +1,22 @@
 import React from 'react';
 import Card from '../components/Card';
 import useCart from '../hooks/useCart';
-import useCourse from '../hooks/useCourse';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AddCart from '../components/AddCart';
-import { addCourse, deleteCourse, updateCourse, getCourses } from '../services/courses'; // Make sure all services are imported
+import {
+  useGetCoursesQuery,
+  useAddCourseMutation,
+  useUpdateCourseMutation,
+  useDeleteCourseMutation,
+} from '../redux/coursesApi';
 
 const HomePage = () => {
   const { handlePlusClick } = useCart();
-  const { courses, loading, error, setCourses } = useCourse(); // Get setCourses from the hook
+  
+  const { data: courses = [], error, isLoading } = useGetCoursesQuery();
+  const [addCourse] = useAddCourseMutation();
+  const [updateCourse] = useUpdateCourseMutation();
+  const [deleteCourse] = useDeleteCourseMutation();
 
   const handleAdd = async (item) => {
     const workHours = parseInt(item.work, 10);  // Convert to a number if it's a string
@@ -20,21 +28,15 @@ const HomePage = () => {
     };
   
     try {
-      await addCourse(newCourse);  // Let json-server assign the id
-      const updatedCourses = await getCourses();  // Re-fetch courses from the server
-      setCourses(updatedCourses);  // Set the courses state with the freshly fetched data
+      await addCourse(newCourse);  // Add the course via RTK Query mutation
     } catch (error) {
       console.error('Failed to add course:', error);
     }
   };
   
-
   const handleEditClick = async (updatedCourse) => {
     try {
-      const response = await updateCourse(updatedCourse.id, updatedCourse);
-      setCourses(prevCourses => prevCourses.map(course =>
-        course.id === updatedCourse.id ? response : course
-      ));
+      await updateCourse(updatedCourse);  // Update the course via RTK Query mutation
     } catch (error) {
       console.error('Failed to update course:', error);
     }
@@ -42,19 +44,18 @@ const HomePage = () => {
 
   const handleDeleteClick = async (id) => {
     try {
-      await deleteCourse(id);
-      setCourses(prevCourses => prevCourses.filter(course => course.id !== id)); // Immediately remove the course from state
+      await deleteCourse(id);  // Delete the course via RTK Query mutation
     } catch (error) {
       console.error('Failed to delete course:', error);
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error.message}</div>;
   }
 
   return (
@@ -62,19 +63,19 @@ const HomePage = () => {
       <AddCart onAdd={handleAdd} />
       <h1 className="text-2xl font-medium mb-6 text-gray-700">In Process</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {courses.slice().reverse().map((course) => ( // Reversing the order of the courses
-        <Card
-          key={course.id}
-          id={course.id}  // Pass the id to the Card component
-          title={course.title}
-          progress={course.progress}
-          icon={course.icon}
-          bgColor={course.bgColor}
-          onPlusClick={handlePlusClick}
-          onEditClick={handleEditClick}
-          onDeleteClick={handleDeleteClick}
-        />
-      ))}
+        {courses.slice().reverse().map((course) => ( // Reversing the order of the courses
+          <Card
+            key={course.id}
+            id={course.id}  // Pass the id to the Card component
+            title={course.title}
+            progress={course.progress}
+            icon={course.icon}
+            bgColor={course.bgColor}
+            onPlusClick={handlePlusClick}
+            onEditClick={handleEditClick}
+            onDeleteClick={handleDeleteClick}
+          />
+        ))}
       </div>
     </div>
   );

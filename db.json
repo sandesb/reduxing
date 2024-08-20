@@ -15,11 +15,11 @@
       "bgColor": "from-green-100 to-green-300"
     },
     {
-      "id": "3",
       "title": "JavaScript: Beginners",
       "icon": "💻",
       "progress": "96 h / 186 h",
-      "bgColor": "from-yellow-100 to-yellow-300"
+      "bgColor": "from-yellow-100 to-yellow-300",
+      "id": "3"
     }
   ]
 }
