@@ -16,7 +16,7 @@ const InputField = ({ type, value, onChange, label }) => {
           />
        
           <label
-            className={`absolute left-3 top-0 text-gray-500 text-xs bg-white px-1 transform -translate-y-1/2`}
+            className={`absolute left-6 top-0 text-gray-500 text-xs bg-white px-1 transform -translate-y-1/2`}
             style={{ pointerEvents: 'none', borderRadius: '5px' }}
           >
             {label}

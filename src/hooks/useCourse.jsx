@@ -1,5 +1,6 @@
 // src/hooks/useCourse.js
 import { useState, useEffect } from 'react';
+import { getCourses } from '../services/courses';
 
 const useCourse = (filterFn) => {
   const [courses, setCourses] = useState([]);
@@ -9,9 +10,9 @@ const useCourse = (filterFn) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('data/db.json');
-        const data = await response.json();
-        const filteredCourses = filterFn ? data.courses.filter(filterFn) : data.courses;
+        const data = await getCourses();
+        const sortedCourses = data.sort((a, b) => b.id - a.id); // Sort by ID, newest first
+        const filteredCourses = filterFn ? sortedCourses.filter(filterFn) : sortedCourses;
         setCourses(filteredCourses);
       } catch (err) {
         setError(err.message);
@@ -23,7 +24,7 @@ const useCourse = (filterFn) => {
     fetchCourses();
   }, [filterFn]);
 
-  return { courses, loading, error };
+  return { courses, loading, error, setCourses };
 };
 
 export default useCourse;

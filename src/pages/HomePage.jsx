@@ -4,17 +4,30 @@ import useCart from '../hooks/useCart';
 import useCourse from '../hooks/useCourse';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AddCart from '../components/AddCart';
-
+import { addCourse } from '../services/courses';
 const HomePage = () => {
   const { handlePlusClick } = useCart();
+  const { courses, loading, error, setCourses } = useCourse(); // Get setCourses from the hook
 
-  // Use the useCourse hook without a filter to load all courses
-  const { courses, loading, error } = useCourse();
-
-  const handleAdd = (item) => {
-    console.log('New item added:', item);
-    // Add your custom logic here to handle the new item
+const handleAdd = async (item) => {
+  const workHours = parseInt(item.work, 10);  // Convert to a number if it's a string
+  const newCourse = {
+    id: Date.now(),  // Assign a unique ID for the new course
+    title: item.name,
+    progress: `0 h / ${workHours} h`,  // Ensure the progress is formatted with proper spacing
+    icon: item.emoji,
+    bgColor: 'from-blue-100 to-blue-300',  // Default color, adjust as needed
   };
+
+  try {
+    const addedCourse = await addCourse(newCourse);
+    setCourses(prevCourses => [addedCourse, ...prevCourses]); // Add the new course to the top of the list
+  } catch (error) {
+    console.error('Failed to add course:', error);
+  }
+};
+
+  
 
   if (loading) {
     return <LoadingSpinner />;
@@ -29,16 +42,17 @@ const HomePage = () => {
       <AddCart onAdd={handleAdd} />
       <h1 className="text-2xl font-medium mb-6 text-gray-700">In Process</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map((course) => (
-          <Card
-            key={course.id}
-            title={course.title}
-            progress={course.progress}
-            icon={course.icon}
-            bgColor={course.bgColor}
-            onPlusClick={handlePlusClick}
-          />
-        ))}
+      {courses.map((course) => (
+  <Card
+    key={course.id}
+    title={course.title}
+    progress={course.progress}  // Ensure this prop is passed correctly
+    icon={course.icon}
+    bgColor={course.bgColor}
+    onPlusClick={handlePlusClick}
+  />
+))}
+
       </div>
     </div>
   );
