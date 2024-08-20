@@ -1,59 +1,87 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import convex from '../convexClient';
-const coursesApi = createApi({
+
+const BASE_URL = 'http://localhost:3001/courses';
+
+export const coursesApi = createApi({
   reducerPath: 'coursesApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '' }), // Base URL is not used since Convex client handles it
+  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  tagTypes: ['Courses'],
   endpoints: (builder) => ({
-    fetchCourses: builder.query({
-      queryFn: async () => {
-        try {
-          const courses = await convex.query('courses.getAll'); // Using Convex to fetch courses
-          return { data: courses };
-        } catch (error) {
-          return { error: { status: 'CUSTOM_ERROR', error } };
-        }
-      },
+    getCourses: builder.query({
+      query: () => '/',
       providesTags: ['Courses'],
     }),
-    createCourse: builder.mutation({
-      queryFn: async (newCourse) => {
+    addCourse: builder.mutation({
+      query: (course) => ({
+        url: '/',
+        method: 'POST',
+        body: course,
+      }),
+      invalidatesTags: ['Courses'],
+      async onQueryStarted(course, { dispatch, queryFulfilled }) {
+        // Optimistic update
+        const patchResult = dispatch(
+          coursesApi.util.updateQueryData('getCourses', undefined, (draft) => {
+            draft.push(course); // Add the new course to the cache
+          })
+        );
         try {
-          await convex.mutation('courses.create', newCourse);
-          return { data: newCourse };
-        } catch (error) {
-          return { error: { status: 'CUSTOM_ERROR', error } };
+          await queryFulfilled;
+        } catch {
+          patchResult.undo(); // Revert the optimistic update if the mutation fails
         }
       },
-      invalidatesTags: ['Courses'],
     }),
     updateCourse: builder.mutation({
-      queryFn: async (updatedCourse) => {
+      query: ({ id, ...course }) => ({
+        url: `/${id}`,
+        method: 'PUT',
+        body: course,
+      }),
+      invalidatesTags: ['Courses'],
+      async onQueryStarted({ id, ...course }, { dispatch, queryFulfilled }) {
+        // Optimistic update
+        const patchResult = dispatch(
+          coursesApi.util.updateQueryData('getCourses', undefined, (draft) => {
+            const index = draft.findIndex((c) => c.id === id);
+            if (index !== -1) {
+              draft[index] = { id, ...course }; // Update the course in the cache
+            }
+          })
+        );
         try {
-          await convex.mutation('courses.update', updatedCourse);
-          return { data: updatedCourse };
-        } catch (error) {
-          return { error: { status: 'CUSTOM_ERROR', error } };
+          await queryFulfilled;
+        } catch {
+          patchResult.undo(); // Revert the optimistic update if the mutation fails
         }
       },
-      invalidatesTags: ['Courses'],
     }),
     deleteCourse: builder.mutation({
-      queryFn: async (id) => {
+      query: (id) => ({
+        url: `/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Courses'],
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        // Optimistic update
+        const patchResult = dispatch(
+          coursesApi.util.updateQueryData('getCourses', undefined, (draft) => {
+            return draft.filter((course) => course.id !== id); // Remove the course from the cache
+          })
+        );
         try {
-          await convex.mutation('courses.delete', id);
-          return { data: id };
-        } catch (error) {
-          return { error: { status: 'CUSTOM_ERROR', error } };
+          await queryFulfilled;
+        } catch {
+          patchResult.undo(); // Revert the optimistic update if the mutation fails
         }
       },
-      invalidatesTags: ['Courses'],
     }),
   }),
 });
 
 export const {
-  useFetchCoursesQuery,
-  useCreateCourseMutation,
+  useGetCoursesQuery,
+  useAddCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
 } = coursesApi;

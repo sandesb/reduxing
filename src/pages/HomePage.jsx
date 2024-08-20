@@ -4,20 +4,17 @@ import useCart from '../hooks/useCart';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AddCart from '../components/AddCart';
 import {
-  useFetchCoursesQuery,
-  useCreateCourseMutation,
+  useGetCoursesQuery,
+  useAddCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
 } from '../redux/coursesApi';
 
 const HomePage = () => {
   const { handlePlusClick } = useCart();
-
-  // Fetch courses with the useFetchCoursesQuery hook
-  const { data: courses = [], isLoading, error } = useFetchCoursesQuery();
-
-  // Set up the mutations for creating, updating, and deleting courses
-  const [createCourse] = useCreateCourseMutation();
+  
+  const { data: courses = [], error, isLoading } = useGetCoursesQuery();
+  const [addCourse] = useAddCourseMutation();
   const [updateCourse] = useUpdateCourseMutation();
   const [deleteCourse] = useDeleteCourseMutation();
 
@@ -31,17 +28,15 @@ const HomePage = () => {
     };
 
     try {
-      await createCourse(newCourse).unwrap(); // Unwrap to handle any errors
-      // No need to refetch, RTK Query will auto-update due to invalidation
+      await addCourse(newCourse);  // Add the course via RTK Query mutation
     } catch (error) {
       console.error('Failed to add course:', error);
     }
   };
-
+  
   const handleEditClick = async (updatedCourse) => {
     try {
-      await updateCourse({ id: updatedCourse.id, ...updatedCourse }).unwrap();
-      // No need to refetch, RTK Query will auto-update due to invalidation
+      await updateCourse(updatedCourse);  // Update the course via RTK Query mutation
     } catch (error) {
       console.error('Failed to update course:', error);
     }
@@ -49,8 +44,7 @@ const HomePage = () => {
 
   const handleDeleteClick = async (id) => {
     try {
-      await deleteCourse(id).unwrap();
-      // No need to refetch, RTK Query will auto-update due to invalidation
+      await deleteCourse(id);  // Delete the course via RTK Query mutation
     } catch (error) {
       console.error('Failed to delete course:', error);
     }
@@ -61,7 +55,7 @@ const HomePage = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error.message}</div>;
   }
 
   return (
@@ -69,10 +63,10 @@ const HomePage = () => {
       <AddCart onAdd={handleAdd} />
       <h1 className="text-2xl font-medium mb-6 text-gray-700">In Process</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.slice().reverse().map((course) => (
+        {courses.slice().reverse().map((course) => ( // Reversing the order of the courses
           <Card
             key={course.id}
-            id={course.id}
+            id={course.id}  // Pass the id to the Card component
             title={course.title}
             progress={course.progress}
             icon={course.icon}

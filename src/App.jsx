@@ -9,7 +9,7 @@ import Messages from './pages/Messges';
 import HelpCenter from './pages/HelpCenter';
 import HomePage from './pages/HomePage';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import {store} from './redux/store';
 
 function App() {
   

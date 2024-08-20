@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import uiReducer from './uiReducer';
-import coursesApi from "./coursesApi"; // Import the coursesApi
+import coursesApi from './coursesApi';
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +10,3 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(coursesApi.middleware), // Add the coursesApi middleware
 });
-
-export default store;
