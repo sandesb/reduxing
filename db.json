@@ -2,9 +2,9 @@
   "courses": [
     {
       "id": "1",
-      "title": "German B2: Grammar",
-      "progress": "198 h / 200 h",
+      "title": "German B2: Grammassr",
       "icon": "📕",
+      "progress": "198 h / 200 h",
       "bgColor": "from-red-100 to-red-300"
     },
     {
