@@ -27,6 +27,16 @@ const handleAdd = async (item) => {
   }
 };
 
+const handleEditClick = (course) => {
+  // Logic for handling the edit action
+  console.log('Edit course:', course);
+};
+
+const handleDeleteClick = (course) => {
+  // Logic for handling the delete action
+  console.log('Delete course:', course);
+};
+
   
 
   if (loading) {
@@ -42,17 +52,18 @@ const handleAdd = async (item) => {
       <AddCart onAdd={handleAdd} />
       <h1 className="text-2xl font-medium mb-6 text-gray-700">In Process</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {courses.map((course) => (
-  <Card
-    key={course.id}
-    title={course.title}
-    progress={course.progress}  // Ensure this prop is passed correctly
-    icon={course.icon}
-    bgColor={course.bgColor}
-    onPlusClick={handlePlusClick}
-  />
-))}
-
+        {courses.map((course) => (
+          <Card
+            key={course.id}
+            title={course.title}
+            progress={course.progress}
+            icon={course.icon}
+            bgColor={course.bgColor}
+            onPlusClick={handlePlusClick}
+            onEditClick={handleEditClick}
+            onDeleteClick={handleDeleteClick}
+          />
+        ))}
       </div>
     </div>
   );

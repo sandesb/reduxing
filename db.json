@@ -41,6 +41,13 @@
       "progress": "0 h / 230 h",
       "icon": "👍",
       "bgColor": "from-blue-100 to-blue-300"
+    },
+    {
+      "id": 1724139088323,
+      "title": "Wow",
+      "progress": "0 h / 200 h",
+      "icon": "😜",
+      "bgColor": "from-blue-100 to-blue-300"
     }
   ]
 }
