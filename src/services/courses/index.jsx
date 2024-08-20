@@ -1,16 +1,16 @@
-import axios from 'axios';
+// import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3001/courses';
+// const BASE_URL = 'http://localhost:3001/courses';
 
-export const getCourses = async () => {
-    try {
-      const response = await axios.get(BASE_URL);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching courses:', error);
-      throw error;
-    }
-  };
+// export const getCourses = async () => {
+//     try {
+//       const response = await axios.get(BASE_URL);
+//       return response.data;
+//     } catch (error) {
+//       console.error('Error fetching courses:', error);
+//       throw error;
+//     }
+//   };
 
 // export const addCourse = async (course) => {
 //   try {
@@ -46,4 +46,3 @@ export const getCourses = async () => {
 //     }
 //   };
   
-// // You can also add other CRUD operations here later (getCourses, updateCourse, deleteCourse)

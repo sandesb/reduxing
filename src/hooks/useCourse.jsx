@@ -1,30 +1,19 @@
-// src/hooks/useCourse.js
-import { useState, useEffect } from 'react';
-import { getCourses } from '../services/courses';
+import { useEffect, useState } from 'react';
+import { useGetCoursesQuery } from '../redux/coursesApi';
 
 const useCourse = (filterFn) => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: courses = [], error, isLoading } = useGetCoursesQuery();
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses();
-        const sortedCourses = data.sort((a, b) => b.id - a.id); // Sort by ID, newest first
-        const filteredCourses = filterFn ? sortedCourses.filter(filterFn) : sortedCourses;
-        setCourses(filteredCourses);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (courses.length > 0) {
+      const sortedCourses = courses.sort((a, b) => b.id - a.id); // Sort by ID, newest first
+      const filtered = filterFn ? sortedCourses.filter(filterFn) : sortedCourses;
+      setFilteredCourses(filtered);
+    }
+  }, [courses, filterFn]);
 
-    fetchCourses();
-  }, [filterFn]);
-
-  return { courses, loading, error, setCourses };
+  return { courses: filteredCourses, loading: isLoading, error, setCourses: setFilteredCourses };
 };
 
 export default useCourse;

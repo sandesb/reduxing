@@ -9,7 +9,7 @@ const InputField = ({ type, value, onChange, label }) => {
           <InputEmoji
             value={value}
             onChange={onChange}
-            placeholder=""
+            placeholder="Tap on Emoji..."
             borderRadius={10}
             className="border p-2 rounded-md text-gray-700 w-full"
             style={{ borderRadius: '10px' }}
@@ -27,6 +27,7 @@ const InputField = ({ type, value, onChange, label }) => {
           type={type}
           value={value}
           onChange={onChange}
+          placeholder="Type Here..."
           className="border p-2 rounded-md text-gray-700 w-full"
           style={{ borderRadius: '10px' }}
         />

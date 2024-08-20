@@ -70,7 +70,7 @@ export const setCartItems = (items) => {
 export const loadCourses = () => {
   return async (dispatch) => {
     try {
-      const response = await fetch('/data/db.json');
+      const response = await fetch('../../db.json');
       const data = await response.json();
       dispatch({
         type: LOAD_COURSES,
