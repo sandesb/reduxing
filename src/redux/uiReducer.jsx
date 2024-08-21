@@ -12,9 +12,9 @@ import {
   SET_SEARCH_RESULTS,
   LOAD_COURSES,
   LOAD_CART_DATA,
-} from './uiActions';
+} from "./uiActions";
 
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const initialState = {
   isSidebarOpen: true,
@@ -64,31 +64,35 @@ const uiReducer = (state = initialState, action) => {
         ...state,
         cartItems: [...state.cartItems, action.payload], // Add new item to cart
       };
-      case SET_CART_ITEMS:
-        return {
-          ...state,
-          cartItems: action.payload,
-          cartCount: action.payload.length,
-        };
-        case REMOVE_FROM_CART:
-          const updatedCartItems = state.cartItems.filter((_, i) => i !== action.payload);
-          Cookies.set('cartItems', JSON.stringify(updatedCartItems), { expires: 7 });
-          return {
-            ...state,
-            cartItems: updatedCartItems,
-            cartCount: updatedCartItems.length, // Update cartCount based on updated cartItems
-          };
+    case SET_CART_ITEMS:
+      return {
+        ...state,
+        cartItems: action.payload,
+        cartCount: action.payload.length,
+      };
+    case REMOVE_FROM_CART:
+      const updatedCartItems = state.cartItems.filter(
+        (_, i) => i !== action.payload
+      );
+      Cookies.set("cartItems", JSON.stringify(updatedCartItems), {
+        expires: 7,
+      });
+      return {
+        ...state,
+        cartItems: updatedCartItems,
+        cartCount: updatedCartItems.length, // Update cartCount based on updated cartItems
+      };
     case SET_CART_ITEMS:
       return {
         ...state,
         cartItems: action.payload, // Set cart items from loaded cookies
       };
-      case LOAD_COURSES:
+    case LOAD_COURSES:
       return {
         ...state,
         courses: action.payload, // Load courses into state
       };
-      case SET_SEARCH_RESULTS:
+    case SET_SEARCH_RESULTS:
       return {
         ...state,
         searchResults: action.payload,

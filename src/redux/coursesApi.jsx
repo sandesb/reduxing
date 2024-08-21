@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { showToast } from '../utils/toast';
 
 const BASE_URL = 'http://localhost:3001/courses';
 
@@ -27,8 +28,10 @@ export const coursesApi = createApi({
         );
         try {
           await queryFulfilled;
-        } catch {
+          showToast('success', 'Course added successfully');
+        } catch (error) {
           patchResult.undo(); // Revert the optimistic update if the mutation fails
+          showToast('error', 'Failed to add course');
         }
       },
     }),
@@ -51,8 +54,10 @@ export const coursesApi = createApi({
         );
         try {
           await queryFulfilled;
-        } catch {
+          showToast('update', 'Course updated successfully');
+        } catch (error) {
           patchResult.undo(); // Revert the optimistic update if the mutation fails
+          showToast('error', 'Failed to update course');
         }
       },
     }),
@@ -71,8 +76,10 @@ export const coursesApi = createApi({
         );
         try {
           await queryFulfilled;
-        } catch {
+          showToast('error', 'Course deleted.');
+        } catch (error) {
           patchResult.undo(); // Revert the optimistic update if the mutation fails
+          showToast('error', 'Failed to delete course');
         }
       },
     }),

@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { Plus, NotebookPen, X, Check } from 'lucide-react';
+import { useSpring, animated } from 'react-spring';
 
 const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, onDeleteClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedIcon, setEditedIcon] = useState(icon);
   const [editedProgress, setEditedProgress] = useState(progress);
+
+  // Define the shaking animation
+  const { x } = useSpring({
+    x: isEditing ? 1 : 0,
+    config: { tension: 20, friction: 16 },
+  });
 
   const handleAddToCart = () => {
     onPlusClick({ title, icon });
@@ -30,7 +37,17 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
   };
 
   return (
-    <div className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]">
+    <animated.div
+      style={{
+        transform: x
+          .to({
+            range: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+            output: [0, -2, 2, -2, 2, -2, 2, 0],
+          })
+          .to(x => `translate3d(${x}px, 0px, 0px)`),
+      }}
+      className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]"
+    >
       <div className="flex justify-between items-start">
         {isEditing ? (
           <input
@@ -100,7 +117,7 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
           style={{ width: `${(parseFloat(editedProgress.split(' h / ')[0]) / parseFloat(editedProgress.split(' h / ')[1])) * 100}%` }}
         ></div>
       </div>
-    </div>
+    </animated.div>
   );
 };
 

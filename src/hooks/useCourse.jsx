@@ -7,9 +7,12 @@ const useCourse = (filterFn) => {
 
   useEffect(() => {
     if (courses.length > 0) {
-      const sortedCourses = courses.sort((a, b) => b.id - a.id); // Sort by ID, newest first
+      const sortedCourses = [...courses].sort((a, b) => b.id - a.id);
       const filtered = filterFn ? sortedCourses.filter(filterFn) : sortedCourses;
-      setFilteredCourses(filtered);
+      // Only update state if filteredCourses is different
+      if (JSON.stringify(filtered) !== JSON.stringify(filteredCourses)) {
+        setFilteredCourses(filtered);
+      }
     }
   }, [courses, filterFn]);
 
