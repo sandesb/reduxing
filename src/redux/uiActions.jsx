@@ -11,8 +11,12 @@ export const SET_CART_ITEMS = 'SET_CART_ITEMS'; // New action
 export const SET_SEARCH_RESULTS = 'SET_SEARCH_RESULTS';
 export const LOAD_COURSES = 'LOAD_COURSES';
 export const LOAD_CART_DATA = 'LOAD_CART_DATA';
+import { createClient } from '@supabase/supabase-js';
 
-
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 export const toggleSidebar = () => {
   return {
@@ -70,11 +74,17 @@ export const setCartItems = (items) => {
 export const loadCourses = () => {
   return async (dispatch) => {
     try {
-      const response = await fetch('/data/db.json');
-      const data = await response.json();
+      // Query the Supabase database to fetch all courses
+      const { data, error } = await supabase.from('db').select('*');
+
+      if (error) {
+        console.error('Error loading courses from Supabase:', error);
+        return;
+      }
+
       dispatch({
         type: LOAD_COURSES,
-        payload: data.courses, // Assuming the courses are in data.courses
+        payload: data, // Assuming data is an array of courses
       });
     } catch (error) {
       console.error('Error loading courses:', error);
@@ -100,7 +110,6 @@ export const setSearchResults = (query) => {
     console.log('Current courses:', courses); // Verify that courses are populated
     console.log('Search query:', query); // Log the search query
 
-    // Ensure the courses array is populated
     if (!courses || courses.length === 0) {
       console.warn('Courses data is empty or not loaded correctly.');
       return;

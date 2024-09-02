@@ -1,52 +1,134 @@
-// src/components/Card.js
-import React from 'react';
-import { Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, NotebookPen, X, Check } from 'lucide-react';
+import { useSpring, animated } from 'react-spring';
 
-const Card = ({ title, progress, icon, bgColor, onPlusClick }) => {
+const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, onDeleteClick, onTitleClick }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(title);
+  const [editedIcon, setEditedIcon] = useState(icon);
+  const [editedProgress, setEditedProgress] = useState(progress);
+
+  const { x } = useSpring({
+    x: isEditing ? 1 : 0,
+    config: { tension: 20, friction: 16 },
+  });
+
   const handleAddToCart = () => {
-    onPlusClick({ title, icon });
+    console.log('Add to cart clicked:', { id, title, icon }); // Debugging
+    onPlusClick({ id, title, icon }); // Pass the id along with title and icon
   };
 
-  // Initialize current and total values to 0
-  let current = 0, total = 0;
-
-  if (typeof progress === 'string') {
-    // Safely parse the progress string
-    const parts = progress.split(' h / ');
-    if (parts.length === 2) {
-      current = parseFloat(parts[0]) || 0;
-      total = parseFloat(parts[1]) || 0;
+  const handleEditClick = () => {
+    console.log('Edit clicked:', id); // Debugging
+    if (isEditing) {
+      const updatedCourse = {
+        id,
+        title: editedTitle,
+        icon: editedIcon,
+        progress: editedProgress,
+        bgColor,
+      };
+      console.log('Updated course:', updatedCourse); // Debugging
+      onEditClick(updatedCourse);
     }
-  } else if (progress && typeof progress.current === 'number' && typeof progress.total === 'number') {
-    current = progress.current;
-    total = progress.total;
-  }
+    setIsEditing(!isEditing);
+  };
 
-  // Calculate the progress width
-  const progressWidth = total > 0 ? `${(current / total) * 100}%` : '0%';
+  const handleDeleteClick = () => {
+    console.log('Delete clicked:', id); // Debugging
+    onDeleteClick(id);
+  };
+
+  const handleTitleClick = () => {
+    console.log(`Card ID: ${id}`); // Debugging
+    onTitleClick(id); // Trigger the dialog for this item
+  };
 
   return (
-    <div className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]">
+    <animated.div
+      style={{
+        transform: x
+          .to({
+            range: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+            output: [0, -2, 2, -2, 2, -2, 2, 0],
+          })
+          .to(x => `translate3d(${x}px, 0px, 0px)`),
+      }}
+      className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]"
+    >
       <div className="flex justify-between items-start">
-        <span className="text-3xl text-teal-600">{icon}</span>
-        <button
-          onClick={handleAddToCart}
-          className="text-gray-400 hover:text-gray-600"
-        >
-          <Plus className="w-6 h-6" />
-        </button>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editedIcon}
+            onChange={(e) => setEditedIcon(e.target.value)}
+            className="text-3xl text-teal-600 p-2 border border-gray-300 rounded"
+            style={{
+              width: '60px',
+              height: '40px',
+              textAlign: 'center',
+              borderRadius: '8px',
+            }}
+            autoFocus
+          />
+        ) : (
+          <span className="text-3xl text-teal-600">{icon}</span>
+        )}
+        <div className="flex space-x-2">
+          <button
+            onClick={handleAddToCart}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleEditClick}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            {isEditing ? <Check className="w-5 h-5" /> : <NotebookPen className="w-5 h-5" />}
+          </button>
+          <button
+            onClick={handleDeleteClick}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
       </div>
-      <h2 className="text-lg font-semibold mt-4 text-gray-800">{title}</h2>
+      <h2
+        className="text-lg font-semibold mt-4 text-gray-800 cursor-pointer"
+        onClick={handleTitleClick} // Handle title click
+      >
+        {isEditing ? (
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        ) : (
+          title
+        )}
+      </h2>
       <div className="mt-2 text-sm text-gray-600">
-        {`${current} h / ${total} h`}
+        {isEditing ? (
+          <input
+            type="text"
+            value={editedProgress}
+            onChange={(e) => setEditedProgress(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        ) : (
+          progress
+        )}
       </div>
       <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
         <div
           className="h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
-          style={{ width: progressWidth }}
+          style={{ width: `${(parseFloat(editedProgress.split(' h / ')[0]) / parseFloat(editedProgress.split(' h / ')[1])) * 100}%` }}
         ></div>
       </div>
-    </div>
+    </animated.div>
   );
 };
 

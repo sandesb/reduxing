@@ -9,12 +9,15 @@ import Messages from './pages/Messges';
 import HelpCenter from './pages/HelpCenter';
 import HomePage from './pages/HomePage';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import {store} from './redux/store';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   
   return (
     <Provider store={store}>
+          <Toaster position="bottom-center" />
+
       <Router>
         <Routes>
           <Route path="/" element={<BodyLayout />}>
