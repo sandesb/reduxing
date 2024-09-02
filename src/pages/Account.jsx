@@ -21,7 +21,7 @@ const Account = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-medium mb-6 text-gray-700">My Account</h1>
+      <h1 className="text-2xl font-medium mb-6 text-gray-700">Repositories</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((course) => (
           <Card

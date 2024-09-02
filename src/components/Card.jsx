@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { Plus, NotebookPen, X, Check } from 'lucide-react';
 import { useSpring, animated } from 'react-spring';
 
-const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, onDeleteClick }) => {
+const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, onDeleteClick, onTitleClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedIcon, setEditedIcon] = useState(icon);
   const [editedProgress, setEditedProgress] = useState(progress);
 
-  // Define the shaking animation
   const { x } = useSpring({
     x: isEditing ? 1 : 0,
     config: { tension: 20, friction: 16 },
   });
 
   const handleAddToCart = () => {
-    onPlusClick({ title, icon });
+    onPlusClick({ id, title, icon }); // Pass the id along with title and icon
   };
 
   const handleEditClick = () => {
@@ -34,6 +33,11 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
 
   const handleDeleteClick = () => {
     onDeleteClick(id);
+  };
+
+  const handleTitleClick = () => {
+    console.log(`Card ID: ${id}`); // Log the ID to the console
+    onTitleClick(id); // Trigger the dialog for this item
   };
 
   return (
@@ -87,7 +91,10 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
           </button>
         </div>
       </div>
-      <h2 className="text-lg font-semibold mt-4 text-gray-800">
+      <h2
+        className="text-lg font-semibold mt-4 text-gray-800 cursor-pointer"
+        onClick={handleTitleClick} // Handle title click
+      >
         {isEditing ? (
           <input
             type="text"

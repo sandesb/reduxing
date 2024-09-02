@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.2",
     "@reduxjs/toolkit": "^2.2.7",
+    "@supabase/supabase-js": "^2.45.3",
     "axios": "^1.7.4",
     "convex": "^1.14.1",
     "dotenv": "^16.4.5",

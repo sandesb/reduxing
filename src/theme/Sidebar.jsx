@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { User, Home, Mail, HelpCircle } from "lucide-react";
+import { User, Home, Mail, HelpCircle, Book, FolderHeart  } from "lucide-react";
 import { motion } from "framer-motion";
 import vaderImage from "../assets/vader.png"; // Import the image
 
@@ -69,14 +69,14 @@ const Sidebar = () => {
           <nav className="flex flex-col space-y-3">
             <ActiveLink
               to="/my-classes"
-              icon={Home}
+              icon={Book}
               label="Courses"
               isActive={location.pathname === "/my-classes"}
             />
             <ActiveLink
               to="/account"
-              icon={User}
-              label="Account"
+              icon={FolderHeart}
+              label="Repositories"
               isActive={location.pathname === "/account"}
             />
             <ActiveLink

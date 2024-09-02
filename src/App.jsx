@@ -16,7 +16,7 @@ function App() {
   
   return (
     <Provider store={store}>
-          <Toaster position="top-right" />
+          <Toaster position="bottom-center" />
 
       <Router>
         <Routes>

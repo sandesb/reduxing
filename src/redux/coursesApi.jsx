@@ -12,6 +12,30 @@ export const coursesApi = createApi({
       query: () => '/',
       providesTags: ['Courses'],
     }),
+    loadNote: builder.query({
+      query: (id) => `/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Courses', id }],
+    }),
+    
+
+    updateNote: builder.mutation({
+      query: ({ id, note }) => ({
+        url: `/${id}`,
+        method: 'PATCH',
+        body: { note },
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Courses', id }],
+      async onQueryStarted({ id, note }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          showToast('success', 'Note updated successfully');
+        } catch (error) {
+          showToast('error', 'Failed to update note');
+        }
+      },
+    }),
+    
+    
     addCourse: builder.mutation({
       query: (course) => ({
         url: '/',
@@ -91,6 +115,8 @@ export const {
   useAddCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
+  useUpdateNoteMutation,
+  useLoadNoteQuery
 } = coursesApi;
 
 export default coursesApi;
