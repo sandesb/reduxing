@@ -13,7 +13,8 @@
       "icon": "💲",
       "progress": "12 h / 20 h",
       "bgColor": "from-green-100 to-green-300",
-      "id": "2"
+      "id": "2",
+      "note": "notes"
     },
     {
       "id": "9f39",

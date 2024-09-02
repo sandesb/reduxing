@@ -1,9 +1,15 @@
 // src/supabaseClient.js
 import { createClient } from "@supabase/supabase-js";
 
-// Initialize the Supabase client using environment variables
-const supabaseUrl = process.env.REDUXING_SUPABASE_URL;
-const supabaseAnonKey = process.env.REDUXING_SUPABASE_ANON_KEY;
+// Ensure the environment variables are correctly loaded
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase URL or anonymous key in environment variables');
+}
+
+
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

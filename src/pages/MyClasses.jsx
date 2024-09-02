@@ -4,9 +4,12 @@ import ItemDialog from '../components/ItemDialog';
 import useCart from '../hooks/useCart';
 import LoadingSpinner from '../components/LoadingSpinner';
 import supabase from '../config/supabaseClient';
+
 const MyClasses = () => {
   const { handlePlusClick } = useCart();
   const [courses, setCourses] = useState([]);
+  const [updatedCourses, setUpdatedCourses] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -43,6 +46,7 @@ const MyClasses = () => {
     try {
       const { data, error } = await supabase.from("db").insert([newCourse]);
       if (error) throw error;
+      console.log('Added course:', data); // Debugging
       setCourses([...courses, ...data]);
     } catch (error) {
       console.error('Failed to add course:', error);
@@ -51,18 +55,51 @@ const MyClasses = () => {
 
   const handleEditClick = async (updatedCourse) => {
     try {
-      const { data, error } = await supabase.from("db").update(updatedCourse).eq('id', updatedCourse.id);
+      console.log('Updating course:', updatedCourse);
+  
+      // Perform the update in Supabase and return the updated row
+      const { data, error } = await supabase
+        .from("db")
+        .update({
+          title: updatedCourse.title,
+          progress: updatedCourse.progress,
+          icon: updatedCourse.icon,
+          bgColor: updatedCourse.bgColor,
+        })
+        .eq('id', updatedCourse.id)
+        .select(); // Ensure it returns the updated row
+  
       if (error) throw error;
-      setCourses(courses.map(course => course.id === updatedCourse.id ? updatedCourse : course));
+  
+      console.log('Course updated successfully in Supabase:', data);
+  
+      if (data.length > 0) {
+        console.log('Updated row:', data[0]);
+        // Update local state with the returned updated data
+        setCourses(courses.map(course => 
+          course.id === updatedCourse.id ? data[0] : course
+        ));
+      } else {
+        console.log('No rows returned after update.');
+      }
     } catch (error) {
       console.error('Failed to update course:', error);
     }
   };
+  
+  
+  
+  
+
+  
+  
+  
 
   const handleDeleteClick = async (id) => {
     try {
-      const { error } = await supabase.from("db").delete().eq('id', id);
+      const { data, error } = await supabase.from("db").delete().eq('id', id);
       if (error) throw error;
+      console.log('Deleted course with id:', id); // Debugging
       setCourses(courses.filter(course => course.id !== id));
     } catch (error) {
       console.error('Failed to delete course:', error);

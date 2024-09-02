@@ -14,10 +14,12 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
   });
 
   const handleAddToCart = () => {
+    console.log('Add to cart clicked:', { id, title, icon }); // Debugging
     onPlusClick({ id, title, icon }); // Pass the id along with title and icon
   };
 
   const handleEditClick = () => {
+    console.log('Edit clicked:', id); // Debugging
     if (isEditing) {
       const updatedCourse = {
         id,
@@ -26,17 +28,19 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
         progress: editedProgress,
         bgColor,
       };
+      console.log('Updated course:', updatedCourse); // Debugging
       onEditClick(updatedCourse);
     }
     setIsEditing(!isEditing);
   };
 
   const handleDeleteClick = () => {
+    console.log('Delete clicked:', id); // Debugging
     onDeleteClick(id);
   };
 
   const handleTitleClick = () => {
-    console.log(`Card ID: ${id}`); // Log the ID to the console
+    console.log(`Card ID: ${id}`); // Debugging
     onTitleClick(id); // Trigger the dialog for this item
   };
 
