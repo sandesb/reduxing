@@ -129,6 +129,8 @@ export const {
   useAddCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
+  useUpdateNoteMutation,
+  useLoadNoteQuery
 } = coursesApi;
 
 export default coursesApi;
