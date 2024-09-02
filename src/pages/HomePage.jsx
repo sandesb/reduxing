@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../components/Card';
-import ItemDialog from '../components/ItemDialog';
+// import ItemDialog from '../components/ItemDialog';
 import useCart from '../hooks/useCart';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AddCart from '../components/AddCart';
@@ -154,13 +154,13 @@ const HomePage = () => {
           />
         ))}
       </div>
-      {selectedItem && (
+      {/* {selectedItem && (
         <ItemDialog
           isOpen={isDialogOpen}
           onClose={closeDialog}
           item={selectedItem}
         />
-      )}
+      )} */}
     </div>
   );
 };

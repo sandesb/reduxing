@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Minus } from "lucide-react";
 import { removeFromCart } from "../redux/uiActions";
 import { useGetCoursesQuery } from "../redux/coursesApi";
-import ItemDialog from "./ItemDialog"; // Import the new ItemDialog component
+// import ItemDialog from "./ItemDialog"; 
 
 const CartPopup = () => {
   const isCartPopupVisible = useSelector(
@@ -69,11 +69,11 @@ const CartPopup = () => {
       </div>
 
       {/* Reuse ItemDialog component for item details */}
-      <ItemDialog
+      {/* <ItemDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         item={selectedItem}
-      />
+      /> */}
     </>
   );
 };
