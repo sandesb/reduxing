@@ -1,5 +1,3 @@
-// src/redux/uiReducer.js
-
 import {
   TOGGLE_SIDEBAR,
   SET_LARGE_SCREEN,
@@ -8,7 +6,7 @@ import {
   TOGGLE_CART_POPUP,
   ADD_TO_CART,
   REMOVE_FROM_CART,
-  SET_CART_ITEMS, // Import the new action
+  SET_CART_ITEMS,
   SET_SEARCH_RESULTS,
   LOAD_COURSES,
   LOAD_CART_DATA,
@@ -21,18 +19,40 @@ const initialState = {
   isLargeScreen: window.innerWidth >= 1024,
   cartCount: 0,
   isCartPopupVisible: false,
-  cartItems: [], // State for cart items
-  courses: [], // This should be populated with the data from db.json
+  cartItems: [],
+  courses: [], // State for storing courses fetched from Supabase
   searchResults: [], // To store search results
 };
 
 const uiReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_CART_DATA:
+    case LOAD_COURSES:
       return {
         ...state,
-        cartItems: action.payload.cartItems,
-        cartCount: action.payload.cartItems.length,
+        courses: action.payload, // Update courses in state
+      };
+    case SET_CART_ITEMS:
+      return {
+        ...state,
+        cartItems: action.payload,
+        cartCount: action.payload.length,
+      };
+    case REMOVE_FROM_CART:
+      const updatedCartItems = state.cartItems.filter(
+        (_, i) => i !== action.payload
+      );
+      Cookies.set("cartItems", JSON.stringify(updatedCartItems), {
+        expires: 7,
+      });
+      return {
+        ...state,
+        cartItems: updatedCartItems,
+        cartCount: updatedCartItems.length, // Update cartCount based on updated cartItems
+      };
+    case SET_SEARCH_RESULTS:
+      return {
+        ...state,
+        searchResults: action.payload,
       };
     case TOGGLE_SIDEBAR:
       return {
@@ -63,39 +83,6 @@ const uiReducer = (state = initialState, action) => {
       return {
         ...state,
         cartItems: [...state.cartItems, action.payload], // Add new item to cart
-      };
-    case SET_CART_ITEMS:
-      return {
-        ...state,
-        cartItems: action.payload,
-        cartCount: action.payload.length,
-      };
-    case REMOVE_FROM_CART:
-      const updatedCartItems = state.cartItems.filter(
-        (_, i) => i !== action.payload
-      );
-      Cookies.set("cartItems", JSON.stringify(updatedCartItems), {
-        expires: 7,
-      });
-      return {
-        ...state,
-        cartItems: updatedCartItems,
-        cartCount: updatedCartItems.length, // Update cartCount based on updated cartItems
-      };
-    case SET_CART_ITEMS:
-      return {
-        ...state,
-        cartItems: action.payload, // Set cart items from loaded cookies
-      };
-    case LOAD_COURSES:
-      return {
-        ...state,
-        courses: action.payload, // Load courses into state
-      };
-    case SET_SEARCH_RESULTS:
-      return {
-        ...state,
-        searchResults: action.payload,
       };
     default:
       return state;
