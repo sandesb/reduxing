@@ -16,7 +16,7 @@ body {
 }
 /* src/index.css or any global CSS file */
 .editorjs-container {
-  text-align: right !important;
+  text-align: left !important;
   width: 100% !important;
   max-width: none !important;
 }
@@ -24,14 +24,15 @@ body {
 .editorjs-container .ce-block__content {
   justify-content: flex-start !important;
   text-align: left !important;
-  margin-left: 0 !important;
+  margin-left: 2% !important;
 }
 
 /* src/index.css or any global CSS file */
 
 /* Align Editor.js toolbars to the left */
 .editorjs-container .ce-toolbar__plus {
-  left: 0 !important; /* Ensure the plus button is aligned to the left */
+  right: 10 !important; /* Ensure the plus button is aligned to the left */
+
 }
 
 .editorjs-container .ce-block__content {
@@ -40,6 +41,8 @@ body {
 
 .editorjs-container .ce-toolbar__content {
   justify-content: flex-start !important; /* Ensure the toolbar content is aligned to the left */
+  margin-right: 27% !important;
+
 }
 
 .editorjs-container .ce-toolbar__settings-btn {

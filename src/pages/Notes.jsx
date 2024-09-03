@@ -53,7 +53,7 @@ const Notes = () => {
       <h1 className="text-2xl font-bold mb-4">
         Study Notes for {itemName} (ID: {id})
       </h1>
-      <div className="w-full text-left editorjs-container">
+      <div className="w-full  editorjs-container">
         <Editor
           data={data}
           editorBlock="editorjs-container"
