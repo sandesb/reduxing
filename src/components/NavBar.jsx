@@ -34,7 +34,7 @@ const Navbar = () => {
           <button onClick={handleToggle} className="p-2 text-gray-700 rounded-md flex items-center">
             <Menu className="w-5 h-5" />
           </button>
-          <SearchBar />
+          <SearchBar className="max-sm:hidden"/>
         </div>
       </div>
 
