@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Bell, User, Menu, ShoppingCart } from 'lucide-react';
@@ -30,15 +29,18 @@ const Navbar = () => {
         <Link to="/" className="flex items-center text-xl font-bold text-gray-700 pl-6 pr-10">
           <img src={reduxLogo} alt="Redux Logo" className="w-8 h-8 mr-2" /> React+Redux
         </Link>
-        <div className='flex space-x-4 '>
+        <div className="flex space-x-4">
           <button onClick={handleToggle} className="p-2 text-gray-700 rounded-md flex items-center">
             <Menu className="w-5 h-5" />
           </button>
-          <SearchBar className="max-sm:hidden"/>
+          {/* The SearchBar will only be visible on screens larger than 640px */}
+          <div className="hidden sm:block w-full">
+            <SearchBar />
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center space-x-4 pr-4">
+      <div className="flex items-center space-x-4">
         <div className="relative" onClick={handleCartClick}>
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 shadow">
             {cartCount}

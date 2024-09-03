@@ -43,18 +43,18 @@ const AddCart = ({ refetch }) => {
   ];
 
   return (
-    <div className="flex space-x-4 items-center mb-4">
-    {inputFields.map((field, index) => (
-      <InputField key={index} {...field} />
-    ))}
-    <button
-      onClick={handleAddClick}
-      className="bg-blue-100 text-blue-500 px-4 py-2 rounded-md flex items-center border border-blue-200"
-      style={{ borderRadius: '10px' }}
-    >
-      <span className="mr-2 text-blue-500">+</span> Add
-    </button>
-  </div>
+    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-4">
+      {inputFields.map((field, index) => (
+        <InputField key={index} {...field} />
+      ))}
+      <button
+        onClick={handleAddClick}
+        className="bg-blue-100 text-blue-500 px-4 py-2 rounded-md flex items-center border border-blue-200"
+        style={{ borderRadius: '10px' }}
+      >
+        <span className="mr-2 text-blue-500">+</span> Add
+      </button>
+    </div>
   );
 };
 

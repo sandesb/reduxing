@@ -3,15 +3,15 @@ import InputEmoji from 'react-input-emoji';
 
 const InputField = ({ type, value, onChange, label }) => {
   return (
-    <div className="relative flex-1 mb-">
+    <div className="relative flex-1 w-full">
       {type === 'emoji' ? (
-        <div className="relative ">
+        <div className="relative w-full">
           <InputEmoji
             value={value}
             onChange={onChange}
             placeholder="Tap on Emoji..."
             borderRadius={10}
-            className="border p-2 rounded-md text-gray-700 w-full"
+            className="border p-2 rounded-md text-gray-700"
             style={{ borderRadius: '10px' }}
           />
        
