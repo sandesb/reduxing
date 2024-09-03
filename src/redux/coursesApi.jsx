@@ -121,8 +121,32 @@ export const coursesApi = createApi({
         }
       },
     }),
+
+    loadNote: builder.query({
+      query: (id) => ({
+        url: `db?id=eq.${id}`,
+        method: 'select',
+        body: '*',
+      }),
+      providesTags: ['Courses'],
+    }),
+
+    updateNote: builder.mutation({
+      query: ({ id, note }) => ({
+        url: 'db',
+        method: 'update',
+        body: { id, note },
+      }),
+      invalidatesTags: ['Courses'],
+    }),
+
+
+    
   }),
+
+  
 });
+
 
 export const {
   useGetCoursesQuery,

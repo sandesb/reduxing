@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Card from '../components/Card';
 import useCart from '../hooks/useCart';
 import LoadingSpinner from '../components/LoadingSpinner';
-import supabase from '../config/supabaseClient';
+import AddCart from '../components/AddCart';
+import ItemDialog from '../components/ItemDialog'; // Import the ItemDialog
 
 import {
   useGetCoursesQuery,
@@ -10,7 +11,6 @@ import {
   useUpdateCourseMutation,
   useDeleteCourseMutation,
 } from '../redux/coursesApi';
-import AddCart from '../components/AddCart';
 
 const HomePage = () => {
   const { handlePlusClick } = useCart();
@@ -26,42 +26,25 @@ const HomePage = () => {
   const handleEditClick = async (updatedCourse) => {
     try {
       console.log('Updating course:', updatedCourse);
-  
-      const { data, error } = await supabase
-        .from("db")
-        .update({
-          title: updatedCourse.title,
-          progress: updatedCourse.progress,
-          icon: updatedCourse.icon,
-          bgColor: updatedCourse.bgColor,
-        })
-        .eq('id', updatedCourse.id)
-        .select(); // Ensure it returns the updated row
-  
+
+      const { data, error } = await updateCourse(updatedCourse).unwrap();
+
       if (error) throw error;
-  
-      console.log('Course updated successfully in Supabase:', data);
-  
-      if (data.length > 0) {
-        console.log('Updated row:', data[0]);
-        // Refetch data from the server to ensure synchronization
-        refetch();
-      } else {
-        console.log('No rows returned after update.');
-      }
+
+      console.log('Course updated successfully:', data);
+
+      refetch(); // Refetch courses to reflect the update
     } catch (error) {
       console.error('Failed to update course:', error);
     }
   };
 
-  // Handle deleting a course
   const handleDeleteClick = async (id) => {
     try {
-      await deleteCourse(id);
+      await deleteCourse(id).unwrap();
       console.log('Deleted course with id:', id);
-      
-      // Refetch data from the server to ensure synchronization
-      refetch();
+
+      refetch(); // Refetch courses to reflect the deletion
     } catch (error) {
       console.error('Failed to delete course:', error);
     }
@@ -104,10 +87,18 @@ const HomePage = () => {
             onPlusClick={handlePlusClick}
             onEditClick={handleEditClick}
             onDeleteClick={handleDeleteClick}
-            onTitleClick={handleTitleClick}
+            onTitleClick={handleTitleClick} // Pass handleTitleClick to Card
           />
         ))}
       </div>
+      {/* ItemDialog to show details and edit notes */}
+      {selectedItem && (
+        <ItemDialog
+          isOpen={isDialogOpen}
+          onClose={closeDialog}
+          item={selectedItem} // Pass the selected item
+        />
+      )}
     </div>
   );
 };
