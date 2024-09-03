@@ -2,7 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import supabase from '../config/supabaseClient';
 import { showToast } from '../utils/toast';
 
-const supabaseBaseQuery = async ({ url, method, body }) => {
+const supabaseBaseQuery = async ({ url, method, body , returning}) => {
   let supabaseQuery;
   switch (method) {
     case 'select':
@@ -14,6 +14,9 @@ const supabaseBaseQuery = async ({ url, method, body }) => {
     case 'update':
       supabaseQuery = supabase.from(url).update(body).eq('id', body.id);
       break;
+      case 'post':  // Handle POST with UPSERT
+      supabaseQuery = supabase.from(url).upsert(body).select(); // Ensure to return the inserted/updated row(s)
+      break;
     case 'delete':
       supabaseQuery = supabase.from(url).delete().eq('id', body.id);
       break;
@@ -24,6 +27,8 @@ const supabaseBaseQuery = async ({ url, method, body }) => {
   const { data, error } = await supabaseQuery;
 
   if (error) {
+    console.error('Error in Supabase query:', error);
+
     return { error: { status: 'CUSTOM_ERROR', data: error.message } };
   }
 
@@ -140,6 +145,26 @@ export const coursesApi = createApi({
       invalidatesTags: ['Courses'],
     }),
 
+       
+    loadContent: builder.query({
+      query: (db_id) => ({
+        url: `content?db_id=eq.${db_id}`, // Fetch content based on db_id
+        method: 'select',
+        body: '*',
+      }),
+      providesTags: ['Courses'],
+    }),
+
+    updateContent: builder.mutation({
+      query: ({ db_id, content, name }) => ({
+        url: `content`,  // Target the `content` table directly
+        method: 'post',  // Use POST with UPSERT
+        body: { db_id, note: content, name },  // Ensure note is a JSON object
+        returning: 'representation', // Explicitly request the return of the inserted/updated record(s)
+      }),
+      invalidatesTags: ['Content'],
+    }),
+
 
     
   }),
@@ -154,7 +179,9 @@ export const {
   useUpdateCourseMutation,
   useDeleteCourseMutation,
   useUpdateNoteMutation,
-  useLoadNoteQuery
+  useLoadNoteQuery,
+  useLoadContentQuery,
+  useUpdateContentMutation
 } = coursesApi;
 
 export default coursesApi;

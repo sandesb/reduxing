@@ -14,3 +14,44 @@ body {
   z-index: 2; /* Ensure it stays on top */
   overflow: hidden;
 }
+/* src/index.css or any global CSS file */
+.editorjs-container {
+  text-align: right !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.editorjs-container .ce-block__content {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  margin-left: 0 !important;
+}
+
+/* src/index.css or any global CSS file */
+
+/* Align Editor.js toolbars to the left */
+.editorjs-container .ce-toolbar__plus {
+  left: 0 !important; /* Ensure the plus button is aligned to the left */
+}
+
+.editorjs-container .ce-block__content {
+  justify-content: flex-start !important; /* Ensure the block content is aligned to the left */
+}
+
+.editorjs-container .ce-toolbar__content {
+  justify-content: flex-start !important; /* Ensure the toolbar content is aligned to the left */
+}
+
+.editorjs-container .ce-toolbar__settings-btn {
+  left: 0 !important; /* Align settings button to the left */
+  right: auto !important;
+}
+
+.editorjs-container .ce-block__controls {
+  left: 0 !important; /* Ensure the controls are aligned to the left */
+  right: auto !important;
+}
+
+.editorjs-container .ce-toolbar__actions {
+  justify-content: flex-start !important;
+}

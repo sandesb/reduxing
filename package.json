@@ -10,6 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/editorjs": "^2.30.5",
+    "@editorjs/header": "^2.8.7",
+    "@editorjs/image": "^2.9.3",
+    "@editorjs/link": "^2.6.2",
+    "@editorjs/list": "^1.10.0",
+    "@editorjs/quote": "^2.7.2",
+    "@editorjs/simple-image": "^1.6.0",
     "@headlessui/react": "^2.1.2",
     "@reduxjs/toolkit": "^2.2.7",
     "@supabase/supabase-js": "^2.45.3",

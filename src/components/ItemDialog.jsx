@@ -3,6 +3,7 @@ import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/re
 import clsx from 'clsx';
 import vaderImage from '../assets/vader.png';
 import { useUpdateNoteMutation, useLoadNoteQuery } from '../redux/coursesApi';
+import { useNavigate } from 'react-router-dom';
 
 const ItemDialog = ({ isOpen, onClose, item }) => {
   const { data: loadedNote, isLoading } = useLoadNoteQuery(item?.id, {
@@ -11,13 +12,13 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
 
   const [updateNote] = useUpdateNoteMutation();
   const [comment, setComment] = useState('');
+  const navigate = useNavigate();
 
-  // Use effect to set the comment when the loadedNote data is available
   useEffect(() => {
     if (loadedNote && loadedNote.length > 0 && loadedNote[0].note) {
-      setComment(loadedNote[0].note);  // Make sure to access the correct data structure
+      setComment(loadedNote[0].note);
     } else {
-      setComment(''); // Reset comment if there's no note
+      setComment('');
     }
   }, [loadedNote]);
 
@@ -25,7 +26,7 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
     if (item && comment.trim() !== '') {
       try {
         await updateNote({ id: item.id, note: comment }).unwrap();
-        console.log('Note updated:', comment); // Debugging output
+        console.log('Note updated:', comment);
       } catch (error) {
         console.error('Failed to update note:', error);
       }
@@ -36,6 +37,10 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
     if (!progress) return 0;
     const [current, total] = progress.split(' h / ').map(parseFloat);
     return (current / total) * 100;
+  };
+
+  const handleStudyClick = () => {
+    navigate(`/notes/${item.id}`, { state: { title: item.title } }); // Pass the title via state
   };
 
   return (
@@ -81,15 +86,21 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
                       'block w-full rounded-lg border border-gray-300 bg-white py-2 px-3 text-sm text-gray-900',
                       'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y'
                     )}
-                    rows={3}                  
+                    rows={3}
                     placeholder="Add your notes..."
                   />
                 </div>
               </div>
-              <div className="flex justify-end mt-2">
+              <div className="flex justify-between mt-2">
+                <button
+                  onClick={handleStudyClick} // Handle navigation to Notes page
+                  className="bg-teal-600 text-white px-4 py-2 rounded-lg"
+                >
+                  Study
+                </button>
                 <button
                   onClick={handlePostClick} // Handle posting the note
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                  className="bg-blue-400 text-white px-4 py-2 rounded-lg"
                   disabled={isLoading} // Disable the button while loading
                 >
                   Post
