@@ -11,13 +11,15 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
     case 'insert':
       supabaseQuery = supabase.from(url).insert(body);
       break;
-    case 'update':
-      console.log(body)
-      supabaseQuery = supabase.from(url).update(body).eq('id', body.id);
-      break;
-      case 'update':  // Handle POST with UPSERT
-      supabaseQuery = supabase.from(url).update(body).select(); // Ensure to return the inserted/updated row(s)
-      break;
+      case 'update':
+        if (!body.id) {
+          return { error: { status: 'CUSTOM_ERROR', data: 'ID is required for update' } };
+        }
+        supabaseQuery = supabase.from(url).update(body).eq('id', body.id).select(); // Ensure id is used
+        break;
+      case 'upsert': // If you need to use UPSERT
+        supabaseQuery = supabase.from(url).upsert(body).eq('db_id', body.db_id).select();
+        break;
     case 'delete':
       supabaseQuery = supabase.from(url).delete().eq('id', body.id);
       break;
@@ -156,16 +158,16 @@ export const coursesApi = createApi({
       providesTags: ['Courses'],
     }),
 
+
     updateContent: builder.mutation({
       query: ({ db_id, content, name }) => ({
         url: `content`,  // Target the `content` table directly
-        method: 'update',  // Use POST with UPSERT
-        body: { db_id, note: content, name },  // Ensure note is a JSON object
-        returning: 'representation', // Explicitly request the return of the inserted/updated record(s)
+        method: 'upsert',  // Use UPSERT to insert or update based on db_id
+        body: { db_id, note: content, name },  // Pass db_id and the content (note)
+        returning: 'representation', // Request to return the updated record
       }),
       invalidatesTags: ['Content'],
     }),
-
 
     
   }),

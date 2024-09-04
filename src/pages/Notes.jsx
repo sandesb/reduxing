@@ -4,13 +4,13 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useLoadContentQuery } from '../redux/coursesApi';
 
 const Notes = () => {
-  const { id } = useParams();  // Get the db_id from the URL
-  const location = useLocation();  // Get the location object to access the state
-  const { data: loadedContent, isLoading, error } = useLoadContentQuery(id);  // Load content based on id
+  const { id } = useParams();  // This is the db_id from the URL
+  const location = useLocation();
+  const { data: loadedContent, isLoading, error } = useLoadContentQuery(id);  // Use db_id to load content
   const [data, setData] = useState(null);
   const hasInitialized = useRef(false);
 
-  const itemName = location.state?.title || 'Unknown Item';  // Get the item name from the location state
+  const itemName = location.state?.title || 'Unknown Item';
 
   useEffect(() => {
     if (isLoading) return;
@@ -42,10 +42,6 @@ const Notes = () => {
     hasInitialized.current = true;
   }, [loadedContent, isLoading, error]);
 
-  useEffect(() => {
-    console.log('db_id:', id);  // Log the id to ensure it's available
-  }, [id]);
-
   if (isLoading || !data) return <div>Loading...</div>;
 
   return (
@@ -53,12 +49,12 @@ const Notes = () => {
       <h1 className="text-2xl font-bold mb-4">
         Study Notes for {itemName} (ID: {id})
       </h1>
-      <div className="w-full  editorjs-container">
+      <div className="w-full text-left editorjs-container">
         <Editor
           data={data}
           editorBlock="editorjs-container"
-          db_id={id}  // Pass the `id` to the Editor as `db_id`
-          itemName={itemName}  // Pass the itemName to the Editor for the name field
+          db_id={id}  // db_id is now passed here
+          itemName={itemName}
         />
       </div>
     </div>
