@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Bell, User, Menu, ShoppingCart } from 'lucide-react';
+import { Bell, User, Menu, ShoppingCart, Lightbulb, MessageCircleHeart, MessageCircleQuestion } from 'lucide-react';
 import { toggleSidebar, toggleCartPopup, loadCourses, loadCartData } from '../redux/uiActions';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
@@ -41,13 +41,13 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center space-x-4">
-        <div className="relative" onClick={handleCartClick}>
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 shadow">
+        <div className="relative mb-4" onClick={handleCartClick}>
+          <span className="absolute -bottom-4 -left-4  bg-red-500 text-white text-xs font-extralight rounded-full px-2 py-0.5 shadow">
             {cartCount}
           </span>
-          <ShoppingCart className="w-6 h-6 text-gray-600" />
+          <MessageCircleHeart  className="w-6 h-6 text-gray-600 cursor-pointer" />
         </div>
-        <User className="w-8 h-8 text-gray-600" />
+        <MessageCircleQuestion className="w-6 h-6 mb-4 text-gray-600 cursor-pointer" />
       </div>
     </div>
   );
