@@ -56,13 +56,13 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
       }}
       className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]"
     >
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start ">
         {isEditing ? (
           <input
             type="text"
             value={editedIcon}
             onChange={(e) => setEditedIcon(e.target.value)}
-            className="text-3xl text-teal-600 p-2 border border-gray-300 rounded"
+            className="text-2xl text-teal-600 p-2 border border-gray-300 rounded"
             style={{
               width: '60px',
               height: '40px',
@@ -96,7 +96,7 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
         </div>
       </div>
       <h2
-        className="text-lg font-semibold mt-4 text-gray-800 cursor-pointer"
+        className="text-base font-semibold mt-4 text-gray-700 cursor-pointer"
         onClick={handleTitleClick} // Handle title click
       >
         {isEditing ? (

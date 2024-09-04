@@ -72,9 +72,11 @@ const HomePage = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="">
+      <h1 className="text-2xl font-semibold mb-6 text-gray-700 text-center">Know Your Academix</h1>
+      <div className='py-2 px-6'>
+
       <AddCart refetch={refetch} />
-      <h1 className="text-2xl font-medium mb-6 text-gray-700">In Process</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.slice().reverse().map((course) => (
           <Card
@@ -99,6 +101,7 @@ const HomePage = () => {
           item={selectedItem} // Pass the selected item
         />
       )}
+    </div>
     </div>
   );
 };

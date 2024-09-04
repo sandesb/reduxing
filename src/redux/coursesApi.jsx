@@ -17,9 +17,11 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
         }
         supabaseQuery = supabase.from(url).update(body).eq('id', body.id).select(); // Ensure id is used
         break;
+
       case 'upsert': // If you need to use UPSERT
         supabaseQuery = supabase.from(url).upsert(body).eq('db_id', body.db_id).select();
         break;
+        
     case 'delete':
       supabaseQuery = supabase.from(url).delete().eq('id', body.id);
       break;

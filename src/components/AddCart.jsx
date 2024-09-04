@@ -43,7 +43,7 @@ const AddCart = ({ refetch }) => {
   ];
 
   return (
-    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-4">
+    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-8">
       {inputFields.map((field, index) => (
         <InputField key={index} {...field} />
       ))}
