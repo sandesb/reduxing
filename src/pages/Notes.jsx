@@ -47,7 +47,7 @@ const Notes = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">
-        Study Notes for {itemName} (ID: {id})
+        Study Notes for {itemName})
       </h1>
       <div className="w-full text-left editorjs-container">
         <Editor
