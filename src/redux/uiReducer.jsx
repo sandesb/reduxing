@@ -4,6 +4,8 @@ import {
   INCREMENT_CART,
   SET_CART_COUNT,
   TOGGLE_CART_POPUP,
+  TOGGLE_HELP_POPUP,
+
   ADD_TO_CART,
   REMOVE_FROM_CART,
   SET_CART_ITEMS,
@@ -79,6 +81,11 @@ const uiReducer = (state = initialState, action) => {
         ...state,
         isCartPopupVisible: !state.isCartPopupVisible,
       };
+      case TOGGLE_HELP_POPUP:
+        return {
+          ...state,
+          isHelpPopupVisible: !state.isHelpPopupVisible,
+        };
     case ADD_TO_CART:
       return {
         ...state,

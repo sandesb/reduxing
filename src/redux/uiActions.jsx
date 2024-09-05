@@ -5,6 +5,8 @@ export const SET_LARGE_SCREEN = 'SET_LARGE_SCREEN';
 export const INCREMENT_CART = 'INCREMENT_CART';
 export const SET_CART_COUNT = 'SET_CART_COUNT';
 export const TOGGLE_CART_POPUP = 'TOGGLE_CART_POPUP';
+export const TOGGLE_HELP_POPUP = 'TOGGLE_HELP_POPUP';
+
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const SET_CART_ITEMS = 'SET_CART_ITEMS'; // New action
@@ -47,6 +49,11 @@ export const setCartCount = (count) => {
 export const toggleCartPopup = () => {
   return {
     type: TOGGLE_CART_POPUP,
+  };
+};
+export const toggleHelpPopup = () => {
+  return {
+    type: TOGGLE_HELP_POPUP,
   };
 };
 

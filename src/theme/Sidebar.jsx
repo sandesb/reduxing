@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { User, Home, Mail, HelpCircle, Book, FolderHeart  } from "lucide-react";
+import { User, Home, Mail, HelpCircle, Book, FolderHeart, HomeIcon  } from "lucide-react";
 import { motion } from "framer-motion";
 import vaderImage from "../assets/vader.png"; // Import the image
 
@@ -52,9 +52,9 @@ const Sidebar = () => {
 
   return (
     <div className="relative h-screen flex">
-      <div className="absolute top-0 left-0 w-72 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden">
-        <div className="h-full w-full bg-primary">
-          <div className="flex items-center space-x-2 mb-2 p-4 ml-4">
+      <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden">
+        <div className="h-full w-full ">
+          <div className="flex items-center space-x-2 mb-2 p-2 ml-4">
             {/* Replace the User icon with the vader.png image */}
             <img 
               src={vaderImage} 
@@ -66,7 +66,13 @@ const Sidebar = () => {
               <p className="text-sm text-gray-500">Student</p>
             </div>
           </div>
-          <nav className="flex flex-col space-y-3">
+          <nav className="flex flex-col space-y-1">
+          <ActiveLink
+              to="/"
+              icon={HomeIcon}
+              label="Home"
+              isActive={location.pathname === "/"}
+            />
             <ActiveLink
               to="/my-classes"
               icon={Book}

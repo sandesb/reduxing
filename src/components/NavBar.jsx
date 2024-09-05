@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Bell, User, Menu, ShoppingCart, Lightbulb, MessageCircleHeart, MessageCircleQuestion } from 'lucide-react';
-import { toggleSidebar, toggleCartPopup, loadCourses, loadCartData } from '../redux/uiActions';
+import { toggleSidebar, toggleCartPopup, toggleHelpPopup, loadCourses, loadCartData } from '../redux/uiActions';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import reduxLogo from '../assets/redux.png';
@@ -21,6 +21,10 @@ const Navbar = () => {
 
   const handleCartClick = () => {
     dispatch(toggleCartPopup());
+  };
+
+  const handleHelpClick = () => {
+    dispatch(toggleHelpPopup());
   };
 
   return (
@@ -47,7 +51,8 @@ const Navbar = () => {
           </span>
           <MessageCircleHeart  className="w-6 h-6 text-gray-600 cursor-pointer" />
         </div>
-        <MessageCircleQuestion className="w-6 h-6 mb-4 text-gray-600 cursor-pointer" />
+        
+        <MessageCircleQuestion onClick={handleHelpClick} className="w-6 h-6 mb-4 text-gray-600 cursor-pointer" />
       </div>
     </div>
   );

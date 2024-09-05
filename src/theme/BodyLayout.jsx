@@ -27,7 +27,7 @@ const BodyLayout = () => {
       <CartPopup/>
       <div className={`grid ${isSidebarOpen && isLargeScreen ? 'grid-cols-[auto,1fr]' : 'grid-cols-1'}`}>
         {isSidebarOpen && isLargeScreen && (
-          <div className="w-64">
+          <div className="w-52">
             <Sidebar />
           </div>
         )}
