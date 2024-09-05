@@ -5,15 +5,12 @@ import { useGetCoursesQuery } from "../redux/coursesApi";
 // import ItemDialog from "./ItemDialog"; 
 
 const HelpPop = () => {
+  
   const isHelpPopupVisible = useSelector(
     (state) => state.ui.isHelpPopupVisible
   );
 
   if (!isHelpPopupVisible) return null;
-
-
-
-
   return (
     <>
       <div className="fixed top-16 right-4 w-80 bg-white shadow-lg rounded-lg z-50">
