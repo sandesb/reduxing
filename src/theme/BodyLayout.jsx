@@ -6,6 +6,7 @@ import Navbar from '../components/NavBar';
 import { setLargeScreen } from '../redux/uiActions';
 import CartPopup from '../components/CartPopup';
 import FooterWebsite from './FooterWebsite';
+import HelpPopup from '../components/HelpPopup';
 
 const BodyLayout = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,8 @@ const BodyLayout = () => {
     <div className="bg-primary-bg min-h-screen grid grid-rows-[auto,1fr,auto]">
       <Navbar />
       <CartPopup />
+      <HelpPopup />
+
       <div className={`grid ${isSidebarOpen && isLargeScreen ? 'grid-cols-[auto,1fr]' : 'grid-cols-1'}`}>
         {isSidebarOpen && isLargeScreen && (
           <div className="w-52">

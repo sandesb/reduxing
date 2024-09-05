@@ -21,6 +21,8 @@ const initialState = {
   isLargeScreen: window.innerWidth >= 1024,
   cartCount: 0,
   isCartPopupVisible: false,
+  isHelpPopupVisible: false,  // Initialize Help Popup visibility state
+
   cartItems: [],
   courses: [], // State for storing courses fetched from Supabase
   searchResults: [], // To store search results
@@ -80,12 +82,16 @@ const uiReducer = (state = initialState, action) => {
       return {
         ...state,
         isCartPopupVisible: !state.isCartPopupVisible,
+        isHelpPopupVisible: false,  // Close HelpPopup when CartPopup is toggled
+
       };
       case TOGGLE_HELP_POPUP:
-        return {
-          ...state,
-          isHelpPopupVisible: !state.isHelpPopupVisible,
-        };
+      return {
+        ...state,
+        isHelpPopupVisible: !state.isHelpPopupVisible,
+        isCartPopupVisible: false,  // Close CartPopup when HelpPopup is toggled
+
+      };
     case ADD_TO_CART:
       return {
         ...state,

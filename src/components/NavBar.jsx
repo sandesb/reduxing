@@ -26,6 +26,7 @@ const Navbar = () => {
   const handleHelpClick = () => {
     dispatch(toggleHelpPopup());
   };
+  
 
   return (
     <div className="font-lato flex justify-between items-center py-4 bg-primary from-gray-100 to-gray-200 w-full">
