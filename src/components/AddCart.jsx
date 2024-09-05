@@ -5,6 +5,8 @@ import { useAddCourseMutation } from '../redux/coursesApi';
 
 const AddCart = ({ refetch }) => {
   const [name, setName] = useState('');
+  const [place, setPlace] = useState('');
+
   const [emoji, setEmoji] = useState('');
   const [work, setWork] = useState('');
   const [addCourse] = useAddCourseMutation();
@@ -36,17 +38,32 @@ const AddCart = ({ refetch }) => {
     }
   };
 
-  const inputFields = [
-    { type: 'text', value: name, onChange: (e) => setName(e.target.value), label: 'Name' },
-    { type: 'emoji', value: emoji, onChange: setEmoji, label: 'Emoji' },
-    { type: 'number', value: work, onChange: (e) => setWork(e.target.value), label: 'Chapters' },
-  ];
-
   return (
-    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-8">
-      {inputFields.map((field, index) => (
-        <InputField key={index} {...field} />
-      ))}
+    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-8 w-full">
+      {/* Pass customWidth prop to give different widths to Name and Chapters */}
+      <InputField
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        label="Name"
+        place="Name of Subject..."
+        customWidth="35%"  // Adjust width for larger screens
+      />
+      <InputField
+        type="emoji"
+        value={emoji}
+        onChange={setEmoji}
+        label="Emoji"
+        customWidth="30%"  // Adjust width for larger screens
+      />
+      <InputField
+        type="number"
+        value={work}
+        onChange={(e) => setWork(e.target.value)}
+        label="Chapters"
+        place="Total Chapters..."
+        customWidth="30%"  // Adjust width for larger screens
+      />
       <button
         onClick={handleAddClick}
         className="bg-blue-100 text-blue-500 px-4 py-2 rounded-md flex items-center border border-blue-200"

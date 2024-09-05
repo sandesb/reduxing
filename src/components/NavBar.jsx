@@ -48,12 +48,12 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex items-center space-x-4 pr-6">
+      <div className="flex items-center space-x-4 pr-6 mb-3">
         <div className="relative " onClick={handleCartClick}>
-          <span className="absolute -bottom-4 -left-4 mb-4  bg-red-500 text-white text-xs font-extralight rounded-full px-2 py-0.5 shadow">
+          <span className="absolute -bottom-4 -left-4   bg-red-500 text-white text-xs font-extralight rounded-full px-2 py-0.5 shadow">
             {cartCount}
           </span>
-          <MessageCircleHeart  className="w-6 h-6 text-gray-600 cursor-pointer" />
+          <MessageCircleHeart  className="w-6 h-6 text-gray-600 cursor-pointer " />
         </div>
         
         <MessageCircleQuestion onClick={handleHelpClick} className="w-6 h-6  text-gray-600 cursor-pointer" />

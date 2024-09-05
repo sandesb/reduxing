@@ -1,22 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import InputEmoji from 'react-input-emoji';
 
-const InputField = ({ type, value, onChange, label }) => {
+const InputField = ({ type, value, place, onChange, label, customWidth }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size and set isMobile to true for small screens
+  useEffect(() => {
+    const handleResize = () => {
+      // Check if the screen width is less than 640px (Tailwind's sm breakpoint)
+      setIsMobile(window.matchMedia('(max-width: 640px)').matches);
+    };
+
+    // Set the initial state and listen for window resize events
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="relative flex-1 w-full">
+    <div
+      className="relative"
+      style={{
+        width: customWidth, // Use custom width
+        minWidth: isMobile ? '100%' : 'auto', // Apply min-width: 100% on small screens
+      }}
+    >
       {type === 'emoji' ? (
-        <div className="relative w-full">
+        <div className="relative w-full drop-shadow-sm"> {/* Apply custom shadow */}
           <InputEmoji
             value={value}
             onChange={onChange}
             placeholder="Tap on Emoji..."
             borderRadius={10}
-            className="border p-2 rounded-md text-gray-700"
+            className="border p-2 rounded-md text-gray-700  "
             style={{ borderRadius: '10px' }}
           />
-       
           <label
-            className={`absolute left-6 top-0 text-gray-500 text-xs bg-white px-1 transform -translate-y-1/2`}
+            className="absolute left-6 top-0 text-gray-500 text-xs bg-slate-50 px-1 transform -translate-y-1/2"
             style={{ pointerEvents: 'none', borderRadius: '5px' }}
           >
             {label}
@@ -27,14 +49,14 @@ const InputField = ({ type, value, onChange, label }) => {
           type={type}
           value={value}
           onChange={onChange}
-          placeholder="Type Here..."
-          className="border p-2 rounded-md text-gray-700 w-full"
+          placeholder={place}
+          className="border p-2 pl-4 rounded-md text-gray-700 w-full bg-slate-50 shadow-primary" 
           style={{ borderRadius: '10px' }}
         />
       )}
       {type !== 'emoji' && (
         <label
-          className={`absolute left-3 top-0 text-gray-500 text-xs bg-white px-1 transform -translate-y-1/2`}
+          className="absolute left-3 top-0 text-gray-500 text-xs bg-slate-50 px-1 transform -translate-y-1/2"
           style={{ pointerEvents: 'none', borderRadius: '5px' }}
         >
           {label}
