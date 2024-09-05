@@ -28,14 +28,14 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center py-4 bg-primary from-gray-100 to-gray-200 w-full">
+    <div className="font-lato flex justify-between items-center py-4 bg-primary from-gray-100 to-gray-200 w-full">
       <div className="flex items-center space-x-4 ">
         <Link to="/" className="flex items-center text-xl font-bold text-gray-700 pl-6 pr-10">
           <div className='flex w-8 h-8 bg-white rounded-2xl'>
           <img src={reduxLogo} alt="Redux Logo" className="w-8 h-8   text-center " />
           </div> 
           
-          <h1 className='pl-2 font-semibold'>React+Redux</h1>
+          <h1 className='pl-2 font-semibold font-lato'>React+Redux</h1>
         </Link>
         <div className="flex space-x-4 ">
           <button onClick={handleToggle} className="p-2 text-gray-700 rounded-md flex items-center">

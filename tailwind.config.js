@@ -5,7 +5,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        outfit: ['Outfit', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
+
       },
       colors: {
         'primary-bg': '#d8e4fc',  // Your primary background color

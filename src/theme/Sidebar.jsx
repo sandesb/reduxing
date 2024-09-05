@@ -51,7 +51,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <div className="relative h-screen flex">
+    <div className="relative font-lato h-screen flex">
       <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden">
         <div className="h-full w-full ">
           <div className="flex items-center space-x-2 mb-2 p-2 ml-4">

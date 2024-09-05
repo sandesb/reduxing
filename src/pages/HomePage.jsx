@@ -73,7 +73,7 @@ const HomePage = () => {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-700 text-center">Know Your Academix</h1>
+      <h1 className="font-lato text-2xl font-semibold mb-6 text-gray-700 text-center">Know Your Academix</h1>
       <div className='py-2 px-6'>
 
       <AddCart refetch={refetch} />

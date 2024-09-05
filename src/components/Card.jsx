@@ -56,7 +56,7 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
       }}
       className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]"
     >
-      <div className="flex justify-between items-start ">
+      <div className=" font-lato flex justify-between items-start ">
         {isEditing ? (
           <input
             type="text"

@@ -39,7 +39,7 @@ const AddCart = ({ refetch }) => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-8 w-full">
+    <div className="font-lato flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-8 w-full">
       {/* Pass customWidth prop to give different widths to Name and Chapters */}
       <InputField
         type="text"

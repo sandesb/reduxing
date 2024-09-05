@@ -45,7 +45,7 @@ const Notes = () => {
   if (isLoading || !data) return <div>Loading...</div>;
 
   return (
-    <div className="p-6">
+    <div className="p-6 font-lato ">
       <h1 className="text-2xl font-bold mb-4">
         Study Notes for {itemName}
       </h1>

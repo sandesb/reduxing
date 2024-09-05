@@ -3,11 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 /* Global CSS file */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
-body {
-  @apply font-outfit bg-gray-50 text-gray-800;
-}
+
 
 
 .bg-sidebar-active {

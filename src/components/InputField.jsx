@@ -28,7 +28,7 @@ const InputField = ({ type, value, place, onChange, label, customWidth }) => {
       }}
     >
       {type === 'emoji' ? (
-        <div className="relative w-full drop-shadow-sm"> {/* Apply custom shadow */}
+        <div className="relative w-full drop-shadow-sm z-40"> {/* Apply custom shadow */}
           <InputEmoji
             value={value}
             onChange={onChange}
@@ -38,7 +38,7 @@ const InputField = ({ type, value, place, onChange, label, customWidth }) => {
             style={{ borderRadius: '10px' }}
           />
           <label
-            className="absolute left-6 top-0 text-gray-500 text-xs bg-slate-50 px-1 transform -translate-y-1/2"
+            className=" absolute left-6 top-0 text-gray-500 text-xs bg-slate-50 px-1 transform -translate-y-1/2"
             style={{ pointerEvents: 'none', borderRadius: '5px' }}
           >
             {label}
@@ -50,13 +50,13 @@ const InputField = ({ type, value, place, onChange, label, customWidth }) => {
           value={value}
           onChange={onChange}
           placeholder={place}
-          className="border p-2 pl-4 rounded-md text-gray-700 w-full bg-slate-50 shadow-primary" 
+          className="border p-2 pl-4 rounded-md text-gray-700 w-full  shadow-primary" 
           style={{ borderRadius: '10px' }}
         />
       )}
       {type !== 'emoji' && (
         <label
-          className="absolute left-3 top-0 text-gray-500 text-xs bg-slate-50 px-1 transform -translate-y-1/2"
+          className="absolute left-3 top-0 text-gray-500 text-xs  bg-slate-50 px-1 transform -translate-y-1/2"
           style={{ pointerEvents: 'none', borderRadius: '5px' }}
         >
           {label}
