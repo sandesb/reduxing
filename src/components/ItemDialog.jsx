@@ -54,12 +54,12 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
           transition
           className="max-w-lg w-full space-y-4 bg-slate-100 p-6 rounded-lg shadow-xl duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          <DialogTitle className="text-xl font-bold text-gray-900">Item Details</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-gray-700">Details</DialogTitle>
           {item ? (
             <>
               <div className="flex items-center space-x-2">
-                <span className="text-2xl">{item.icon || '📦'}</span>
-                <span className="text-lg font-semibold">{item.title || 'No Title'}</span>
+                <span className="text-2xl ">{item.icon || '📦'}</span>
+                <span className="text-lg font-semibold text-gray-700">{item.title || 'No Title'}</span>
               </div>
               {item.progress && (
                 <>
