@@ -28,7 +28,7 @@ body {
   justify-content: flex-start !important;
   text-align: left !important;
   margin-left: 2% !important;
-  max-width: 1000px;  /* example value, adjust for your own use case */
+  max-width: 100%;  /* example value, adjust for your own use case */
 
 }
 
