@@ -28,14 +28,18 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center p-4 bg-primary from-gray-100 to-gray-200 w-full">
-      <div className="flex items-center space-x-4">
+    <div className="flex justify-between items-center py-4 bg-primary from-gray-100 to-gray-200 w-full">
+      <div className="flex items-center space-x-4 ">
         <Link to="/" className="flex items-center text-xl font-bold text-gray-700 pl-6 pr-10">
-          <img src={reduxLogo} alt="Redux Logo" className="w-8 h-8 mr-2" /> React+Redux
+          <div className='flex w-8 h-8 bg-white rounded-2xl'>
+          <img src={reduxLogo} alt="Redux Logo" className="w-8 h-8   text-center " />
+          </div> 
+          
+          <h1 className='pl-2 font-semibold'>React+Redux</h1>
         </Link>
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 ">
           <button onClick={handleToggle} className="p-2 text-gray-700 rounded-md flex items-center">
-            <Menu className="w-5 h-5" />
+            <Menu className="w-5 h-5 " />
           </button>
           {/* The SearchBar will only be visible on screens larger than 640px */}
           <div className="hidden sm:block w-full">
@@ -44,15 +48,15 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <div className="relative mb-4" onClick={handleCartClick}>
-          <span className="absolute -bottom-4 -left-4  bg-red-500 text-white text-xs font-extralight rounded-full px-2 py-0.5 shadow">
+      <div className="flex items-center space-x-4 pr-6">
+        <div className="relative " onClick={handleCartClick}>
+          <span className="absolute -bottom-4 -left-4 mb-4  bg-red-500 text-white text-xs font-extralight rounded-full px-2 py-0.5 shadow">
             {cartCount}
           </span>
           <MessageCircleHeart  className="w-6 h-6 text-gray-600 cursor-pointer" />
         </div>
         
-        <MessageCircleQuestion onClick={handleHelpClick} className="w-6 h-6 mb-4 text-gray-600 cursor-pointer" />
+        <MessageCircleQuestion onClick={handleHelpClick} className="w-6 h-6  text-gray-600 cursor-pointer" />
       </div>
     </div>
   );

@@ -52,7 +52,7 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
           transition
-          className="max-w-lg w-full space-y-4 bg-white p-6 rounded-lg shadow-xl duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="max-w-lg w-full space-y-4 bg-slate-100 p-6 rounded-lg shadow-xl duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <DialogTitle className="text-xl font-bold text-gray-900">Item Details</DialogTitle>
           {item ? (
@@ -83,11 +83,11 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)} // Handle textarea changes
                     className={clsx(
-                      'block w-full rounded-lg border border-gray-300 bg-white py-2 px-3 text-sm text-gray-900',
+                      'block w-full rounded-lg border border-gray-300 bg-slate-100 py-2 px-3 text-sm text-gray-900',
                       'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y'
                     )}
                     rows={3}
-                    placeholder="Add your notes..."
+                    placeholder="Add your comment..."
                   />
                 </div>
               </div>
