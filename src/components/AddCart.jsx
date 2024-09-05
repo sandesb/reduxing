@@ -39,7 +39,7 @@ const AddCart = ({ refetch }) => {
   const inputFields = [
     { type: 'text', value: name, onChange: (e) => setName(e.target.value), label: 'Name' },
     { type: 'emoji', value: emoji, onChange: setEmoji, label: 'Emoji' },
-    { type: 'number', value: work, onChange: (e) => setWork(e.target.value), label: 'Work' },
+    { type: 'number', value: work, onChange: (e) => setWork(e.target.value), label: 'Chapters' },
   ];
 
   return (

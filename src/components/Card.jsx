@@ -119,7 +119,7 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
             className="w-full p-2 border border-gray-300 rounded"
           />
         ) : (
-          progress
+          "Chapters: "+ progress
         )}
       </div>
       <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
