@@ -28,6 +28,8 @@ body {
   justify-content: flex-start !important;
   text-align: left !important;
   margin-left: 2% !important;
+  max-width: 1000px;  /* example value, adjust for your own use case */
+
 }
 
 /* src/index.css or any global CSS file */
