@@ -66,8 +66,8 @@ const AddCart = ({ refetch }) => {
       />
       <button
         onClick={handleAddClick}
-        className="bg-blue-100 text-blue-500 px-4 py-2 rounded-md flex items-center border border-blue-200"
-        style={{ borderRadius: '10px' }}
+        className=" bg-blue-100 text-blue-500 px-4 py-2 rounded-md flex items-center border border-blue-200"
+        style={{ borderRadius: '10px', marginTop: '30px' }}
       >
         <span className="mr-2 text-blue-500">+</span> Add
       </button>
