@@ -86,7 +86,7 @@ const Navbar = () => {
       <div className="flex items-center  ">
         <Link
           to="/"
-          className="flex items-center text-3xl space-y-1 font-bold text-gray-700 pl-3 pr-10"
+          className="flex items-center text-3xl mb-4 space-y-1 font-bold text-gray-700 pl-3 pr-10 lg:mb-0 "
         >
           <img
             src={logo}
@@ -94,9 +94,9 @@ const Navbar = () => {
             className="w-12 h-12  text-center "
           />
 
-          <h1 className="pl-2 font-semibold text-2xl font-lato mb-3 lg:mb-0">Academix</h1>
+          <h1 className="pl-2 font-semibold text-lg font-lato ">Academix</h1>
         </Link>
-        <div className="flex space-x-4 ">
+        <div className="flex space-x-4 pl-5">
         
           {/* The SearchBar will only be visible on screens larger than 640px */}
           <div className="hidden sm:block w-full">
