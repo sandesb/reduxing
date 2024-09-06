@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Minus } from "lucide-react";
 import { removeFromCart } from "../redux/uiActions";
 import { useGetCoursesQuery } from "../redux/coursesApi";
-// import ItemDialog from "./ItemDialog"; 
+import { showToast } from "../utils/toast";
+import ItemDialog from "./ItemDialog"; // Import the ItemDialog component
 
 const CartPopup = () => {
   const isCartPopupVisible = useSelector(
@@ -18,8 +19,9 @@ const CartPopup = () => {
 
   if (!isCartPopupVisible) return null;
 
-  const handleRemove = (index) => {
+  const handleRemove = (index, item) => {
     dispatch(removeFromCart(index));
+    showToast("success", `${item.title} removed from your list`);
   };
 
   const handleOpenDialog = (item) => {
@@ -54,7 +56,7 @@ const CartPopup = () => {
                     <span className="text-lg">{item.title}</span>
                   </div>
                   <button
-                    onClick={() => handleRemove(index)}
+                    onClick={() => handleRemove(index, item)}
                     className="text-gray-500 hover:text-gray-700"
                   >
                     <Minus className="w-6 h-6" />
@@ -68,12 +70,14 @@ const CartPopup = () => {
         </div>
       </div>
 
-      {/* Reuse ItemDialog component for item details */}
-      {/* <ItemDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        item={selectedItem}
-      /> */}
+      {/* Use ItemDialog component for item details */}
+      {selectedItem && (
+        <ItemDialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          item={selectedItem}
+        />
+      )}
     </>
   );
 };

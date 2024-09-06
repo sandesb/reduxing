@@ -1,6 +1,7 @@
 // src/utils/toast.js
 import { toast } from 'react-hot-toast';
 
+// Existing showToast function
 export const showToast = (type, message) => {
   switch (type) {
     case 'success':
@@ -9,6 +10,7 @@ export const showToast = (type, message) => {
           background: '#fff', // Green for success
           color: '#4CAF50',
         },
+        position: 'top-center',
       });
       break;
     case 'error':
@@ -18,6 +20,7 @@ export const showToast = (type, message) => {
           color: '#F44336',
         },
         icon: '❌',
+        position: 'top-center',
       });
       break;
     case 'update':
@@ -27,6 +30,7 @@ export const showToast = (type, message) => {
           color: '#2196F3',
         },
         icon: '🔄',
+        position: 'top-center',
       });
       break;
     default:
@@ -35,6 +39,18 @@ export const showToast = (type, message) => {
           background: '#333', // Default color (dark)
           color: '#fff',
         },
+        position: 'top-center',
       });
   }
+};
+
+// New promise-based toast
+export const showPromiseToast = (promise, messages) => {
+  toast.promise(promise, {
+    loading: messages.loading,
+    success: <b>{messages.success}</b>,
+    error: <b>{messages.error}</b>,
+  }, {
+    position: 'top-center', // Set toast to top center
+  });
 };
