@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { User, Home, Mail, HelpCircle, Book, FolderHeart, HomeIcon  } from "lucide-react";
 import { motion } from "framer-motion";
-import vaderImage from "../assets/vader.png"; // Import the image
+import dp from "../assets/dp.jpg"; // Import the image
 
 const ActiveCircles = ({ isActive }) => {
   return (
@@ -57,9 +57,9 @@ const Sidebar = () => {
           <div className="flex items-center space-x-2 mb-2 p-2 ml-4">
             {/* Replace the User icon with the vader.png image */}
             <img 
-              src={vaderImage} 
+              src={dp} 
               alt="Vader" 
-              className="w-12 h-12 rounded-full  border-2 border-blue-400" 
+              className="w-12 h-12 rounded-full  border-2 border-blue-200 shadow-md" 
             />
             <div>
               <h2 className="font-semibold text-lg text-gray-700">Sandes</h2>

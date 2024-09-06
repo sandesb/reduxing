@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react';
 import clsx from 'clsx';
-import vaderImage from '../assets/vader.png';
+import dp from "../assets/dp.jpg"; // Import the image
+
 import { useUpdateNoteMutation, useLoadNoteQuery } from '../redux/coursesApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -74,7 +75,7 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
               )}
               <div className="flex mt-4 space-x-4 items-start">
                 <img
-                  src={vaderImage} // Profile picture
+                  src={dp} // Profile picture
                   alt="Profile"
                   className="w-10 h-10 rounded-full"
                 />

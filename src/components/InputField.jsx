@@ -38,7 +38,7 @@ const InputField = ({ type, value, place, onChange, label, customWidth }) => {
             style={{ borderRadius: '10px' }}
           />
           <label
-            className=" absolute left-6 top-0 text-gray-500 text-xs bg-slate-50 px-1 transform -translate-y-1/2"
+            className=" absolute left-6 top-0 text-gray-500 text-xs  bg-white shadow-sm px-1 transform -translate-y-1/2"
             style={{ pointerEvents: 'none', borderRadius: '5px' }}
           >
             {label}
@@ -56,7 +56,7 @@ const InputField = ({ type, value, place, onChange, label, customWidth }) => {
       )}
       {type !== 'emoji' && (
         <label
-          className="absolute left-3 top-0 text-gray-500 text-xs  bg-slate-50 px-1 transform -translate-y-1/2"
+          className="absolute left-3 top-0 text-gray-500 text-xs  bg-white shadow-sm px-1 transform -translate-y-1/2"
           style={{ pointerEvents: 'none', borderRadius: '5px' }}
         >
           {label}
