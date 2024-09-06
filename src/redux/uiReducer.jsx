@@ -17,7 +17,7 @@ import {
 import Cookies from "js-cookie";
 
 const initialState = {
-  isSidebarOpen: false,
+  isSidebarOpen: true,
   isLargeScreen: window.innerWidth >= 1024,
   cartCount: 0,
   isCartPopupVisible: false,
