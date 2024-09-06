@@ -16,7 +16,7 @@ const AddCart = ({ refetch }) => {
     const newCourse = {
       id: uuidv4(),
       title: name,
-      progress: `0 h / ${workHours} h`,
+      progress: `0 / ${workHours}`,
       icon: emoji,
       bgColor: 'from-blue-100 to-blue-300',
     };

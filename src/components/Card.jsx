@@ -123,11 +123,13 @@ const Card = ({ id, title, progress, icon, bgColor, onPlusClick, onEditClick, on
         )}
       </div>
       <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
-        <div
-          className="h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
-          style={{ width: `${(parseFloat(editedProgress.split(' h / ')[0]) / parseFloat(editedProgress.split(' h / ')[1])) * 100}%` }}
-        ></div>
-      </div>
+  <div
+    className="h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
+    style={{
+      width: `${(parseFloat(editedProgress.split(' / ')[0]) / parseFloat(editedProgress.split(' / ')[1])) * 100}%`, // Remove 'h'
+    }}
+  ></div>
+</div>
     </animated.div>
   );
 };
