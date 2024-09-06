@@ -39,7 +39,7 @@ const BodyLayout = () => {
         {/* Updated Outlet Container with Conditional m-6 */}
         <div
           className={`rounded-3xl bg-sidebar-active p-6 overflow-y-auto mb-32 ${
-            !isSidebarOpen ? 'm-6' : ''
+            !isSidebarOpen ? 'm-6 shadow-lg' : ''
           }`}
         >
           <Outlet />

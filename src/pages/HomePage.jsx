@@ -73,12 +73,15 @@ const HomePage = () => {
 
   return (
     <div className="">
-<h1 className="font-lato text-6xl mt-2 mb-2 font-semibold text-primary-bg tracking-widest text-center relative">
-  Know Your Academix
+<h1 className="font-lato text-4xl lg:text-6xl mt-2 mb-2 font-semibold text-primary-bg tracking-widest text-center relative">
+  <span className="block lg:inline">Know Your</span>
+  <span className="block lg:inline lg:pl-4">Academix</span>
   <span className="absolute top-0 left-0 w-full h-full text-gray-400 transform translate-x-1 translate-y-0 -z-10 tracking-widest">
-    Know Your Academix
+    <span className="block lg:inline">Know Your</span>
+    <span className="block lg:inline lg:pl-4">Academix</span>
   </span>
 </h1>
+
 
       <div className='py-2 px-6'>
 
