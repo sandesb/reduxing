@@ -8,6 +8,9 @@ import {
   Lightbulb,
   MessageCircleHeart,
   MessageCircleQuestion,
+  ChevronsLeftRight,
+  MessageSquareCode,
+  MessageCircleCode,
 } from "lucide-react";
 import {
   toggleSidebar,
@@ -94,12 +97,7 @@ const Navbar = () => {
           <h1 className="pl-2 font-semibold text-2xl font-lato mb-3 lg:mb-0">Academix</h1>
         </Link>
         <div className="flex space-x-4 ">
-          <button
-            onClick={handleToggle}
-            className="p-2 mb-3 lg:mb-0 text-gray-700 rounded-md flex items-center"
-          >
-            <Menu className="w-5 h-5 " />
-          </button>
+        
           {/* The SearchBar will only be visible on screens larger than 640px */}
           <div className="hidden sm:block w-full">
             <SearchBar />
@@ -108,6 +106,14 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center space-x-4 pr-6 mb-3">
+
+      <button
+            onClick={handleToggle}
+            className="p-2  lg:mb-0 text-gray-600 rounded-md flex items-center"
+          >
+            <MessageCircleCode className="w-6 h-6 "/>
+          </button>
+
         <div className="relative " onClick={handleCartClick}>
           <span className="absolute -bottom-4 -left-4   bg-red-500 text-white text-xs font-extralight rounded-full px-2 py-0.5 shadow">
             {cartCount}
