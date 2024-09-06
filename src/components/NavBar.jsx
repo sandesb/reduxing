@@ -94,7 +94,7 @@ const Navbar = () => {
             className="w-12 h-12  text-center "
           />
 
-          <h1 className="pl-2 font-semibold text-2xl font-lato lg:text-lg">Academix</h1>
+          <h1 className="pl-2 font-semibold text-2xl font-lato text-gray-600 lg:text-lg">Academix</h1>
         </Link>
         <div className="flex space-x-4 pl-5">
         
