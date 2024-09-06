@@ -5,7 +5,7 @@ import { toggleSidebar, toggleCartPopup, toggleHelpPopup, loadCourses, loadCartD
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import reduxLogo from '../assets/redux.png';
-
+import logo from '../assets/logo/colorized.png'
 const Navbar = () => {
   const dispatch = useDispatch();
   const cartCount = useSelector((state) => state.ui.cartCount);
@@ -32,11 +32,9 @@ const Navbar = () => {
     <div className="font-lato flex justify-between items-center py-4 bg-primary from-gray-100 to-gray-200 w-full">
       <div className="flex items-center space-x-4 ">
         <Link to="/" className="flex items-center text-xl font-bold text-gray-700 pl-6 pr-10">
-          <div className='flex w-8 h-8 bg-slate-50 rounded-2xl'>
-          <img src={reduxLogo} alt="Redux Logo" className="w-8 h-8   text-center " />
-          </div> 
+          <img src={logo} alt="Redux Logo" className="w-12 h-12   text-center " />
           
-          <h1 className='pl-2 font-semibold font-lato'>React+Redux</h1>
+          <h1 className='pl-2 font-semibold font-lato'>Academix</h1>
         </Link>
         <div className="flex space-x-4 ">
           <button onClick={handleToggle} className="p-2 text-gray-700 rounded-md flex items-center">
