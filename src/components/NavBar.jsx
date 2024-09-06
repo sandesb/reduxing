@@ -40,7 +40,7 @@ const Navbar = () => {
         to={to}
         className={`flex items-center space-x-2 py-3 px-2 rounded-md text-gray-600 ${
           isExactActive
-            ? "bg-sidebar-active text-gray-600"
+            ? "bg-sidebar-active text-[#a2b5ea]"
             : "hover:bg-sidebar-active"
         } transition`}
       >

@@ -36,10 +36,10 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
         initial={{ paddingLeft: "1rem", backgroundColor: "transparent", boxShadow: "none" }}
         animate={{
           paddingLeft: isActive ? "1.5rem" : "1rem",
-          backgroundColor: isActive ? "#f0f4fc" : "transparent",
+          backgroundColor: isActive ? "#f0f4fc" : "sidebar-active",
           borderRadius: isActive ? "20px 0 0 20px" : "20px 0 0 20px",
-          color: isActive ? "#4b5563" : "#4b5563",
-          boxShadow: isActive ? "-6px 0px 0px rgba(0, 0, 0, 0.1)" : "none", // Shadow only on the left side
+          color: isActive ? " #7F9CEA" : "#4b5563",
+          boxShadow: isActive ? "-6px 0px 0px rgba(162, 181, 234, 1)" : "none", // Shadow only on the left side
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="flex items-center space-x-2 px-4 py-3 ml-4 w-full h-full"

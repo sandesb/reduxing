@@ -106,7 +106,7 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
               <div className="flex justify-between mt-2">
                 <button
                   onClick={handleStudyClick} // Handle navigation to Notes page
-                  className="bg-teal-600 text-white px-4 py-2 rounded-lg"
+                  className="bg-[#7F9CEA] text-white px-4 py-2 rounded-lg"
                 >
                   Study
                 </button>
