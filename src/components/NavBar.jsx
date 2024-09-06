@@ -5,7 +5,7 @@ import { toggleSidebar, toggleCartPopup, toggleHelpPopup, loadCourses, loadCartD
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import reduxLogo from '../assets/redux.png';
-import logo from '../assets/logo/colorized.png'
+import logo from '../assets/logo/babyblue.png'
 const Navbar = () => {
   const dispatch = useDispatch();
   const cartCount = useSelector((state) => state.ui.cartCount);
