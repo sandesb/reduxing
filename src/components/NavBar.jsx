@@ -98,7 +98,7 @@ const Navbar = () => {
 
         {/* Mobile Sidebar (hidden on large screens) */}
         <motion.div
-      className="fixed z-40 top-0 left-0 h-full w-60 bg-primary text-gray-300 from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden lg:hidden"
+      className="fixed shadow-2xl z-40 top-0 left-0 h-full w-60 bg-primary text-gray-300 from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden lg:hidden"
       initial={{ x: '-100%' }}  // Initially off-screen
       animate={{ x: isMobileSidebarOpen ? '0%' : '-100%' }}  // Toggle based on state
       transition={{ duration: 0.3, ease: 'easeInOut' }}
