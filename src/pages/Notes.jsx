@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Editor from '../components/Editor';
+import LoadingSpinner from '../components/LoadingSpinner'; // Make sure to import LoadingSpinner
 import { useParams, useLocation } from 'react-router-dom';
 import { useLoadContentQuery } from '../redux/coursesApi';
 
@@ -42,7 +43,8 @@ const Notes = () => {
     hasInitialized.current = true;
   }, [loadedContent, isLoading, error]);
 
-  if (isLoading || !data) return <div>Loading...</div>;
+  // Use LoadingSpinner while loading
+  if (isLoading || !data) return <LoadingSpinner />;
 
   return (
     <div className="p-6 font-lato ">
