@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react';
 import clsx from 'clsx';
 import dp from "../assets/dp.jpg"; // Import the image
-
+import { showPromiseToast } from '../utils/toast'; // Ensure correct import
 import { useUpdateNoteMutation, useLoadNoteQuery } from '../redux/coursesApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,14 +25,25 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
 
   const handlePostClick = async () => {
     if (item && comment.trim() !== '') {
+      const postPromise = updateNote({ id: item.id, note: comment }).unwrap();
+  
+      // Trigger the promise toast with dynamic position
+      showPromiseToast(postPromise, {
+        loading: 'Your comment is saving...',
+        success: `Your comment "${comment}" has been posted.`,
+        error: 'Failed to post your comment.',
+      }, 'bottom-center'); // Pass 'bottom-center' position
+  
       try {
-        await updateNote({ id: item.id, note: comment }).unwrap();
+        await postPromise;
         console.log('Note updated:', comment);
       } catch (error) {
         console.error('Failed to update note:', error);
       }
     }
   };
+  
+  
 
   const calculateProgressWidth = (progress) => {
     if (!progress) return 0;

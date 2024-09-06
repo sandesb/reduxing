@@ -25,7 +25,7 @@ const HelpPopup = () => {
     });
   };
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50 bg-gray-700">
+    <div className="p-5 fixed inset-0 flex items-center justify-center z-50 bg-opacity-50 bg-gray-700">
       <div className="relative bg-white p-6 rounded-lg shadow-lg w-96">
         <button 
           onClick={handleClose} 
@@ -39,6 +39,9 @@ const HelpPopup = () => {
         </h2>
         <p className="text-gray-600 mb-6">
           Here, you can easily <span className="text-green-500">add, share and update</span> your subject notes and keep track of your chapters. Explore around and happy learning!
+        </p>
+        <p className="text-gray-600 mb-6">
+          Close this and Click on the<span className="text-[#7F9CEA]"> Name</span> of a subject. Or just click on <span className="text-[#7F9CEA]"> Study</span> for Demo.
         </p>
 
         <img src={undrawImage} alt="Study illustration" className="w-full mb-6" />

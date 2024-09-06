@@ -44,13 +44,17 @@ export const showToast = (type, message) => {
   }
 };
 
-// New promise-based toast
-export const showPromiseToast = (promise, messages) => {
-  toast.promise(promise, {
-    loading: messages.loading,
-    success: <b>{messages.success}</b>,
-    error: <b>{messages.error}</b>,
-  }, {
-    position: 'top-center', // Set toast to top center
-  });
+// Updated promise-based toast with dynamic position
+export const showPromiseToast = (promise, messages, position = 'top-center') => {
+  return toast.promise(
+    promise,
+    {
+      loading: messages.loading,
+      success: <b>{messages.success}</b>,
+      error: <b>{messages.error}</b>,
+    },
+    {
+      position, // Use dynamic position here
+    }
+  );
 };
