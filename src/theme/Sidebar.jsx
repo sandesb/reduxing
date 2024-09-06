@@ -1,8 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+
 import { User, Home, Mail, HelpCircle, Book, FolderHeart, HomeIcon  } from "lucide-react";
 import { motion } from "framer-motion";
 import dp from "../assets/dp.jpg"; // Import the image
+import { toggleSidebar } from '../redux/uiActions';  // Import existing Redux action for toggling sidebar
 
 const ActiveCircles = ({ isActive }) => {
   return (
@@ -49,18 +52,20 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
 
 const Sidebar = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const isSidebarOpen = useSelector((state) => state.ui.isSidebarOpen); // Check the Redux state
+
+  console.log("Sidebar open state:", isSidebarOpen); // Add this for debugging
+
 
   return (
-    <div className="relative font-lato h-screen flex">
-      <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden">
-        <div className="h-full w-full ">
+    <div className="z-40 relative font-lato h-screen flex">
+  
+ {/* Static Sidebar for Larger Screens */}
+ <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden hidden lg:block">
+        <div className="h-full w-full">
           <div className="flex items-center space-x-2 mb-2 p-2 ml-4">
-            {/* Replace the User icon with the vader.png image */}
-            <img 
-              src={dp} 
-              alt="Vader" 
-              className="w-12 h-12 rounded-full  border-2 border-blue-200 shadow-md" 
-            />
+            <img src={dp} alt="Vader" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md" />
             <div>
               <h2 className="font-semibold text-lg text-gray-700">Sandes</h2>
               <p className="text-sm text-gray-500">Student</p>

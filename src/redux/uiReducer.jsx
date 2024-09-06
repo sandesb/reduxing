@@ -17,7 +17,7 @@ import {
 import Cookies from "js-cookie";
 
 const initialState = {
-  isSidebarOpen: true,
+  isSidebarOpen: false,
   isLargeScreen: window.innerWidth >= 1024,
   cartCount: 0,
   isCartPopupVisible: false,
@@ -58,11 +58,12 @@ const uiReducer = (state = initialState, action) => {
         ...state,
         searchResults: action.payload,
       };
-    case TOGGLE_SIDEBAR:
-      return {
-        ...state,
-        isSidebarOpen: !state.isSidebarOpen,
-      };
+      case TOGGLE_SIDEBAR:
+        case 'TOGGLE_SIDEBAR':
+          return {
+            ...state,
+            isSidebarOpen: !state.isSidebarOpen, // Toggle state
+          };
     case SET_LARGE_SCREEN:
       return {
         ...state,

@@ -111,11 +111,14 @@ export const loadCartData = () => {
 };
 
 export const setSearchResults = (query) => {
+  console.log("setSearchResults triggered with query:", query);
   return (dispatch, getState) => {
     const { courses } = getState().ui;
 
-    console.log('Current courses:', courses); // Verify that courses are populated
-    console.log('Search query:', query); // Log the search query
+    if (typeof query !== 'string' || !query || Array.isArray(query)) {
+      console.warn('Query is not a valid string:', query);
+      return;
+    }
 
     if (!courses || courses.length === 0) {
       console.warn('Courses data is empty or not loaded correctly.');
@@ -128,11 +131,13 @@ export const setSearchResults = (query) => {
         course.id.toString().includes(query)
     );
 
-    console.log('Filtered results:', filteredResults); // Log the filtered results
-
     dispatch({
       type: SET_SEARCH_RESULTS,
       payload: filteredResults,
     });
   };
 };
+
+
+
+
