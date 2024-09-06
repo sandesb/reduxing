@@ -80,10 +80,10 @@ const Navbar = () => {
 
   return (
     <div className="font-lato flex justify-between items-center py-4 bg-primary from-gray-100 to-gray-200 w-full">
-      <div className="flex items-center space-x-4 ">
+      <div className="flex items-center  ">
         <Link
           to="/"
-          className="flex items-center text-3xl space-y-1 font-bold text-gray-700 pl-6 pr-10"
+          className="flex items-center text-3xl space-y-1 font-bold text-gray-700 pl-3 pr-10"
         >
           <img
             src={logo}
