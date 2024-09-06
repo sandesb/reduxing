@@ -73,7 +73,13 @@ const HomePage = () => {
 
   return (
     <div className="">
-      <h1 className="font-lato text-2xl font-semibold mb-6 text-gray-700 text-center">Know Your Academix</h1>
+<h1 className="font-lato text-6xl mt-2 mb-2 font-semibold text-primary-bg tracking-widest text-center relative">
+  Know Your Academix
+  <span className="absolute top-0 left-0 w-full h-full text-gray-400 transform translate-x-1 translate-y-0 -z-10 tracking-widest">
+    Know Your Academix
+  </span>
+</h1>
+
       <div className='py-2 px-6'>
 
       <AddCart refetch={refetch} />

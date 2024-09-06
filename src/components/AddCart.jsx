@@ -39,7 +39,7 @@ const AddCart = ({ refetch }) => {
   };
 
   return (
-    <div className="font-lato flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-8 w-full">
+    <div className="font-lato mt-7 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center mb-8 w-full">
       {/* Pass customWidth prop to give different widths to Name and Chapters */}
       <InputField
         type="text"
@@ -67,7 +67,7 @@ const AddCart = ({ refetch }) => {
       <button
         onClick={handleAddClick}
         className=" bg-blue-100 text-blue-500 px-4 py-2 rounded-md flex items-center border border-blue-200"
-        style={{ borderRadius: '10px', marginTop: '30px' }}
+        style={{ borderRadius: '10px' }}
       >
         <span className="mr-2 text-blue-500">+</span> Add
       </button>

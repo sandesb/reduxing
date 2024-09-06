@@ -14,12 +14,12 @@ const ActiveCircles = ({ isActive }) => {
         <>
           {/* Top Right Circle */}
           <span
-            className="absolute z-10 top-[-25px] right-[32px] w-[25px] h-[25px]  rounded-full"
+            className="absolute z-10 top-[-25px] right-[32px] w-[25px] h-[25px]  rounded-full "
             style={{ boxShadow: "9px 9px 0 #f0f4fc" }}
           ></span>
           {/* Bottom Right Circle */}
           <span
-            className="absolute z-10 top-[48px] right-[32px] w-[25px] h-[25px]  rounded-full"
+            className="absolute z-10 top-[48px] right-[32px] w-[25px] h-[25px]  rounded-full "
             style={{ boxShadow: "9px -9px 0 #f0f4fc" }}
           ></span>
         </>
@@ -33,15 +33,16 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
     <Link to={to} className="relative">
       <ActiveCircles isActive={isActive} />
       <motion.div
-        initial={{ paddingLeft: "1rem", backgroundColor: "transparent" }}
+        initial={{ paddingLeft: "1rem", backgroundColor: "transparent", boxShadow: "none" }}
         animate={{
           paddingLeft: isActive ? "1.5rem" : "1rem",
           backgroundColor: isActive ? "#f0f4fc" : "transparent",
           borderRadius: isActive ? "20px 0 0 20px" : "20px 0 0 20px",
           color: isActive ? "#4b5563" : "#4b5563",
+          boxShadow: isActive ? "-6px 0px 0px rgba(0, 0, 0, 0.1)" : "none", // Shadow only on the left side
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`flex items-center space-x-2 px-4 py-3 ml-4 w-full h-full`}
+        className="flex items-center space-x-2 px-4 py-3 ml-4 w-full h-full"
       >
         <Icon className="w-5 h-5" />
         <span>{label}</span>
@@ -49,6 +50,7 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
     </Link>
   );
 };
+
 
 const Sidebar = () => {
   const location = useLocation();
