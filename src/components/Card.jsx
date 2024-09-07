@@ -4,6 +4,7 @@ import { useSpring, animated } from "react-spring";
 import { showToast } from "../utils/toast";
 import { showPromiseToast } from '../utils/toast';
 import { MessageCircleHeart } from 'lucide-react'; // Import the icon
+import ChapterSlider from './ChapterSlider'; // Import the new ChapterSlider component
 
 const Card = ({
   id,
@@ -74,6 +75,10 @@ const Card = ({
   const handleTitleClick = () => {
     console.log(`Card ID: ${id}`); // Debugging
     onTitleClick(id); // Trigger the dialog for this item
+  };
+
+  const handleSliderChange = (newProgress) => {
+    setEditedProgress(newProgress); // Update the progress based on slider value
   };
 
   return (
@@ -147,25 +152,28 @@ const Card = ({
         )}
       </h2>
       <div className="mt-2 text-sm text-gray-600">
-        {isEditing ? (
-          <input
-            type="text"
-            value={editedProgress}
-            onChange={(e) => setEditedProgress(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
+      {isEditing ? (
+          <ChapterSlider
+            progress={editedProgress}
+            maxChapters={parseInt(progress.split(' / ')[1])} // Set max chapters
+            onChange={handleSliderChange} // Handle slider value change
           />
         ) : (
           "Chapters: " + progress
         )}
       </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
-        <div
-          className="h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
-          style={{
-            width: `${(parseFloat(editedProgress.split(" / ")[0]) / parseFloat(editedProgress.split(" / ")[1])) * 100}%`, // Remove 'h'
-          }}
-        ></div>
-      </div>
+
+      {!isEditing && (
+        <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
+          <div
+            className="h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
+            style={{
+              width: `${(parseFloat(editedProgress.split(" / ")[0]) / parseFloat(editedProgress.split(" / ")[1])) * 100}%`,
+            }}
+          ></div>
+        </div>
+      )}
+    
     </animated.div>
   );
 };
