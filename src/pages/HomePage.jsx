@@ -11,10 +11,12 @@ import {
   useUpdateCourseMutation,
   useDeleteCourseMutation,
 } from '../redux/coursesApi';
+import DeleteDialog from '../components/DeleteDialog';
 
 const HomePage = () => {
   const { handlePlusClick } = useCart();
   const { data: courses = [], error, isLoading, refetch } = useGetCoursesQuery();
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
 
   const [addCourse] = useAddCourseMutation();
   const [updateCourse] = useUpdateCourseMutation();
@@ -22,6 +24,8 @@ const HomePage = () => {
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
 
   const handleEditClick = async (updatedCourse) => {
     try {
@@ -39,14 +43,22 @@ const HomePage = () => {
     }
   };
 
-  const handleDeleteClick = async (id) => {
-    try {
-      await deleteCourse(id).unwrap();
-      console.log('Deleted course with id:', id);
+  const handleDeleteClick = (id) => {
+    setSelectedCourseId(id);
+    setDeleteDialogOpen(true);
+  };
 
-      refetch(); // Refetch courses to reflect the deletion
+  const handleDelete = async () => {
+    try {
+      await deleteCourse(selectedCourseId).unwrap();
+      console.log('Deleted course with id:', selectedCourseId);
+      setDeleteDialogOpen(false);
+
+      refetch();
     } catch (error) {
       console.error('Failed to delete course:', error);
+      showToast('error', 'Failed to delete course. Please try again.');
+
     }
   };
 
@@ -111,6 +123,13 @@ const HomePage = () => {
         />
       )}
     </div>
+
+        {/* Render DeleteDialog */}
+        <DeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onDelete={handleDelete}
+      />
     </div>
   );
 };

@@ -61,7 +61,7 @@ const Sidebar = () => {
 
 
   return (
-    <div className="z-40 relative font-lato h-screen flex">
+    <div className=" relative font-lato h-screen flex">
   
  {/* Static Sidebar for Larger Screens */}
  <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden hidden lg:block">
