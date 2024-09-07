@@ -47,14 +47,14 @@ const AddCart = ({ refetch }) => {
         onChange={(e) => setName(e.target.value)}
         label="Name"
         place="Name of Subject..."
-        customWidth="35%"  // Adjust width for larger screens
+        customWidth="43%"  // Adjust width for larger screens
       />
       <InputField
         type="emoji"
         value={emoji}
         onChange={setEmoji}
         label="Emoji"
-        customWidth="30%"  // Adjust width for larger screens
+        customWidth="40%"  // Adjust width for larger screens
       />
       <InputField
         type="number"
@@ -62,7 +62,7 @@ const AddCart = ({ refetch }) => {
         onChange={(e) => setWork(e.target.value)}
         label="Chapters"
         place="Total Chapters..."
-        customWidth="30%"  // Adjust width for larger screens
+        customWidth="36%"  // Adjust width for larger screens
       />
       <button
         onClick={handleAddClick}
