@@ -38,14 +38,16 @@ const BodyLayout = () => {
         )}
         {/* Updated Outlet Container with Conditional m-6 */}
         <div
-          className={`rounded-3xl bg-sidebar-active p-6 overflow-y-auto mb-32 ${
+          className={`rounded-3xl bg-sidebar-active p-6 lg:mr-7 overflow-y-auto lg:mb-28 ${
             !isSidebarOpen ? 'm-6 shadow-lg' : ''
           }`}
         >
           <Outlet />
         </div>
       </div>
+      <div className="mt-8 lg:mt-32 ">
       <FooterWebsite /> {/* Add the Footer here */}
+      </div>
     </div>
   );
 };
