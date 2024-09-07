@@ -20,7 +20,7 @@ const HelpPopup = () => {
   const handleStudyClick = () => {
     dispatch(toggleHelpPopup());
 
-    navigate('/notes/87306f1b-8edd-4bd5-a90b-cb724f8f2dd8', {
+    navigate('/notes/0c7a740a-4675-404c-8453-73e71ef00a53', {
       state: { title: 'Exams' }, // Pass the title here
     });
   };
