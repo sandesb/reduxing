@@ -39,7 +39,7 @@ const Notes = () => {
         ]
       });
     }
-
+    
     hasInitialized.current = true;
   }, [loadedContent, isLoading, error]);
 

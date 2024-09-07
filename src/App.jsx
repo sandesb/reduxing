@@ -4,13 +4,13 @@ import { useDispatch } from 'react-redux';
 import { toggleHelpPopup } from "./redux/uiActions"; // Import the action
 
 import BodyLayout from './theme/BodyLayout';
-import MyClasses from './pages/MyClasses';
-import Account from './pages/Account';
-import Messges from './pages/Messges';
+import MyCourses from './pages/MyCourses';
+import Messages from './pages/Messages';
 import HelpCenter from './pages/HelpCenter';
 import HomePage from './pages/HomePage';
 import Notes from './pages/Notes'; // Import the Notes component
 import { Toaster } from 'react-hot-toast';
+import Repositories from './pages/Repositories';
 
 function App() {
   const dispatch = useDispatch();
@@ -36,9 +36,9 @@ function App() {
       <Routes>
         <Route path="/" element={<BodyLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="my-classes" element={<MyClasses />} />
-          <Route path="account" element={<Account />} />
-          <Route path="messages" element={<Messges />} />
+          <Route path="my-courses" element={<MyCourses />} />
+          <Route path="repositories" element={<Repositories />} />
+          <Route path="messages" element={<Messages />} />
           <Route path="help-center" element={<HelpCenter />} />
           <Route path="notes/:id" element={<Notes />} /> {/* Add this route */}
         </Route>

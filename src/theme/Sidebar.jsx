@@ -81,16 +81,16 @@ const Sidebar = () => {
               isActive={location.pathname === "/"}
             />
             <ActiveLink
-              to="/my-classes"
+              to="/my-courses"
               icon={Book}
               label="Courses"
-              isActive={location.pathname === "/my-classes"}
+              isActive={location.pathname === "/my-courses"}
             />
             <ActiveLink
-              to="/account"
+              to="/repositories"
               icon={FolderHeart}
               label="Repositories"
-              isActive={location.pathname === "/account"}
+              isActive={location.pathname === "/repositories"}
             />
             <ActiveLink
               to="/messages"
