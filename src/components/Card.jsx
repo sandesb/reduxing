@@ -166,7 +166,7 @@ const Card = ({
       {!isEditing && (
         <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
           <div
-            className="h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
+            className="h-full bg-gradient-to-r from-blue-200 to-[#a2b5ea] rounded-full"
             style={{
               width: `${(parseFloat(editedProgress.split(" / ")[0]) / parseFloat(editedProgress.split(" / ")[1])) * 100}%`,
             }}
