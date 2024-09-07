@@ -30,7 +30,7 @@ const ActiveCircles = ({ isActive }) => {
 
 const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
   return (
-    <Link to={to} className="relative">
+    <Link to={to} className="z-20 relative">
       <ActiveCircles isActive={isActive} />
       <motion.div
         initial={{ paddingLeft: "1rem", backgroundColor: "transparent", boxShadow: "none" }}

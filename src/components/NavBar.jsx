@@ -22,7 +22,7 @@ import {
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import reduxLogo from "../assets/redux.png";
-import logo from "../assets/logo/babyblue.png"
+import logo from "../assets/logo/colorized.png"
 import { motion } from "framer-motion";
 import { Home, Book, FolderHeart, Mail, HelpCircle } from "lucide-react"; // Import necessary Lucide icons
 import { useLocation } from "react-router-dom";
