@@ -17,9 +17,16 @@ const DeleteDialog = ({ isOpen, onClose, onDelete }) => {
     }
   };
 
+  // Handle Enter key press for confirmation
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleDelete();
+    }
+  };
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -62,6 +69,7 @@ const DeleteDialog = ({ isOpen, onClose, onDelete }) => {
                   placeholder="Without the 'h', Cause Hs are ewww! 🤧"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown} // Listen for Enter key
                 />
 
                 <div className="mt-4 flex justify-end gap-2">
@@ -73,7 +81,7 @@ const DeleteDialog = ({ isOpen, onClose, onDelete }) => {
                   </button>
                   <button
                     className="px-4 py-2 bg-red-400 text-white rounded-md"
-                    onClick={handleDelete}
+                    onClick={handleDelete} // Handle delete on button click
                   >
                     Delete
                   </button>

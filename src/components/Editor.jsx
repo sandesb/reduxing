@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import EditorJS from '@editorjs/editorjs';
-import { EDITOR_JS_TOOLS } from './Tool';
+import { EDITOR_JS_TOOLS } from './Tool';  // Assuming this contains the Comment tool
 import { useUpdateContentMutation } from '../redux/coursesApi';
 
 // Debounce function to limit how often the save function is called
@@ -23,6 +23,7 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
         console.log('Editor received db_id:', db_id);
     }, [db_id]);
 
+    // Debounced save function
     const saveContent = useCallback(
         debounce(async (newData) => {
             if (!db_id) {
@@ -34,7 +35,6 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
             console.log('Content to save:', newData);
 
             try {
-
                 const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
                 console.log('Content successfully saved to Supabase:', result);
             } catch (saveError) {
@@ -44,20 +44,24 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
         [updateContent, db_id, itemName]
     );
 
+    // Initialize EditorJS
     useEffect(() => {
         if (!editorInstance.current && data) {
             console.log('Initializing EditorJS with data:', data);
+
             const editor = new EditorJS({
                 holder: editorBlock,
                 data: data,
-                tools: EDITOR_JS_TOOLS,
+                tools: {
+                    ...EDITOR_JS_TOOLS,  // Add Comment tool from tools config
+                },
                 onReady: () => {
                     editorInstance.current = editor;
                 },
                 async onChange(api) {
                     const newData = await api.saver.save();
                     saveContent(newData);
-                }
+                },
             });
         }
 
@@ -69,7 +73,7 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
         };
     }, [data, editorBlock, saveContent]);
 
-    // Extra logging to track the mutation state
+    // Logging mutation state
     useEffect(() => {
         if (isLoading) {
             console.log('Saving content to Supabase...');

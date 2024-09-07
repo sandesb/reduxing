@@ -14,7 +14,6 @@
   z-index: 2; /* Ensure it stays on top */
   overflow: hidden;
 }
-/* src/index.css or any global CSS file */
 .editorjs-container {
   text-align: left !important;
   width: 100% !important;
