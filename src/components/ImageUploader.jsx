@@ -42,7 +42,7 @@ const ImageUploader = ({ db_id, itemName, noteData }) => {
   };
 
   return (
-    <div className="image-uploader">
+    <div className="image-uploader  mb-4 px-4">
       {imageUrl && (
         <div className="mt-4 mb-4">
           <img
@@ -61,7 +61,7 @@ const ImageUploader = ({ db_id, itemName, noteData }) => {
       />
       <label
         htmlFor="file-upload"
-        className="bg-[#7F9CEA] text-white px-4 py-2 rounded-lg cursor-pointer"
+        className="bg-[#7F9CEA]  text-white px-4 py-2 rounded-lg cursor-pointer"
       >
         {isLoading ? 'Uploading...' : 'Upload Image'}
       </label>
