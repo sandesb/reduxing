@@ -5,7 +5,7 @@ import {
   SET_CART_COUNT,
   TOGGLE_CART_POPUP,
   TOGGLE_HELP_POPUP,
-  SAVE_IMAGE_URL,
+
   ADD_TO_CART,
   REMOVE_FROM_CART,
   SET_CART_ITEMS,
@@ -22,7 +22,7 @@ const initialState = {
   cartCount: 0,
   isCartPopupVisible: false,
   isHelpPopupVisible: false,  // Initialize Help Popup visibility state
-  notes: [], // Add this to hold notes and associated images
+
   cartItems: [],
   courses: [], // State for storing courses fetched from Supabase
   searchResults: [], // To store search results
@@ -98,17 +98,6 @@ const uiReducer = (state = initialState, action) => {
         ...state,
         cartItems: [...state.cartItems, action.payload], // Add new item to cart
       };
-       // Handle saving image URL to a note
-    case SAVE_IMAGE_URL:
-      return {
-        ...state,
-        notes: state.notes.map((note) =>
-          note.id === action.payload.noteId
-            ? { ...note, images: [...(note.images || []), action.payload.imageUrl] }
-            : note
-        ),
-      };
-
     default:
       return state;
   }

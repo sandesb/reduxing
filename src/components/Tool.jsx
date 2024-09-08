@@ -11,25 +11,7 @@ import Strikethrough from '@sotaproject/strikethrough';
 import Alert from 'editorjs-alert';
 import Table from 'editorjs-table';
 import ColorPlugin from 'editorjs-text-color-plugin';
-import axios from 'axios'; // For Cloudinary uploads
-import AttachesTool from '@editorjs/attaches';
 
-const uploadImageToCloudinary = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
-
-  try {
-    const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
-      formData
-    );
-    return response.data.secure_url;  // Return Cloudinary image URL
-  } catch (error) {
-    console.error('Error uploading image to Cloudinary:', error);
-    throw new Error('Image upload failed');
-  }
-};
 export const EDITOR_JS_TOOLS = {
   header: {
     class: Header,

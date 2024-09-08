@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import EditorJS from '@editorjs/editorjs';
-import { EDITOR_JS_TOOLS } from './Tool';
+import { EDITOR_JS_TOOLS } from './Tool';  // Assuming this contains the Comment tool
 import { useUpdateContentMutation } from '../redux/coursesApi';
-import ImageUploader from './ImageUploader';  // Import your working ImageUploader component
+
 // Debounce function to limit how often the save function is called
 function debounce(fn, delay) {
     let timeoutId;
@@ -14,72 +14,79 @@ function debounce(fn, delay) {
     };
 }
 
-
 const Editor = ({ data, editorBlock, db_id, itemName }) => {
-  const editorInstance = useRef(null);
-  const [updateContent, { isLoading, isSuccess, isError, error }] = useUpdateContentMutation();
-  const [imageUrl, setImageUrl] = useState(null);  // Store the image URL uploaded from ImageUploader
+    const editorInstance = useRef(null);
+    const [updateContent, { isLoading, isSuccess, isError, error }] = useUpdateContentMutation();
 
-  // Debounced save function
-  const saveContent = useCallback(
-    debounce(async (newData) => {
-      if (!db_id) {
-        console.error('db_id is undefined, cannot save content.');
-        return;
-      }
+    // Log to check if db_id is correctly passed
+    useEffect(() => {
+        console.log('Editor received db_id:', db_id);
+    }, [db_id]);
 
-      try {
-        const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
-        console.log('Content successfully saved to Supabase:', result);
-      } catch (saveError) {
-        console.error('Error saving content to Supabase:', saveError);
-      }
-    }, 1000),
-    [updateContent, db_id, itemName, imageUrl]  // Include 'imageUrl' in the dependencies
-  );
+    // Debounced save function
+    const saveContent = useCallback(
+        debounce(async (newData) => {
+            if (!db_id) {
+                console.error('db_id is undefined, cannot save content.');
+                return;
+            }
 
-  // Initialize EditorJS
-  useEffect(() => {
-    if (!editorInstance.current && data) {
-      const editor = new EditorJS({
-        holder: editorBlock,
-        data: data,
-        tools: { ...EDITOR_JS_TOOLS },
-        onReady: () => {
-          editorInstance.current = editor;
-        },
-        async onChange(api) {
-          const newData = await api.saver.save();
-          saveContent(newData);  // Trigger save to Supabase
-        },
-      });
-    }
+            console.log('Preparing to save content for db_id:', db_id);
+            console.log('Content to save:', newData);
 
-    return () => {
-      if (editorInstance.current) {
-        editorInstance.current.destroy();
-        editorInstance.current = null;
-      }
-    };
-  }, [data, editorBlock, saveContent]);
+            try {
+                const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
+                console.log('Content successfully saved to Supabase:', result);
+            } catch (saveError) {
+                console.error('Error saving content to Supabase:', saveError);
+            }
+        }, 1000),
+        [updateContent, db_id, itemName]
+    );
 
-  return (
-    <div>
-      {/* Render the EditorJS instance */}
-      <ImageUploader db_id={db_id} itemName={itemName} noteData={data} />
-      {imageUrl && <img src={imageUrl} 
-      alt="Uploaded" 
-            className="w-50 rounded-md border-4 border-[#7F9CEA] shadow-lg"
-      
-      />}
+    // Initialize EditorJS
+    useEffect(() => {
+        if (!editorInstance.current && data) {
+            console.log('Initializing EditorJS with data:', data);
 
-      <div id={editorBlock} />
+            const editor = new EditorJS({
+                holder: editorBlock,
+                data: data,
+                tools: {
+                    ...EDITOR_JS_TOOLS,  // Add Comment tool from tools config
+                },
+                onReady: () => {
+                    editorInstance.current = editor;
+                },
+                async onChange(api) {
+                    const newData = await api.saver.save();
+                    saveContent(newData);
+                },
+            });
+        }
 
-      {/* Pass necessary props to ImageUploader */}
+        return () => {
+            if (editorInstance.current) {
+                editorInstance.current.destroy();
+                editorInstance.current = null;
+            }
+        };
+    }, [data, editorBlock, saveContent]);
 
-      {/* Display uploaded image */}
-    </div>
-  );
+    // Logging mutation state
+    useEffect(() => {
+        if (isLoading) {
+            console.log('Saving content to Supabase...');
+        }
+        if (isSuccess) {
+            console.log('Content saved successfully.');
+        }
+        if (isError) {
+            console.error('Failed to save content:', error);
+        }
+    }, [isLoading, isSuccess, isError, error]);
+
+    return <div id={editorBlock} />;
 };
 
 export default Editor;

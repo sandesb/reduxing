@@ -161,31 +161,14 @@ export const coursesApi = createApi({
     }),
 
 
-    // Updating content including note and image URLs
     updateContent: builder.mutation({
       query: ({ db_id, content, name }) => ({
         url: `content`,  // Target the `content` table directly
         method: 'upsert',  // Use UPSERT to insert or update based on db_id
-        body: { db_id, note: content, name },  // Save everything in the 'note' column with the 'name'
+        body: { db_id, note: content, name },  // Pass db_id and the content (note)
         returning: 'representation', // Request to return the updated record
       }),
       invalidatesTags: ['Content'],
-      async onQueryStarted({ db_id, content, name }, { dispatch, queryFulfilled }) {
-        try {
-          // Optimistic update: update the Redux store before the request finishes
-          const patchResult = dispatch(
-            coursesApi.util.updateQueryData('loadContent', db_id, (draft) => {
-              draft.note = content;
-              draft.name = name;
-            })
-          );
-          await queryFulfilled;  // Wait for the request to succeed
-          showToast('success', 'Content updated successfully');
-        } catch (error) {
-          patchResult.undo();  // Rollback the optimistic update if the request fails
-          showToast('error', 'Failed to update content');
-        }
-      },
     }),
 
     
