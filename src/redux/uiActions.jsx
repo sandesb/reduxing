@@ -6,7 +6,7 @@ export const INCREMENT_CART = 'INCREMENT_CART';
 export const SET_CART_COUNT = 'SET_CART_COUNT';
 export const TOGGLE_CART_POPUP = 'TOGGLE_CART_POPUP';
 export const TOGGLE_HELP_POPUP = 'TOGGLE_HELP_POPUP';
-
+export const SAVE_IMAGE_URL = 'SAVE_IMAGE_URL';
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const SET_CART_ITEMS = 'SET_CART_ITEMS'; // New action
@@ -135,6 +135,14 @@ export const setSearchResults = (query) => {
       type: SET_SEARCH_RESULTS,
       payload: filteredResults,
     });
+  };
+};
+
+// Action to save image URL in the Redux store
+export const saveImageUrl = (noteId, imageUrl) => {
+  return {
+    type: SAVE_IMAGE_URL,
+    payload: { noteId, imageUrl },
   };
 };
 
