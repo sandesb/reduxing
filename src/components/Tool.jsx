@@ -11,6 +11,7 @@ import Strikethrough from '@sotaproject/strikethrough';
 import Alert from 'editorjs-alert';
 import Table from 'editorjs-table';
 import ColorPlugin from 'editorjs-text-color-plugin';
+import AttachesTool from '@editorjs/attaches';
 
 export const EDITOR_JS_TOOLS = {
   header: {
