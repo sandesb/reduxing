@@ -48,7 +48,7 @@ const Notes = () => {
 
   return (
     <div className="p-6 font-lato ">
-      <h1 className="text-2xl font-bold mb-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">
         Study Notes for {itemName}
       </h1>
       <div className="w-full text-left editorjs-container">

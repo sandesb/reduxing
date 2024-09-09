@@ -66,7 +66,9 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
   return (
     <div>
       {/* Render the EditorJS instance */}
-      <ImageUploader db_id={db_id} itemName={itemName} noteData={data} />
+      <div className='flex justify-center items-center mb-6'>
+      <ImageUploader db_id={db_id} itemName={itemName} noteData={data}  />
+      </div>
       {imageUrl && <img src={imageUrl} 
       alt="Uploaded" 
             className="w-50 rounded-md border-4 border-[#7F9CEA] shadow-lg"
