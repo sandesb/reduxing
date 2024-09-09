@@ -1,45 +1,67 @@
-import React, { useState } from 'react';
-import { uploadImageToCloudinary } from '../utils/uploadImageToCloudinary';  // Your existing Cloudinary upload function
+import React, { useEffect, useRef, useCallback, useState } from 'react';
+import EditorJS from '@editorjs/editorjs';
+import { EDITOR_JS_TOOLS } from './Tool';
 import { useUpdateContentMutation } from '../redux/coursesApi';
+import ImageUploader from './ImageUploader';  // Import your working ImageUploader component
+// Debounce function to limit how often the save function is called
+function debounce(fn, delay) {
+    let timeoutId;
+    return (...args) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            fn(...args);
+        }, delay);
+    };
+}
 
-const ImageUploader = ({ db_id, itemName, noteData }) => {
-  const [imageUrl, setImageUrl] = useState(null);  // Store the uploaded image URL
-  const [uploadImage, { isLoading }] = useUpdateContentMutation();  // Use the mutation for updating content in Supabase
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      try {
-        const url = await uploadImageToCloudinary(file);  // Upload image to Cloudinary
-        setImageUrl(url);
+const Editor = ({ data, editorBlock, db_id, itemName }) => {
+  const editorInstance = useRef(null);
+  const [updateContent, { isLoading, isSuccess, isError, error }] = useUpdateContentMutation();
+  const [imageUrl, setImageUrl] = useState(null);  // Store the image URL uploaded from ImageUploader
 
-        // Prepare the new content to include the uploaded image URL in the note's JSON
-        const updatedNote = {
-          ...noteData,  // Keep the existing note data
-          blocks: [
-            ...noteData.blocks,  // Add new image block to the blocks
-            {
-              type: 'image',
-              data: {
-                file: { url: url },  // Add the image URL to the note
-              },
-            },
-          ],
-        };
-
-        // Trigger the mutation to update Supabase with the new content
-        await uploadImage({
-          db_id,  // The note ID in Supabase
-          content: updatedNote,  // Updated note with image URL
-          name: itemName,  // Name of the note (if required)
-        });
-
-        console.log('Image URL saved to Supabase:', url);
-      } catch (error) {
-        console.error('Error uploading or saving the image:', error);
+  // Debounced save function
+  const saveContent = useCallback(
+    debounce(async (newData) => {
+      if (!db_id) {
+        console.error('db_id is undefined, cannot save content.');
+        return;
       }
+
+      try {
+        const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
+        console.log('Content successfully saved to Supabase:', result);
+      } catch (saveError) {
+        console.error('Error saving content to Supabase:', saveError);
+      }
+    }, 1000),
+    [updateContent, db_id, itemName, imageUrl]  // Include 'imageUrl' in the dependencies
+  );
+
+  // Initialize EditorJS
+  useEffect(() => {
+    if (!editorInstance.current && data) {
+      const editor = new EditorJS({
+        holder: editorBlock,
+        data: data,
+        tools: { ...EDITOR_JS_TOOLS },
+        onReady: () => {
+          editorInstance.current = editor;
+        },
+        async onChange(api) {
+          const newData = await api.saver.save();
+          saveContent(newData);  // Trigger save to Supabase
+        },
+      });
     }
-  };
+
+    return () => {
+      if (editorInstance.current) {
+        editorInstance.current.destroy();
+        editorInstance.current = null;
+      }
+    };
+  }, [data, editorBlock, saveContent]);
 
   return (
     <div>
@@ -53,20 +75,13 @@ const ImageUploader = ({ db_id, itemName, noteData }) => {
       
       />}
 
-      <input
-        type="file"
-        onChange={handleFileChange}
-        className="hidden"  // Hide the input and trigger it with the button
-        id="file-upload"
-      />
-      <label
-        htmlFor="file-upload"
-        className="bg-[#7F9CEA] text-white px-4 py-2 rounded-lg cursor-pointer"
-      >
-        {isLoading ? 'Uploading...' : 'Upload Image'}
-      </label>
+      <div id={editorBlock} />
+
+      {/* Pass necessary props to ImageUploader */}
+
+      {/* Display uploaded image */}
     </div>
   );
 };
 
-export default ImageUploader;
+export default Editor;
