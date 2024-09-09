@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom'; // Use Navigate for redirection
 import { useDispatch } from 'react-redux';
 import { toggleHelpPopup } from "./redux/uiActions"; // Import the action
 
@@ -8,19 +8,19 @@ import MyCourses from './pages/MyCourses';
 import Messages from './pages/Messages';
 import HelpCenter from './pages/HelpCenter';
 import HomePage from './pages/HomePage';
-import Notes from './pages/Notes'; // Import the Notes component
-import { Toaster } from 'react-hot-toast';
+import Notes from './pages/Notes';
 import Repositories from './pages/Repositories';
+import Login from './pages/Login'; // Import the Login page
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const dispatch = useDispatch();
-
+  
+  // Handle Help Popup logic on app load
   useEffect(() => {
-    // Check if the popup has already been shown
     const isHelpPopupShown = localStorage.getItem('helpPopupShown');
 
     if (!isHelpPopupShown) {
-      // Show the popup and set a flag in localStorage to prevent future popups
       const timer = setTimeout(() => {
         dispatch(toggleHelpPopup());
         localStorage.setItem('helpPopupShown', 'true'); // Set flag to true
@@ -28,13 +28,18 @@ function App() {
 
       return () => clearTimeout(timer);  // Cleanup the timeout
     }
-  }, [dispatch]);  // Only run once when the app first loads
+  }, [dispatch]);
+
+  const isAuthenticated = localStorage.getItem('isAuthenticated'); // Check authentication status
 
   return (
     <>
       <Toaster position="bottom-center" />
       <Routes>
-        <Route path="/" element={<BodyLayout />}>
+        {/* Root route to display Login by default */}
+        <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Login />} /> {/* Redirect to Home if authenticated */}
+
+        <Route path="/home" element={<BodyLayout />}>
           <Route index element={<HomePage />} />
           <Route path="my-courses" element={<MyCourses />} />
           <Route path="repositories" element={<Repositories />} />
@@ -42,6 +47,9 @@ function App() {
           <Route path="help-center" element={<HelpCenter />} />
           <Route path="notes/:id" element={<Notes />} /> {/* Add this route */}
         </Route>
+
+        {/* Fallback route in case of unknown paths */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   );

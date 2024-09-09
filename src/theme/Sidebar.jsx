@@ -1,25 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
-
-import { User, Home, Mail, HelpCircle, Book, FolderHeart, HomeIcon  } from "lucide-react";
+import { useSelector } from 'react-redux';
+import { HomeIcon, Mail, HelpCircle, Book, FolderHeart } from "lucide-react";
 import { motion } from "framer-motion";
-import dp from "../assets/dp.jpg"; // Import the image
-import { toggleSidebar } from '../redux/uiActions';  // Import existing Redux action for toggling sidebar
+import dp from "../assets/logo/user.png"; // Import the image
+import { useGetStudentsQuery } from '../redux/studentsApi'; // Import the hook
 
 const ActiveCircles = ({ isActive }) => {
   return (
     <>
       {isActive && (
         <>
-          {/* Top Right Circle */}
           <span
-            className="absolute z-10 top-[-25px] right-[32px] w-[25px] h-[25px]  rounded-full "
+            className="absolute z-10 top-[-25px] right-[32px] w-[25px] h-[25px] rounded-full"
             style={{ boxShadow: "9px 9px 0 #f0f4fc" }}
           ></span>
-          {/* Bottom Right Circle */}
           <span
-            className="absolute z-10 top-[48px] right-[32px] w-[25px] h-[25px]  rounded-full "
+            className="absolute z-10 top-[48px] right-[32px] w-[25px] h-[25px] rounded-full"
             style={{ boxShadow: "9px -9px 0 #f0f4fc" }}
           ></span>
         </>
@@ -39,7 +36,7 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
           backgroundColor: isActive ? "#f0f4fc" : "transparent",
           borderRadius: isActive ? "20px 0 0 20px" : "20px 0 0 20px",
           color: isActive ? " #7F9CEA" : "#4b5563",
-          boxShadow: isActive ? "-6px 0px 0px rgba(0, 0, 0, 0.1)" : "none", // Shadow only on the left side
+          boxShadow: isActive ? "-6px 0px 0px rgba(0, 0, 0, 0.1)" : "none",
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="flex items-center space-x-2 px-4 py-3 ml-4 w-full h-full"
@@ -51,30 +48,46 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
   );
 };
 
-
 const Sidebar = () => {
   const location = useLocation();
-  const dispatch = useDispatch();
-  const isSidebarOpen = useSelector((state) => state.ui.isSidebarOpen); // Check the Redux state
+  const isSidebarOpen = useSelector((state) => state.ui.isSidebarOpen);
+  const [userName, setUserName] = useState('');
+  const { data: students, isLoading, isError, error } = useGetStudentsQuery(); // Fetch all students
 
-  console.log("Sidebar open state:", isSidebarOpen); // Add this for debugging
+  useEffect(() => {
+    const matricNo = localStorage.getItem('matricNo'); // Get the logged-in user's matricNo from localStorage
 
+    console.log('Matric No from localStorage:', matricNo);
+    console.log('Fetched Students:', students);
+
+    if (matricNo && students) {
+      // Directly compare matricNo strings
+      const student = students.find((s) => s.matric === matricNo);
+      console.log('Matched Student:', student);
+
+      if (student) {
+        setUserName(student.name); // Set the user's name
+      } else {
+        console.log('No matching student found');
+      }
+    }
+  }, [students]);
 
   return (
-    <div className=" relative font-lato h-screen flex">
-  
- {/* Static Sidebar for Larger Screens */}
- <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden hidden lg:block">
+    <div className="relative font-lato h-screen flex">
+      {/* Static Sidebar for Larger Screens */}
+      <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden hidden lg:block">
         <div className="h-full w-full">
           <div className="flex items-center space-x-2 mb-2 p-2 ml-4">
-            <img src={dp} alt="Vader" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md" />
+            <img src={dp} alt="User" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md" />
             <div>
-              <h2 className="font-semibold text-lg text-gray-700">Sandes</h2>
+              {/* Display the fetched user's name */}
+              <h2 className="font-semibold text-lg text-gray-700">{userName || 'Guest'}</h2>
               <p className="text-sm text-gray-500">Student</p>
             </div>
           </div>
           <nav className="flex flex-col space-y-1">
-          <ActiveLink
+            <ActiveLink
               to="/"
               icon={HomeIcon}
               label="Home"
@@ -112,4 +125,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
