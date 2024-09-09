@@ -43,7 +43,7 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
       const editor = new EditorJS({
         holder: editorBlock,
         data: data,
-        tools: EDITOR_JS_TOOLS,  // Use ImageTool and other tools
+        tools: EDITOR_JS_TOOLS,  // Use ImageTool and AttachesTool
         onReady: () => {
           editorInstance.current = editor;
         },

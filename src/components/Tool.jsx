@@ -127,26 +127,24 @@ export const EDITOR_JS_TOOLS = {
       config: {
         uploader: {
           async uploadByFile(file) {
-            // Upload file to Cloudinary
+            // Use the same function to upload PDFs or other files
             const url = await uploadImageToCloudinary(file);
   
-            if (!url) {
-              throw new Error('File upload failed');
-            }
+            if (!url) throw new Error('File upload failed');
   
-            // Return the correct data format for AttachesTool
+            // Return the expected format for Attaches Tool
             return {
               success: 1,
               file: {
                 url,  // URL to access the file
                 name: file.name,  // Original file name
                 size: file.size,  // File size in bytes
-                extension: file.name.split('.').pop(),  // File extension (e.g., pdf, jpg)
+                extension: file.name.split('.').pop(),  // File extension (e.g., pdf)
               },
             };
           },
         },
-        accept: 'application/pdf,image/*,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',  // Proper MIME types
+        accept: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',  // Allowed file types
       },
     },
 };

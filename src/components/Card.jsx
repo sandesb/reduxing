@@ -93,7 +93,10 @@ const Card = ({
       }}
       className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]"
     >
-      <div className=" font-lato flex justify-between items-start ">
+      <div className=" font-lato flex justify-between items-start cursor-pointer"
+        onClick={handleTitleClick} // Handle title click
+
+       >
         {isEditing ? (
           <input
             type="text"
