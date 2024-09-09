@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux'; // Import useSelector to access Redux state
 import { HomeIcon, Mail, HelpCircle, Book, FolderHeart } from "lucide-react";
 import { motion } from "framer-motion";
-import dp from "../assets/logo/user.png"; // Import the image
-import { useGetStudentsQuery } from '../redux/studentsApi'; // Import the hook
+import dp from "../assets/logo/user.png"; // Import the user image
 
 const ActiveCircles = ({ isActive }) => {
   return (
@@ -50,28 +49,9 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
 
 const Sidebar = () => {
   const location = useLocation();
-  const isSidebarOpen = useSelector((state) => state.ui.isSidebarOpen);
-  const [userName, setUserName] = useState('');
-  const { data: students, isLoading, isError, error } = useGetStudentsQuery(); // Fetch all students
-
-  useEffect(() => {
-    const matricNo = localStorage.getItem('matricNo'); // Get the logged-in user's matricNo from localStorage
-
-    console.log('Matric No from localStorage:', matricNo);
-    console.log('Fetched Students:', students);
-
-    if (matricNo && students) {
-      // Directly compare matricNo strings
-      const student = students.find((s) => s.matric === matricNo);
-      console.log('Matched Student:', student);
-
-      if (student) {
-        setUserName(student.name); // Set the user's name
-      } else {
-        console.log('No matching student found');
-      }
-    }
-  }, [students]);
+  
+  // Get the user's name from Redux store
+  const { name, isAuthenticated } = useSelector((state) => state.user); // Access both name and authentication status
 
   return (
     <div className="relative font-lato h-screen flex">
@@ -81,42 +61,17 @@ const Sidebar = () => {
           <div className="flex items-center space-x-2 mb-2 p-2 ml-4">
             <img src={dp} alt="User" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md" />
             <div>
-              {/* Display the fetched user's name */}
-              <h2 className="font-semibold text-lg text-gray-700">{userName || 'Guest'}</h2>
+              {/* Display the authenticated user's name or "Guest" */}
+              <h2 className="font-semibold text-lg text-gray-700">{isAuthenticated ? name : 'Guest'}</h2>
               <p className="text-sm text-gray-500">Student</p>
             </div>
           </div>
           <nav className="flex flex-col space-y-1">
-            <ActiveLink
-              to="/"
-              icon={HomeIcon}
-              label="Home"
-              isActive={location.pathname === "/"}
-            />
-            <ActiveLink
-              to="/my-courses"
-              icon={Book}
-              label="Courses"
-              isActive={location.pathname === "/my-courses"}
-            />
-            <ActiveLink
-              to="/repositories"
-              icon={FolderHeart}
-              label="Repositories"
-              isActive={location.pathname === "/repositories"}
-            />
-            <ActiveLink
-              to="/messages"
-              icon={Mail}
-              label="Messages"
-              isActive={location.pathname === "/messages"}
-            />
-            <ActiveLink
-              to="/help-center"
-              icon={HelpCircle}
-              label="Help Center"
-              isActive={location.pathname === "/help-center"}
-            />
+            <ActiveLink to="/home" icon={HomeIcon} label="Home" isActive={location.pathname === "/home"} />
+            <ActiveLink to="/my-courses" icon={Book} label="Courses" isActive={location.pathname === "/my-courses"} />
+            <ActiveLink to="/repositories" icon={FolderHeart} label="Repositories" isActive={location.pathname === "/repositories"} />
+            <ActiveLink to="/messages" icon={Mail} label="Messages" isActive={location.pathname === "/messages"} />
+            <ActiveLink to="/help-center" icon={HelpCircle} label="Help Center" isActive={location.pathname === "/help-center"} />
           </nav>
         </div>
       </div>
