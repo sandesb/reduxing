@@ -27,6 +27,7 @@ import { motion } from "framer-motion";
 import { Home, Book, FolderHeart, Mail, HelpCircle } from "lucide-react"; // Import necessary Lucide icons
 import { useLocation } from "react-router-dom";
 import dp from "../assets/dp.jpg"; // Import the image
+import PopOver from "./PopOver";
 
 const Navbar = () => {
   const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
@@ -81,6 +82,16 @@ const Navbar = () => {
     dispatch(toggleHelpPopup());
   };
 
+    // Manage popover visibility
+    const [popoverOpen, setPopoverOpen] = useState(false);
+
+    // Function to toggle popover
+    const togglePopOver = () => {
+      setPopoverOpen((prev) => !prev);
+    };
+   // Get the user's name from Redux store
+   const { name, isAuthenticated } = useSelector((state) => state.user); // Access both name and authentication status
+ 
   return (
     <div className="font-lato flex justify-between items-center py-4 bg-primary from-gray-100 to-gray-200 w-full">
       <div className="flex items-center  ">
@@ -136,11 +147,14 @@ const Navbar = () => {
       >
         <div className="h-full  bg-primary-bg w-full">
           <div className="flex items-center justify-center py-4 mb-2">
+          <button onClick={togglePopOver} className="focus:outline-none">
+
             <img
               src={dp}
               alt="Profile"
               className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md"
             />
+            </button>
           </div>
 
           <nav className="flex flex-col space-y-3 px-4">
@@ -175,6 +189,8 @@ const Navbar = () => {
               isActive={location.pathname === "/help-center"}
             />
           </nav>
+              {/* PopOver */}
+              <PopOver open={popoverOpen} onClose={togglePopOver} />
         </div>
       </motion.div>
     </div>
