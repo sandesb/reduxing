@@ -1,9 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux'; // Import useSelector to access Redux state
 import { HomeIcon, Mail, HelpCircle, Book, FolderHeart } from "lucide-react";
 import { motion } from "framer-motion";
 import dp from "../assets/logo/user.png"; // Import the user image
+import PopOver from '../components/PopOver'; // Import the PopOver component
+
+
+ 
 
 const ActiveCircles = ({ isActive }) => {
   return (
@@ -50,6 +54,13 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
 const Sidebar = () => {
   const location = useLocation();
   
+   // Manage popover visibility
+   const [popoverOpen, setPopoverOpen] = useState(false);
+
+   // Function to toggle popover
+   const togglePopOver = () => {
+     setPopoverOpen((prev) => !prev);
+   };
   // Get the user's name from Redux store
   const { name, isAuthenticated } = useSelector((state) => state.user); // Access both name and authentication status
 
@@ -59,13 +70,19 @@ const Sidebar = () => {
       <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden hidden lg:block">
         <div className="h-full w-full">
           <div className="flex items-center space-x-2 mb-2 p-2 ml-4">
+          <button onClick={togglePopOver} className="focus:outline-none">
+
             <img src={dp} alt="User" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md" />
+            </button>
             <div>
               {/* Display the authenticated user's name or "Guest" */}
               <h2 className="font-semibold text-lg text-gray-700">{isAuthenticated ? name : 'Guest'}</h2>
               <p className="text-sm text-gray-500">Student</p>
             </div>
+             {/* PopOver */}
+             <PopOver open={popoverOpen} onClose={togglePopOver} />
           </div>
+
           <nav className="flex flex-col space-y-1">
             <ActiveLink to="/home" icon={HomeIcon} label="Home" isActive={location.pathname === "/home"} />
             <ActiveLink to="/my-courses" icon={Book} label="Courses" isActive={location.pathname === "/my-courses"} />
