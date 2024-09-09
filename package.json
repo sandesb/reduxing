@@ -27,6 +27,8 @@
     "@sotaproject/strikethrough": "^1.0.1",
     "@supabase/supabase-js": "^2.45.3",
     "axios": "^1.7.4",
+    "cloudinary": "^2.4.0",
+    "cloudinary-core": "^2.13.1",
     "dotenv": "^16.4.5",
     "editorjs-alert": "^1.1.4",
     "editorjs-comment": "^1.0.3",
