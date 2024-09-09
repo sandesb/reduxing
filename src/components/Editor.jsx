@@ -18,7 +18,6 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
   const editorInstance = useRef(null);
   const [updateContent] = useUpdateContentMutation();
 
-  // Debounced save function
   const saveContent = useCallback(
     debounce(async (newData) => {
       if (!db_id) {
@@ -27,7 +26,6 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
       }
 
       try {
-        // Save content to Supabase
         const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
         console.log('Content successfully saved to Supabase:', result);
       } catch (saveError) {
@@ -37,19 +35,18 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
     [updateContent, db_id, itemName]
   );
 
-  // Initialize EditorJS
   useEffect(() => {
     if (!editorInstance.current && data) {
       const editor = new EditorJS({
         holder: editorBlock,
         data: data,
-        tools: EDITOR_JS_TOOLS,  // Use ImageTool and AttachesTool
+        tools: EDITOR_JS_TOOLS,
         onReady: () => {
           editorInstance.current = editor;
         },
         async onChange(api) {
           const newData = await api.saver.save();
-          saveContent(newData);  // Trigger save to Supabase
+          saveContent(newData); // Trigger save to Supabase
         },
       });
     }

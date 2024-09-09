@@ -39,6 +39,7 @@ const FooterWebsite = () => {
       </div>
 
       {/* Footer Content */}
+      <div className='flex justify-center items-center'>
       <div className="relative container py-8 text-center">
         {/* Social Media Links */}
         <div className="flex justify-center space-x-6 mb-4 text-gray-500">
@@ -58,6 +59,9 @@ const FooterWebsite = () => {
           ©2024 Sandesh Bajracharya | All Rights Reserved
         </p>
       </div>
+
+      </div>
+    
     </footer>
   );
 };
