@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux'; // Import Redux hooks
 import { logout } from '../redux/userSlice'; // Import logout action
 import { useNavigate } from 'react-router-dom'; // Import for navigation
+import dp from "../assets/logo/user.png"; // Import the user image
 
 const PopOver = ({ open, onClose }) => {
   const dispatch = useDispatch();
@@ -28,11 +29,7 @@ const PopOver = ({ open, onClose }) => {
       style={{ top: '50px', left: '20px', zIndex: '30' }} // Adjust the position
     >
       <div className="flex items-center justify-between gap-4 mb-2">
-        <img
-          src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80"
-          alt={name}
-          className="relative inline-block object-cover object-center w-12 h-12 rounded-full"
-        />
+      <img src={dp} alt={name} className="relative inline-block object-cover object-center w-12 h-12 rounded-full" />
         <button
           className="select-none rounded-lg bg-blue-400 py-2 px-3 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
           type="button"

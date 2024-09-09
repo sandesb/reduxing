@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import LogInput from "../components/LogInput";
 import { useGetStudentsQuery } from '../redux/studentsApi';
 import { loginSuccess } from '../redux/userSlice'; // Import the loginSuccess action
+import dp from "../assets/dp.jpg"; // Import the image
 
 const Login = () => {
   const [matricNo, setMatricNo] = useState('');
@@ -46,7 +47,7 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-primary-bg">
       <div id="login" className="p-8 rounded max-w-sm text-center">
-        <img className="logo1 mb-4 inline-flex w-20" src="src/assets/logo/colorized.png" alt="Logo" />
+        <img className="logo1 mb-4 inline-flex w-20 shadow-sm" src={dp} alt="Logo" />
         <h1 className="text-2xl font-semibold mb-6 text-center text-gray-700">Sign In</h1>
         <form onSubmit={doLogin}>
           <LogInput
