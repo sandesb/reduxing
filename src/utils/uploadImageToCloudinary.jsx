@@ -20,7 +20,7 @@ export const uploadImageToCloudinary = async (file) => {
         },
       }
     );
-    
+
     return response.data.secure_url;  // Return the Cloudinary URL for the uploaded file
   } catch (error) {
     console.error('Error uploading file to Cloudinary: ', error);

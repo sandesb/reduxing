@@ -12,7 +12,7 @@ import Alert from 'editorjs-alert';
 import Table from 'editorjs-table';
 import ColorPlugin from 'editorjs-text-color-plugin';
 import AttachesTool from '@editorjs/attaches';
-
+import { uploadImageToCloudinary } from '../utils/uploadImageToCloudinary';
 export const EDITOR_JS_TOOLS = {
   header: {
     class: Header,
@@ -27,9 +27,33 @@ export const EDITOR_JS_TOOLS = {
   image: {
     class: ImageTool,
     config: {
-      endpoints: {
-        byFile: 'http://localhost:8008/uploadFile',
-        byUrl: 'http://localhost:8008/fetchUrl',
+      uploader: {
+        async uploadByFile(file) {
+          // Upload image to Cloudinary
+          const url = await uploadImageToCloudinary(file);
+
+          if (!url) {
+            throw new Error('File upload failed');
+          }
+
+          // Return the expected format for the Image Tool
+          return {
+            success: 1,
+            file: {
+              url,  // URL of the uploaded image
+            },
+          };
+        },
+        // Optionally, add support for uploading by URL
+        async uploadByUrl(url) {
+          // In case you want to allow users to upload images by URL
+          return {
+            success: 1,
+            file: {
+              url,  // Return the URL directly
+            },
+          };
+        },
       },
     },
   },
@@ -101,9 +125,28 @@ export const EDITOR_JS_TOOLS = {
     attaches: {
       class: AttachesTool,
       config: {
-        endpoint: 'http://localhost:8008/uploadFile',
-        types: ['application/pdf', 'image/*', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],  // Allowed file types
-
-      }
+        uploader: {
+          async uploadByFile(file) {
+            // Upload file to Cloudinary
+            const url = await uploadImageToCloudinary(file);
+  
+            if (!url) {
+              throw new Error('File upload failed');
+            }
+  
+            // Return the correct data format for AttachesTool
+            return {
+              success: 1,
+              file: {
+                url,  // URL to access the file
+                name: file.name,  // Original file name
+                size: file.size,  // File size in bytes
+                extension: file.name.split('.').pop(),  // File extension (e.g., pdf, jpg)
+              },
+            };
+          },
+        },
+        accept: 'application/pdf,image/*,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',  // Proper MIME types
+      },
     },
 };
