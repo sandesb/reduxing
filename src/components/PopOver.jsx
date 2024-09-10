@@ -9,7 +9,7 @@ const PopOver = ({ open, onClose }) => {
   const navigate = useNavigate();
   
   // Access the user's name, matric number, and email from Redux store
-  const { name, matricNo, email } = useSelector((state) => state.user);
+  const { name, matricNo, email, semester } = useSelector((state) => state.user);
 
   // Handle the logout action
   const handleLogout = () => {
@@ -41,7 +41,7 @@ const PopOver = ({ open, onClose }) => {
       <h6 className="flex items-center gap-2 mb-2 font-sans text-base antialiased font-medium leading-relaxed tracking-normal text-blue-gray-900">
         <span>{name}</span> •{" "}
         <a className="text-sm text-blue-gray-700" href="#">
-          @{email}
+          @{semester}
         </a>
       </h6>
       <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
