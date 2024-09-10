@@ -41,7 +41,7 @@ const Login = () => {
       };
     
         {/* Guest Button */}
-        <button type="button" className="w-full bg-[#7F9CEA] text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
+        <button type="button" className="w-full bg-blue-400 text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
         I'm A Guest
       </button>
   return (
@@ -59,7 +59,7 @@ const Login = () => {
             className="mb-4 p-2 w-full border rounded bg-slate-50"
           />
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          <button type="submit" className="w-full bg-blue-400 text-white p-2 rounded hover:bg-blue-500 mb-4">
+          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-500 mb-4">
             Sign in
           </button>
 

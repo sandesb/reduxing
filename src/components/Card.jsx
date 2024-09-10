@@ -75,6 +75,8 @@ const Card = ({
   const handleTitleClick = () => {
     console.log(`Card ID: ${id}`); // Debugging
     onTitleClick(id); // Trigger the dialog for this item
+
+  
   };
 
   const handleSliderChange = (newProgress) => {
@@ -93,7 +95,7 @@ const Card = ({
       }}
       className="relative p-4 rounded-xl shadow-lg bg-gradient-to-br from-[#E0F2FF] via-[#EAF3F8] to-[#F6F7FB]"
     >
-      <div className=" font-lato flex justify-between items-start cursor-pointer"
+      <div id="parent" className=" font-lato flex justify-between items-start cursor-pointer"
         onClick={handleTitleClick} // Handle title click
 
        >
@@ -114,16 +116,16 @@ const Card = ({
         ) : (
           <span className="text-3xl text-teal-600">{icon}</span>
         )}
-        <div className="flex space-x-2">
+        <div className="flex space-x-2" id="child">
           <button
             onClick={handleAddToCart}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-600 hover:text-gray-900"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-5 h-5 " />
           </button>
           <button
             onClick={handleEditClick}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-600 hover:text-gray-900"
           >
             {isEditing ? (
               <Check className="w-5 h-5" />
@@ -133,7 +135,7 @@ const Card = ({
           </button>
           <button
             onClick={handleDeleteClick}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-600 hover:text-gray-900"
           >
             <X className="w-5 h-5" />
           </button>

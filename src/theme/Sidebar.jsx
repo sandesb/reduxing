@@ -6,9 +6,6 @@ import { motion } from "framer-motion";
 import dp from "../assets/logo/user.png"; // Import the user image
 import PopOver from '../components/PopOver'; // Import the PopOver component
 
-
- 
-
 const ActiveCircles = ({ isActive }) => {
   return (
     <>
@@ -38,8 +35,8 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
           paddingLeft: isActive ? "1.5rem" : "1rem",
           backgroundColor: isActive ? "#f0f4fc" : "transparent",
           borderRadius: isActive ? "20px 0 0 20px" : "20px 0 0 20px",
-          color: isActive ? " #7F9CEA" : "#4b5563",
-          boxShadow: isActive ? "-6px 0px 0px rgba(0, 0, 0, 0.1)" : "none",
+          color: isActive ? " #60A5FA" : "#4b5563",
+          boxShadow: isActive ? "-6px 0px 0px #60A5FA" : "none",
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="flex items-center space-x-2 px-4 py-3 ml-4 w-full h-full"

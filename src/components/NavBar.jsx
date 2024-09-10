@@ -60,19 +60,40 @@ const Navbar = () => {
     dispatch(loadCartData()); // Ensure cart data is loaded on mount
   }, [dispatch]);
 
-  const handleToggle = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
+ // Handle sidebar toggle
+const handleToggle = (event) => {
+  event.preventDefault();
+  event.stopPropagation();
 
-    // Dynamically handle sidebar toggle based on screen size
-    if (window.innerWidth >= 1024) {
-      // For large screens, use Redux to toggle sidebar
-      dispatch(toggleSidebar());
-    } else {
-      // For small screens, toggle local mobile sidebar state
-      setIsMobileSidebarOpen((prev) => !prev);
+  // Dynamically handle sidebar toggle based on screen size
+  if (window.innerWidth >= 1024) {
+    // For large screens, use Redux to toggle sidebar
+    dispatch(toggleSidebar());
+  } else {
+    // For small screens, toggle local mobile sidebar state
+    setIsMobileSidebarOpen((prev) => !prev);
+  }
+};
+
+// Close sidebar when clicking outside of it
+useEffect(() => {
+  const handleOutsideClick = (event) => {
+    if (isMobileSidebarOpen && !event.target.closest('.sidebar')) {
+      setIsMobileSidebarOpen(false);
     }
   };
+
+  if (isMobileSidebarOpen) {
+    document.addEventListener('click', handleOutsideClick);
+  } else {
+    document.removeEventListener('click', handleOutsideClick);
+  }
+
+  return () => {
+    document.removeEventListener('click', handleOutsideClick);
+  };
+}, [isMobileSidebarOpen]);
+
 
   const handleCartClick = () => {
     dispatch(toggleCartPopup());
@@ -98,6 +119,7 @@ const Navbar = () => {
         <Link
           to="/"
           className="flex items-center text-3xl mb-4 space-y-1 font-bold text-gray-700 pl-3 pr-10 lg:mb-0 "
+          onClick={handleToggle}
         >
           <img
             src={logo}
@@ -117,14 +139,6 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center space-x-4 pr-6 mb-3">
-
-      <button
-            onClick={handleToggle}
-            className="p-2  lg:mb-0 text-gray-600 rounded-md flex items-center"
-          >
-            <MessageCircleCode className="w-6 h-6 "/>
-          </button>
-
         <div className="relative " onClick={handleCartClick}>
           <span className="absolute -bottom-4 -left-4   bg-red-500 text-white text-xs font-extralight rounded-full px-2 py-0.5 shadow">
             {cartCount}
