@@ -20,7 +20,7 @@ const HelpPopup = () => {
   const handleStudyClick = () => {
     dispatch(toggleHelpPopup());
 
-    navigate('/notes/0c7a740a-4675-404c-8453-73e71ef00a53', {
+    navigate('/notes/cfdd9571-5ab8-412a-ab6d-f48fbd91377d', {
       state: { title: 'Exams' }, // Pass the title here
     });
   };
@@ -43,6 +43,9 @@ const HelpPopup = () => {
         <p className="text-gray-600 mb-6">
           Close this and Click on the<span className="text-[#7F9CEA]"> Name</span> of a subject. Or just click on <span className="text-[#7F9CEA]"> Study</span> for Demo.
         </p>
+
+        <p className="text-gray-600 mb-6">
+          Click on the<span className="text-[#7F9CEA]"> Logo</span> for more pages.   </p>
 
         <img src={undrawImage} alt="Study illustration" className="w-full mb-6" />
 

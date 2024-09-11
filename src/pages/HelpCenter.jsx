@@ -17,9 +17,24 @@ const HelpCenter = () => {
       </p>
 
       <p className="text-gray-600 mb-4">
-        Close this and click on the<span className="text-[#7F9CEA]"> Name</span> of a subject.
+        Go to 'Home' and click on the<span className="text-[#7F9CEA]"> Name</span> of a subject.
       </p>
 
+      <p className="text-gray-600 mb-4">
+        Then click on<span className="text-[#7F9CEA]"> Study</span> to access the notes in the Dialog box.
+      </p>
+
+      <p className="text-gray-600 mb-4">
+        On the top-left corner, you can see the <span className="text-[#7F9CEA]"> LOGO.</span>
+      </p>
+
+      <p className="text-gray-600 mb-4">
+      Click on it to toggle SIDEBAR and achieve FullScreen in PC.<span className="text-[#7F9CEA]"> Thank You.</span>
+      </p>
+
+      <p className="text-gray-600 mb-4">
+      As you complete studying a chapter, click on<span className="text-[#7F9CEA]"> Edit 📝 Icon</span><span className=""> & use the slider.</span>
+      </p>
       <img src={undrawImage} alt="Study illustration" className="w-full mb-4 rounded-lg" />
 
       
