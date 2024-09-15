@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSuccess } from './redux/userSlice'; // Import loginSuccess action
-import { toggleHelpPopup } from "./redux/uiActions";
-import { useGetStudentsQuery } from './redux/studentsApi'; // Import the students API query
-
+import { loginSuccess } from './redux/adminSlice'; // Import admin loginSuccess
 import BodyLayout from './theme/BodyLayout';
 import MyCourses from './pages/MyCourses';
 import Messages from './pages/Messages';
@@ -15,42 +12,31 @@ import Repositories from './pages/Repositories';
 import Login from './pages/Login';
 import { Toaster } from 'react-hot-toast';
 
+// Admin Imports
+import SignIn from './admin/pages/auth/sign-in';
+import Dashboard from './admin/pages/dashboard';
+import AdminLayout from './admin/theme/AdminLayout';
+
 function App() {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const { data: students } = useGetStudentsQuery(); // Fetch all students from Supabase
+  const adminIsAuthenticated = useSelector((state) => state.admin.isAuthenticated);
 
   useEffect(() => {
-    // Check for session on app load
-    const savedMatricNo = localStorage.getItem('matricNo');
-    const savedIsAuthenticated = localStorage.getItem('isAuthenticated');
+    // Check for admin session in localStorage
+    const savedEmail = localStorage.getItem('adminEmail');
+    const savedIsAuthenticated = localStorage.getItem('adminIsAuthenticated');
 
-    if (savedIsAuthenticated === 'true' && savedMatricNo && students) {
-      // Find the student's name based on matricNo
-      const student = students.find((s) => s.matric === savedMatricNo);
-
-      if (student) {
-        // Dispatch the student's actual name and matricNo to Redux
-        dispatch(loginSuccess({ matricNo: savedMatricNo, name: student.name }));
-      }
+    if (savedIsAuthenticated === 'true' && savedEmail) {
+      dispatch(loginSuccess({ email: savedEmail }));
     }
-
-    // Handle Help Popup logic
-    const isHelpPopupShown = localStorage.getItem('helpPopupShown');
-    if (!isHelpPopupShown) {
-      const timer = setTimeout(() => {
-        dispatch(toggleHelpPopup());
-        localStorage.setItem('helpPopupShown', 'true');
-      }, 1200);
-      return () => clearTimeout(timer);
-    }
-  }, [dispatch, students]); // Add `students` as a dependency to ensure it triggers when data is available
+  }, [dispatch]);
 
   return (
     <>
       <Toaster position="bottom-center" />
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Login />} />
+        {/* Client-side routes */}
+        <Route path="/" element={adminIsAuthenticated ? <Navigate to="/home" /> : <Login />} />
         <Route element={<BodyLayout />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/my-courses" element={<MyCourses />} />
@@ -59,6 +45,14 @@ function App() {
           <Route path="/help-center" element={<HelpCenter />} />
           <Route path="/notes/:id" element={<Notes />} />
         </Route>
+        
+        {/* Admin routes */}
+        <Route path="/admin" element={adminIsAuthenticated ? <Navigate to="/admin/dashboard" /> : <SignIn />} />
+        <Route path="/admin/dashboard" element={adminIsAuthenticated ? <AdminLayout /> : <Navigate to="/admin" />}>
+          <Route index element={<Dashboard />} />
+        </Route>
+
+        {/* Catch-all route to redirect to home */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
