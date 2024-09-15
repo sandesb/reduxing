@@ -300,7 +300,7 @@ export default function Dashboard() {
                 </p>
               </div>
               <AddCart refetch={refetch} />
-              <div className='grid gap-4 h-[700px] sm:grid-cols-2 lg:grid-cols-4'>
+              <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               {courses
                 .slice()
                 .reverse()
