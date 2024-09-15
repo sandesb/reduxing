@@ -1,20 +1,93 @@
-import { Layout } from '../../components/custom/layout'
-import { Button } from '../../components/custom/button'
+import { Layout } from '../../components/custom/layout';
+import { Button } from '../../components/custom/button';
+import { useState } from 'react';
 import {
-  Card,
+  Cardy,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../../components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs'
-import ThemeSwitch from '../../components/theme-switch'
-import { TopNav } from '../../components/top-nav'
-import { UserNav } from '../../components/user-nav'
-import { RecentSales } from './components/recent-sales'
-import { Overview } from './components/overview'
+} from '../../components/ui/card';
+import Card from '../../../components/Card';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import ThemeSwitch from '../../components/theme-switch';
+import { TopNav } from '../../components/top-nav';
+import { UserNav } from '../../components/user-nav';
+import { RecentSales } from './components/recent-sales';
+import { Overview } from './components/overview';
+import { UserAuthForm } from '../auth/components/user-auth-form';
+import { StudentEntry } from './components/StudentEntry';
+import AddCart from '../../../components/AddCart';
+import {
+  useGetCoursesQuery,
+  useUpdateCourseMutation,
+  useDeleteCourseMutation,
+} from '../../../redux/coursesApi';
+import DeleteDialog from '../../../components/DeleteDialog';
+import ItemDialog from '../../../components/ItemDialog';
 
 export default function Dashboard() {
+  const { data: courses = [], error, isLoading, refetch } = useGetCoursesQuery();
+
+  const [updateCourse] = useUpdateCourseMutation();
+  const [deleteCourse] = useDeleteCourseMutation();
+
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const handleEditClick = async (updatedCourse) => {
+    try {
+      console.log('Updating course:', updatedCourse);
+
+      const { data, error } = await updateCourse(updatedCourse).unwrap();
+
+      if (error) throw error;
+
+      console.log('Course updated successfully:', data);
+
+      refetch(); // Refetch courses to reflect the update
+    } catch (error) {
+      console.error('Failed to update course:', error);
+    }
+  };
+
+  const handleDeleteClick = (id) => {
+    setSelectedCourseId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteCourse(selectedCourseId).unwrap();
+      console.log('Deleted course with id:', selectedCourseId);
+      setDeleteDialogOpen(false);
+
+      refetch();
+    } catch (error) {
+      console.error('Failed to delete course:', error);
+      showToast('error', 'Failed to delete course. Please try again.');
+    }
+  };
+
+  const handleTitleClick = (id) => {
+    const selectedCourse = courses.find((course) => course.id === id);
+    if (selectedCourse) {
+      setSelectedItem(selectedCourse);
+      setIsDialogOpen(true);
+    }
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedItem(null);
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <Layout>
       {/* ===== Top Heading ===== */}
@@ -49,7 +122,8 @@ export default function Dashboard() {
           </div>
           <TabsContent value='overview' className='space-y-4'>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              <Card>
+              {/* Static Cards */}
+              <Cardy>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
                     Total Revenue
@@ -73,11 +147,12 @@ export default function Dashboard() {
                     +20.1% from last month
                   </p>
                 </CardContent>
-              </Card>
-              <Card>
+              </Cardy>
+              {/* Other static cards here */}
+              <Cardy>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Subscriptions
+                    Total Revenue
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -89,46 +164,21 @@ export default function Dashboard() {
                     strokeWidth='2'
                     className='h-4 w-4 text-muted-foreground'
                   >
-                    <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-                    <circle cx='9' cy='7' r='4' />
-                    <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
+                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                  <div className='text-2xl font-bold'>$45,231.89</div>
                   <p className='text-xs text-muted-foreground'>
-                    +180.1% from last month
+                    +20.1% from last month
                   </p>
                 </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <rect width='20' height='14' x='2' y='5' rx='2' />
-                    <path d='M2 10h20' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +19% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
+              </Cardy>
+
+                <Cardy>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Active Now
+                    Total Revenue
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -140,49 +190,158 @@ export default function Dashboard() {
                     strokeWidth='2'
                     className='h-4 w-4 text-muted-foreground'
                   >
-                    <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
+                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                  <div className='text-2xl font-bold'>$45,231.89</div>
                   <p className='text-xs text-muted-foreground'>
-                    +201 since last hour
+                    +20.1% from last month
                   </p>
                 </CardContent>
-              </Card>
+              </Cardy>
             </div>
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-              <Card className='col-span-1 lg:col-span-4'>
+              <Cardy className='col-span-1 lg:col-span-4'>
                 <CardHeader>
                   <CardTitle>Overview</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <Overview />
                 </CardContent>
-              </Card>
-              <Card className='col-span-1 lg:col-span-3'>
+              </Cardy>
+              <Cardy className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>All Students</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Virinchi students.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <RecentSales />
                 </CardContent>
-              </Card>
+              </Cardy>
             </div>
+          </TabsContent>
+
+          <TabsContent value='analytics' className='space-y-4'>
+            <AddCart />
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              {courses.map((course) => (
+                <Cardy key={course.id}>
+                  <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                    <CardTitle className='text-sm font-medium'>
+                      {course.title}
+                    </CardTitle>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      stroke='currentColor'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      className='h-4 w-4 text-muted-foreground'
+                    >
+                      <path d={course.icon} /> {/* Assuming icon is an SVG path */}
+                    </svg>
+                  </CardHeader>
+                  <CardContent>
+                    <div className='text-2xl font-bold'>{course.icon}</div>
+                    <p className='text-xs text-muted-foreground'>
+                      Chapters: {course.progress}
+                    </p>
+                  </CardContent>
+                </Cardy>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value='reports' className='space-y-4'>
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              <Cardy>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    User Authentication
+                  </CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='h-4 w-4 text-muted-foreground'
+                  >
+                    {/* Your icon here */}
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  <div className='text-md font-medium'>
+                    Please login to access the reports dashboard.
+                  </div>
+                </CardContent>
+              </Cardy>
+            </div>
+            <div className='mt-6'>
+              <StudentEntry />
+            </div>
+          </TabsContent>
+
+
+
+ {/* ===== Notifications Tab ===== */}
+          <TabsContent value='notifications' className='space-y-4'>
+              <div>
+                <h2 className='text-2xl font-bold tracking-tight'>Notifications</h2>
+                <p className='text-muted-foreground'>
+                  Here's a list of your courses.
+                </p>
+              </div>
+              <AddCart refetch={refetch} />
+              <div className='grid gap-4 h-[700px] sm:grid-cols-2 lg:grid-cols-4'>
+              {courses
+                .slice()
+                .reverse()
+                .map((course) => (
+                  <Card
+                    key={course.id}
+                    id={course.id}
+                    title={course.title}
+                    progress={course.progress}
+                    icon={course.icon}
+                    bgColor={course.bgColor}
+                    onEditClick={handleEditClick}
+                    onDeleteClick={handleDeleteClick}
+                    onTitleClick={handleTitleClick}
+                  />
+                ))}
+            </div>
+            {/* ItemDialog to show details and edit notes */}
+            {selectedItem && (
+              <ItemDialog
+                isOpen={isDialogOpen}
+                onClose={closeDialog}
+                item={selectedItem}
+              />
+            )}
+            {/* Render DeleteDialog */}
+            <DeleteDialog
+              isOpen={isDeleteDialogOpen}
+              onClose={() => setDeleteDialogOpen(false)}
+              onDelete={handleDelete}
+            />
           </TabsContent>
         </Tabs>
       </Layout.Body>
     </Layout>
-  )
+  );
 }
-
 const topNav = [
   {
     title: 'Overview',
     href: 'dashboard/overview',
     isActive: true,
   }
-]
+];

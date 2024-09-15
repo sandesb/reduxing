@@ -4,10 +4,13 @@ import { showToast } from '../utils/toast'; // Assuming this is the correct path
 
 const DeleteDialog = ({ isOpen, onClose, onDelete }) => {
   const [inputValue, setInputValue] = useState('');
+  
+  // Access the password from environment variables
+  const correctPassword = import.meta.env.VITE_ACADEMIX_PASS || 'defaultPassword'; 
 
   const handleDelete = () => {
     // Make the input case-insensitive by converting to lowercase
-    if (inputValue.toLowerCase() === 'sandes') {
+    if (inputValue.toLowerCase() === correctPassword.toLowerCase()) {
       // Call onDelete callback and show success toast
       onDelete();
       onClose();
@@ -59,14 +62,14 @@ const DeleteDialog = ({ isOpen, onClose, onDelete }) => {
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    To Delete, Type the Name of the Creator.
+                    Sorry, Only The Creator, SuperAdmin can delete.
                   </p>
                 </div>
 
                 <input
                   className="w-full p-2 border border-gray-300 bg-slate-50 rounded-md mt-4"
                   type="text"
-                  placeholder="Without the 'h', Cause Hs are ewww! 🤧"
+                  placeholder="Ask the password from Sandes🤧"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown} // Listen for Enter key

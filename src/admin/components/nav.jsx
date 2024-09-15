@@ -57,21 +57,21 @@ export default function Nav({ links, isCollapsed, className, closeNav }) {
   );
 }
 
-function NavLink({ title, icon, label, href, closeNav, subLink = false }) {
+function NavLink({ title, icon, label, to, closeNav, subLink = false }) {
   const { checkActiveNav } = useCheckActiveNav();
   return (
     <Link
-      to={href}
+      to={to} // Use "to" instead of "href"
       onClick={closeNav}
       className={cn(
         buttonVariants({
-          variant: checkActiveNav(href) ? 'secondary' : 'ghost',
+          variant: checkActiveNav(to) ? 'secondary' : 'ghost',
           size: 'sm',
         }),
         'h-12 justify-start text-wrap rounded-none px-6',
         subLink && 'h-10 w-full border-l border-l-slate-500 px-2'
       )}
-      aria-current={checkActiveNav(href) ? 'page' : undefined}
+      aria-current={checkActiveNav(to) ? 'page' : undefined}
     >
       <div className='mr-2'>{icon}</div>
       {title}
@@ -84,11 +84,11 @@ function NavLink({ title, icon, label, href, closeNav, subLink = false }) {
   );
 }
 
+
 function NavLinkDropdown({ title, icon, label, sub, closeNav }) {
   const { checkActiveNav } = useCheckActiveNav();
 
-  /* Open collapsible by default if one of the child elements is active */
-  const isChildActive = !!sub?.find((s) => checkActiveNav(s.href));
+  const isChildActive = !!sub?.find((s) => checkActiveNav(s.to)); // Check using "to"
 
   return (
     <Collapsible defaultOpen={isChildActive}>
@@ -115,7 +115,6 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav }) {
       </CollapsibleTrigger>
       <CollapsibleContent className='collapsibleDropdown' asChild>
         <ul>
-          {/* Check if sub exists before mapping */}
           {sub && sub.map((sublink) => (
             <li key={sublink.title} className='my-1 ml-8'>
               <NavLink {...sublink} subLink closeNav={closeNav} />
@@ -126,6 +125,7 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav }) {
     </Collapsible>
   );
 }
+
 
 function NavLinkIconDropdown({ title, icon, label, sub }) {
   const { checkActiveNav } = useCheckActiveNav();

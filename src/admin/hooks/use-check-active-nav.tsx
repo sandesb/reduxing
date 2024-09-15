@@ -1,15 +1,22 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
 
 export default function useCheckActiveNav() {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
-  const checkActiveNav = (nav: string) => {
-    const pathArray = pathname.split('/').filter((item) => item !== '')
+  const checkActiveNav = (nav) => {
+    // Ensure nav is a valid string before processing
+    if (!nav || typeof nav !== 'string') {
+      return false;
+    }
 
-    if (nav === '/' && pathArray.length < 1) return true
+    const pathArray = pathname.split('/').filter((item) => item !== '');
 
-    return pathArray.includes(nav.replace(/^\//, ''))
-  }
+    // Check if the nav is root
+    if (nav === '/' && pathArray.length < 1) return true;
 
-  return { checkActiveNav }
+    // Use replace only if nav is a string
+    return pathArray.includes(nav.replace(/^\//, ''));
+  };
+
+  return { checkActiveNav };
 }
