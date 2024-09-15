@@ -39,6 +39,10 @@ const Login = () => {
         dispatch(loginSuccess({ matricNo: 'guest', name: 'Guest' })); // Set guest login state
         navigate('/home'); // Redirect to home page
       };
+
+      const handleAdminLogin = () => {
+        navigate('/admin'); // Redirect to home page
+      };
     
         {/* Guest Button */}
         <button type="button" className="w-full bg-blue-400 text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
@@ -66,6 +70,10 @@ const Login = () => {
             {/* Guest Button */}
             <button type="button" className="w-full bg-[#7F9CEA] text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
             I'm A Guest
+          </button>
+
+          <button type="button" className="w-full mt-4 bg-[#4f4f4f] text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleAdminLogin}>
+            I'm Admin
           </button>
         </form>
       </div>
