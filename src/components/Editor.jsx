@@ -14,7 +14,7 @@ function debounce(fn, delay) {
   };
 }
 
-const Editor = ({ data, editorBlock, db_id, itemName }) => {
+const Editor = ({ data, editorBlock, db_id, itemName, setSaving }) => {
   const editorInstance = useRef(null);
   const [updateContent] = useUpdateContentMutation();
 
@@ -25,14 +25,17 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
         return;
       }
 
+      setSaving('saving'); // Set status to "Saving..."
+
       try {
         const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
         console.log('Content successfully saved to Supabase:', result);
+        setSaving('saved'); // Set status to "Saved"
       } catch (saveError) {
         console.error('Error saving content to Supabase:', saveError);
       }
     }, 1000),
-    [updateContent, db_id, itemName]
+    [updateContent, db_id, itemName, setSaving]
   );
 
   useEffect(() => {
@@ -41,6 +44,7 @@ const Editor = ({ data, editorBlock, db_id, itemName }) => {
         holder: editorBlock,
         data: data,
         tools: EDITOR_JS_TOOLS,
+
         onReady: () => {
           editorInstance.current = editor;
         },
