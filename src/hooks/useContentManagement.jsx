@@ -1,14 +1,17 @@
-import { useEffect, useCallback, useState } from 'react';
-import { useLoadContentQuery, useLoadProposedContentQuery, useUpdateProposedContentMutation } from '../redux/coursesApi';
-import { useRef } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
+import { useLoadContentQuery, useLoadProposedContentQuery, useUpdateProposedContentMutation, useSubmitProposedContentMutation } from '../redux/coursesApi';
+
 const useContentManagement = ({ db_id, matricNo }) => {
   const [data, setData] = useState(null);
   const [isSaving, setIsSaving] = useState(null); // Track saving status
   const hasInitialized = useRef(false); // Prevent multiple initialization
 
-  const { data: loadedContent, isLoading: isLoadingContent, error: contentError } = useLoadContentQuery(db_id);
+  // Load main content and proposed content queries
+  const { data: mainContent, isLoading: isLoadingMainContent, error: mainContentError } = useLoadContentQuery(db_id);
   const { data: proposedContent, isLoading: isLoadingProposed, error: proposedError } = useLoadProposedContentQuery({ db_id, matricNo });
+
   const [updateProposedContent] = useUpdateProposedContentMutation();
+  const [submitProposedContent] = useSubmitProposedContentMutation();
 
   // Save content to proposedcontent table
   const saveContent = useCallback(
@@ -25,30 +28,44 @@ const useContentManagement = ({ db_id, matricNo }) => {
     [db_id, matricNo, updateProposedContent]
   );
 
-  useEffect(() => {
-    // Exit early if loading or errors
-    if (isLoadingContent || contentError || proposedError || hasInitialized.current) return;
+  // Copy main content to proposedcontent for the first time
+  const copyMainContentToProposed = useCallback(async () => {
+    if (matricNo === 'guest') return; // No need to copy for guests
 
-    if (matricNo === 'guest') {
-      // For guests, just load the main content without any saving
-      if (loadedContent && loadedContent.length > 0 && loadedContent[0].note) {
-        setData(loadedContent[0].note);
+    try {
+      if (mainContent?.length > 0 && mainContent[0]?.note) {
+        const { note } = mainContent[0];
+        // Create a unique copy for the user
+        await submitProposedContent({
+          db_id,
+          matric: matricNo,
+          proposed_note: note,  // Copy the main content's note
+        }).unwrap();
       }
+    } catch (error) {
+      console.error('Error copying main content:', error);
+    }
+  }, [db_id, matricNo, mainContent, submitProposedContent]);
+
+  // Effect to check and handle copying content on first load
+  useEffect(() => {
+    if (isLoadingMainContent || isLoadingProposed || mainContentError || proposedError || hasInitialized.current) return;
+
+    if (proposedContent?.length > 0 && proposedContent[0]?.proposed_note) {
+      // If user has a proposed copy, use that
+      setData(proposedContent[0].proposed_note);
     } else {
-      // For regular users with matricNo, load or copy content to proposedcontent
-      if (proposedContent?.length > 0 && proposedContent[0].proposed_note) {
-        setData(proposedContent[0].proposed_note);
-      } else if (loadedContent?.length > 0 && loadedContent[0].note) {
-        // If no proposed content exists, copy main content to proposedcontent
-        setData(loadedContent[0].note);
-        saveContent(loadedContent[0].note); // Copy main content to proposedcontent table
+      // If no copy exists, copy main content and use that
+      if (mainContent?.length > 0 && mainContent[0]?.note) {
+        setData(mainContent[0].note);
+        copyMainContentToProposed();  // Copy content for future reference
       }
     }
 
     hasInitialized.current = true;
-  }, [isLoadingContent, contentError, proposedError, loadedContent, proposedContent, saveContent, matricNo]);
+  }, [isLoadingMainContent, isLoadingProposed, mainContentError, proposedError, proposedContent, mainContent, copyMainContentToProposed]);
 
-  return { data, isLoading: isLoadingContent || isLoadingProposed, isSaving };
+  return { data, isLoading: isLoadingMainContent || isLoadingProposed, isSaving };
 };
 
 export default useContentManagement;

@@ -176,7 +176,7 @@ export const coursesApi = createApi({
  submitProposedContent: builder.mutation({
   query: ({ db_id, matric, proposed_note }) => ({
     url: 'proposedcontent',
-    method: 'upsert',  // Use upsert
+    method: 'upsert',  // Use upsert to insert or update based on db_id
     body: {
       db_id,
       matric,  // Use the matricNo as a unique identifier
@@ -187,6 +187,7 @@ export const coursesApi = createApi({
   }),
   invalidatesTags: ['ProposedContent'],
 }),
+
 
 // Update existing proposed content or insert new one
 updateProposedContent: builder.mutation({

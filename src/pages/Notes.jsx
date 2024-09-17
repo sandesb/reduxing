@@ -1,9 +1,10 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import useContentManagement from '../hooks/useContentManagement';
 import Editor from '../components/Editor';
 import LoadingSpinner from '../components/LoadingSpinner';
-import useContentManagement from '../hooks/useContentManagement';
+
 const Notes = () => {
   const { id } = useParams();  // This is the db_id from the URL
   const location = useLocation();
