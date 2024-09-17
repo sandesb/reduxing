@@ -1,71 +1,110 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
-import { useLoadContentQuery, useLoadProposedContentQuery, useUpdateProposedContentMutation, useSubmitProposedContentMutation } from '../redux/coursesApi';
+import { useLoadContentQuery, useLoadProposedContentQuery, useAddProposedContentMutation } from '../redux/coursesApi';  // Add useLoadProposedContentQuery to check existing content
+import { v4 as uuidv4 } from 'uuid';
 
 const useContentManagement = ({ db_id, matricNo }) => {
   const [data, setData] = useState(null);
-  const [isSaving, setIsSaving] = useState(null); // Track saving status
-  const hasInitialized = useRef(false); // Prevent multiple initialization
+  const hasInitialized = useRef(false);  // Prevent multiple initializations
 
-  // Load main content and proposed content queries
+  // Load main content query (notes from 'content' table)
   const { data: mainContent, isLoading: isLoadingMainContent, error: mainContentError } = useLoadContentQuery(db_id);
-  const { data: proposedContent, isLoading: isLoadingProposed, error: proposedError } = useLoadProposedContentQuery({ db_id, matricNo });
+  
+  // Load proposed content to check for existing records for this student (by matricNo and s_id)
+  const { data: proposedContent, isLoading: isLoadingProposed } = useLoadProposedContentQuery({ matricNo });
 
-  const [updateProposedContent] = useUpdateProposedContentMutation();
-  const [submitProposedContent] = useSubmitProposedContentMutation();
+  // Mutation to add or update proposed content in the database
+  const [addProposedContent] = useAddProposedContentMutation();  
 
-  // Save content to proposedcontent table
-  const saveContent = useCallback(
-    async (newData) => {
-      if (!db_id || !matricNo || matricNo === 'guest') return; // Avoid saving for guests
-      setIsSaving('saving');
-      try {
-        await updateProposedContent({ db_id, matric: matricNo, proposed_note: newData }).unwrap();
-        setIsSaving('saved');
-      } catch (error) {
-        console.error('Error saving proposed content:', error);
-      }
-    },
-    [db_id, matricNo, updateProposedContent]
-  );
+  // Generate IDs for the proposed content
+  const generateProposedContent = useCallback(() => {
+    const proposed_id = uuidv4();  // Generate a UUID for proposed_id
+    const s_id = uuidv4();  // Generate a UUID for s_id
 
-  // Copy main content to proposedcontent for the first time
+    console.log("Generated IDs:");
+    console.log("proposed_id:", proposed_id);
+    console.log("s_id:", s_id);
+
+    return { proposed_id, s_id };
+  }, []);
+
+  // Merge new course data into existing course_data for the same student and session (s_id)
+  const mergeCourseData = useCallback((existingCourseData, db_id, note) => {
+    return {
+      ...existingCourseData,
+      [db_id]: note  // Add or overwrite the content for this db_id
+    };
+  }, []);
+
+  // Copy content to 'proposedcontent' structure and store or update in Supabase
   const copyMainContentToProposed = useCallback(async () => {
-    if (matricNo === 'guest') return; // No need to copy for guests
+    if (!matricNo || matricNo === 'guest') return;  // Avoid saving for guests
 
-    try {
-      if (mainContent?.length > 0 && mainContent[0]?.note) {
-        const { note } = mainContent[0];
-        // Create a unique copy for the user
-        await submitProposedContent({
-          db_id,
-          matric: matricNo,
-          proposed_note: note,  // Copy the main content's note
-        }).unwrap();
+    // Check if main content exists
+    if (mainContent?.length > 0 && mainContent[0]?.note) {
+      const { note } = mainContent[0];
+      console.log("Main content note:", note);
+
+      // Generate the UUIDs (used for new entries)
+      const { proposed_id, s_id } = generateProposedContent();
+
+      let course_data;
+      let s_id_to_use = s_id;  // Use the new s_id by default
+
+      // Check if the matric already exists in the proposedcontent table
+      if (proposedContent?.length > 0) {
+        const existingProposedContent = proposedContent.find((entry) => entry.matric === matricNo);
+
+        if (existingProposedContent) {
+          console.log("Existing proposed content found:", existingProposedContent);
+          // Use existing s_id if found
+          s_id_to_use = existingProposedContent.s_id;
+
+          // Merge the new course content into the existing course_data
+          course_data = mergeCourseData(existingProposedContent.course_data, db_id, note);
+        } else {
+          console.log("No existing content found for this matric, creating new entry.");
+          course_data = { [db_id]: note };  // New course_data with just this db_id
+        }
+      } else {
+        console.log("No existing proposed content found, creating new record.");
+        course_data = { [db_id]: note };  // New course_data with just this db_id
       }
-    } catch (error) {
-      console.error('Error copying main content:', error);
+
+      // Structure for proposedcontent
+      const proposedContentData = {
+        proposed_id,
+        s_id: s_id_to_use,  // Either the new or existing s_id
+        matric: matricNo,
+        proposed_note: note,  // Copying main content into 'proposed_note'
+        course_data  // Merged or new course_data
+      };
+
+      // Store or update proposed content in Supabase
+      try {
+        const response = await addProposedContent(proposedContentData).unwrap();
+        console.log("Proposed content successfully stored:", response);
+      } catch (error) {
+        console.error("Error storing proposed content:", error);
+      }
+    } else {
+      console.warn("No main content found to copy.");
     }
-  }, [db_id, matricNo, mainContent, submitProposedContent]);
+  }, [db_id, matricNo, mainContent, proposedContent, addProposedContent, generateProposedContent, mergeCourseData]);
 
   // Effect to check and handle copying content on first load
   useEffect(() => {
-    if (isLoadingMainContent || isLoadingProposed || mainContentError || proposedError || hasInitialized.current) return;
+    if (isLoadingMainContent || isLoadingProposed || mainContentError || hasInitialized.current) return;
 
-    if (proposedContent?.length > 0 && proposedContent[0]?.proposed_note) {
-      // If user has a proposed copy, use that
-      setData(proposedContent[0].proposed_note);
-    } else {
-      // If no copy exists, copy main content and use that
-      if (mainContent?.length > 0 && mainContent[0]?.note) {
-        setData(mainContent[0].note);
-        copyMainContentToProposed();  // Copy content for future reference
-      }
+    // Copy the main content on the first load
+    if (mainContent?.length > 0 && mainContent[0]?.note) {
+      setData(mainContent[0].note);  // Set the current note
+      copyMainContentToProposed();  // Copy content to 'proposedcontent'
     }
 
     hasInitialized.current = true;
-  }, [isLoadingMainContent, isLoadingProposed, mainContentError, proposedError, proposedContent, mainContent, copyMainContentToProposed]);
+  }, [isLoadingMainContent, isLoadingProposed, mainContentError, mainContent, copyMainContentToProposed]);
 
-  return { data, isLoading: isLoadingMainContent || isLoadingProposed, isSaving };
+  return { data, isLoading: isLoadingMainContent || isLoadingProposed };
 };
 
 export default useContentManagement;

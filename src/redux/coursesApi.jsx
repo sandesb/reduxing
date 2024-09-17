@@ -20,7 +20,7 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
         break;
 
       case 'upsert': // If you need to use UPSERT
-        supabaseQuery = supabase.from(url).upsert(body).eq('db_id', body.db_id).select();
+        supabaseQuery = supabase.from(url).upsert(body).select();
         break;
         
     case 'delete':
@@ -40,6 +40,21 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
 
   return { data };
 };
+
+
+const mergeCourseContent = (existingData, db_id, newNote) => {
+  const updatedData = existingData ? { ...existingData } : {};
+  
+  // Ensure we are adding the new note in the right place
+  updatedData[db_id] = {
+    blocks: newNote.blocks,
+    time: newNote.time,
+    version: newNote.version,
+  };
+
+  return updatedData;
+};
+
 
 
 export const coursesApi = createApi({
@@ -152,13 +167,26 @@ export const coursesApi = createApi({
     }),
 
        
+    // Load main content based on db_id
     loadContent: builder.query({
       query: (db_id) => ({
-        url: `content?db_id=eq.${db_id}`, // Fetch content based on db_id
+        url: `content?db_id=eq.${db_id}`,
         method: 'select',
         body: '*',
       }),
       providesTags: ['Courses'],
+    }),
+
+
+    // Load proposed content based on matricNo
+    loadProposedContent: builder.query({
+      query: ({ matricNo }) => ({
+        url: `proposedcontent`,
+        method: 'select',
+        body: '*',
+        filter: `matric=eq.${matricNo}`, // Fetch by matricNo
+      }),
+      providesTags: ['ProposedContent'],
     }),
 
 
@@ -171,60 +199,54 @@ export const coursesApi = createApi({
       }),
       invalidatesTags: ['Content'],
     }),
-
- // UPSERT content into proposedcontent table
+ // Copy content from the main content table to the proposedcontent table for the first time
  submitProposedContent: builder.mutation({
-  query: ({ db_id, matric, proposed_note }) => ({
+  query: ({ matric, db_id, note }) => ({
     url: 'proposedcontent',
-    method: 'upsert',  // Use upsert to insert or update based on db_id
+    method: 'upsert',
     body: {
-      db_id,
-      matric,  // Use the matricNo as a unique identifier
-      proposed_note,  // The content proposed by the student or guest
-      s_id: uuidv4()  // Generate a unique s_id if inserting a new record
+      matric,
+      course_data: { [db_id]: note }, // Store the note under the db_id key in course_data
     },
-    returning: 'representation', // Request to return the updated record
   }),
   invalidatesTags: ['ProposedContent'],
 }),
 
-
-// Update existing proposed content or insert new one
+// Update the proposed content (course_data) for a specific user
+// Update proposed content mutation
 updateProposedContent: builder.mutation({
-  query: ({ db_id, matric, proposed_note }) => ({
+  query: ({ matric, db_id, newNote }) => {
+    return {
+      url: 'proposedcontent',
+      method: 'upsert',
+      body: {
+        matric,
+        course_data: mergeCourseContent(matric.course_data, db_id, newNote), // Merge new note with existing course_data
+        proposed_note: newNote,  // Ensure proposed_note is not null
+      },
+    };
+  },
+  invalidatesTags: ['ProposedContent'],
+}),
+// Mutation to upsert (insert or update) proposed content into the proposedcontent table
+addProposedContent: builder.mutation({
+  query: ({ proposed_id, s_id, matric, proposed_note, course_data }) => ({
     url: 'proposedcontent',
-    method: 'upsert',  // Use UPSERT to insert or update based on db_id and matric
+    method: 'upsert',  // Use upsert to insert new or update existing records
     body: {
-      db_id,
-      matric,  // Use the matricNo as a unique identifier
-      proposed_note: proposed_note,  // Ensure valid JSON format for the proposed_note
+      proposed_id,
+      s_id,
+      matric,
+      proposed_note,
+      course_data
     },
-    returning: 'representation', // Request to return the updated record
   }),
   invalidatesTags: ['ProposedContent'],
-  async onQueryStarted({ db_id, matric, proposed_note }, { dispatch, queryFulfilled }) {
-    try {
-      const response = await queryFulfilled;
-      console.log('UPSERT Successful:', response);  // Log response to check if UPSERT was successful
-    } catch (error) {
-      console.error('Error during UPSERT:', error);  // Log error if UPSERT fails
-    }
-  },
 }),
 
-// Load proposed content based on db_id and matricNo
-loadProposedContent: builder.query({
-  query: ({ db_id, matricNo }) => ({
-    url: `proposedcontent?db_id=eq.${db_id}&matric=eq.${matricNo}`, // Fetch content based on db_id and matricNo
-    method: 'select',
-    body: '*',
-  }),
-  providesTags: ['ProposedContent'],
 }),
 
 
-    
-  }),
 
   
 });
@@ -242,6 +264,8 @@ export const {
   useSubmitProposedContentMutation,
   useUpdateProposedContentMutation,
   useLoadProposedContentQuery,
+  useAddProposedContentMutation,  // Exporting the mutation
+
 
 } = coursesApi;
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import { EDITOR_JS_TOOLS } from './Tool';
-import { useUpdateProposedContentMutation } from '../redux/coursesApi'; 
+import { useUpdateProposedContentMutation } from '../redux/coursesApi';
 
 // Debounce function to limit how often the save function is called
 function debounce(fn, delay) {
@@ -14,14 +14,15 @@ function debounce(fn, delay) {
   };
 }
 
-const Editor = ({ data, editorBlock, db_id, matricNo }) => {
+const Editor = ({ data, editorBlock = 'editorjs', db_id, matricNo }) => {
   const editorInstance = useRef(null);
-  const [updateProposedContent] = useUpdateProposedContentMutation(); 
+  const editorContainerRef = useRef(null); // Ref for the editor container div
+  const [updateProposedContent] = useUpdateProposedContentMutation();
 
   // Save content function for the proposedcontent table
   const saveContent = useCallback(
     debounce(async (newData) => {
-      if (!db_id || !matricNo || matricNo === 'guest') return; 
+      if (!db_id || !matricNo || matricNo === 'guest') return;
 
       try {
         await updateProposedContent({ db_id, matric: matricNo, proposed_note: newData }).unwrap();
@@ -34,9 +35,9 @@ const Editor = ({ data, editorBlock, db_id, matricNo }) => {
   );
 
   useEffect(() => {
-    if (!editorInstance.current && data) {
+    if (!editorInstance.current && editorContainerRef.current && data) {
       const editor = new EditorJS({
-        holder: editorBlock,
+        holder: editorBlock,  // Referencing the correct holder ID
         data: data,
         tools: EDITOR_JS_TOOLS,
         onReady: () => {
@@ -57,7 +58,9 @@ const Editor = ({ data, editorBlock, db_id, matricNo }) => {
     };
   }, [data, editorBlock, saveContent]);
 
-  return <div id={editorBlock} />;
+  return (
+    <div id={editorBlock} ref={editorContainerRef} />  // Ensures ID and ref are correctly set
+  );
 };
 
 export default Editor;
