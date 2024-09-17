@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import { EDITOR_JS_TOOLS } from './Tool';
-import { useUpdateContentMutation } from '../redux/coursesApi';
+import { useUpdateProposedContentMutation } from '../redux/coursesApi'; 
 
 // Debounce function to limit how often the save function is called
 function debounce(fn, delay) {
@@ -14,28 +14,23 @@ function debounce(fn, delay) {
   };
 }
 
-const Editor = ({ data, editorBlock, db_id, itemName, setSaving }) => {
+const Editor = ({ data, editorBlock, db_id, matricNo }) => {
   const editorInstance = useRef(null);
-  const [updateContent] = useUpdateContentMutation();
+  const [updateProposedContent] = useUpdateProposedContentMutation(); 
 
+  // Save content function for the proposedcontent table
   const saveContent = useCallback(
     debounce(async (newData) => {
-      if (!db_id) {
-        console.error('db_id is undefined, cannot save content.');
-        return;
-      }
-
-      setSaving('saving'); // Set status to "Saving..."
+      if (!db_id || !matricNo || matricNo === 'guest') return; 
 
       try {
-        const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
-        console.log('Content successfully saved to Supabase:', result);
-        setSaving('saved'); // Set status to "Saved"
+        await updateProposedContent({ db_id, matric: matricNo, proposed_note: newData }).unwrap();
+        console.log('Content saved successfully');
       } catch (saveError) {
-        console.error('Error saving content to Supabase:', saveError);
+        console.error('Error saving proposed content:', saveError);
       }
     }, 1000),
-    [updateContent, db_id, itemName, setSaving]
+    [updateProposedContent, db_id, matricNo]
   );
 
   useEffect(() => {
@@ -44,13 +39,12 @@ const Editor = ({ data, editorBlock, db_id, itemName, setSaving }) => {
         holder: editorBlock,
         data: data,
         tools: EDITOR_JS_TOOLS,
-
         onReady: () => {
           editorInstance.current = editor;
         },
         async onChange(api) {
           const newData = await api.saver.save();
-          saveContent(newData); // Trigger save to Supabase
+          saveContent(newData); // Save to proposedcontent
         },
       });
     }

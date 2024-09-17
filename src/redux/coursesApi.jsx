@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import supabase from '../config/supabaseClient';
 import { showToast } from '../utils/toast';
+import { v4 as uuidv4 } from 'uuid';
 
 const supabaseBaseQuery = async ({ url, method, body , returning}) => {
   let supabaseQuery;
@@ -44,7 +45,7 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
 export const coursesApi = createApi({
   reducerPath: 'coursesApi',
   baseQuery: supabaseBaseQuery,
-  tagTypes: ['Courses'],
+  tagTypes: ['Courses', 'ProposedContent'],
   endpoints: (builder) => ({
     getCourses: builder.query({
       query: () => ({ url: 'db', method: 'select', body: '*' }),
@@ -171,6 +172,56 @@ export const coursesApi = createApi({
       invalidatesTags: ['Content'],
     }),
 
+ // UPSERT content into proposedcontent table
+ submitProposedContent: builder.mutation({
+  query: ({ db_id, matric, proposed_note }) => ({
+    url: 'proposedcontent',
+    method: 'upsert',  // Use upsert
+    body: {
+      db_id,
+      matric,  // Use the matricNo as a unique identifier
+      proposed_note,  // The content proposed by the student or guest
+      s_id: uuidv4()  // Generate a unique s_id if inserting a new record
+    },
+    returning: 'representation', // Request to return the updated record
+  }),
+  invalidatesTags: ['ProposedContent'],
+}),
+
+// Update existing proposed content or insert new one
+updateProposedContent: builder.mutation({
+  query: ({ db_id, matric, proposed_note }) => ({
+    url: 'proposedcontent',
+    method: 'upsert',  // Use UPSERT to insert or update based on db_id and matric
+    body: {
+      db_id,
+      matric,  // Use the matricNo as a unique identifier
+      proposed_note: proposed_note,  // Ensure valid JSON format for the proposed_note
+    },
+    returning: 'representation', // Request to return the updated record
+  }),
+  invalidatesTags: ['ProposedContent'],
+  async onQueryStarted({ db_id, matric, proposed_note }, { dispatch, queryFulfilled }) {
+    try {
+      const response = await queryFulfilled;
+      console.log('UPSERT Successful:', response);  // Log response to check if UPSERT was successful
+    } catch (error) {
+      console.error('Error during UPSERT:', error);  // Log error if UPSERT fails
+    }
+  },
+}),
+
+// Load proposed content based on db_id and matricNo
+loadProposedContent: builder.query({
+  query: ({ db_id, matricNo }) => ({
+    url: `proposedcontent?db_id=eq.${db_id}&matric=eq.${matricNo}`, // Fetch content based on db_id and matricNo
+    method: 'select',
+    body: '*',
+  }),
+  providesTags: ['ProposedContent'],
+}),
+
+
     
   }),
 
@@ -186,7 +237,11 @@ export const {
   useUpdateNoteMutation,
   useLoadNoteQuery,
   useLoadContentQuery,
-  useUpdateContentMutation
+  useUpdateContentMutation,
+  useSubmitProposedContentMutation,
+  useUpdateProposedContentMutation,
+  useLoadProposedContentQuery,
+
 } = coursesApi;
 
 export default coursesApi;
