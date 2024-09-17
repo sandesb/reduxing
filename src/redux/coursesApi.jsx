@@ -44,16 +44,22 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
 
 const mergeCourseContent = (existingData, db_id, newNote) => {
   const updatedData = existingData ? { ...existingData } : {};
-  
-  // Ensure we are adding the new note in the right place
-  updatedData[db_id] = {
-    blocks: newNote.blocks,
-    time: newNote.time,
-    version: newNote.version,
-  };
+
+  // Ensure newNote has the correct structure before attempting to access properties
+  if (newNote && newNote.blocks) {
+    // Add or overwrite the note for this db_id
+    updatedData[db_id] = {
+      blocks: newNote.blocks,
+      time: newNote.time || Date.now(),
+      version: newNote.version || '2.0',  // Ensure version is set
+    };
+  } else {
+    console.error('Invalid newNote format: blocks are missing');
+  }
 
   return updatedData;
 };
+
 
 
 
@@ -215,19 +221,18 @@ export const coursesApi = createApi({
 // Update the proposed content (course_data) for a specific user
 // Update proposed content mutation
 updateProposedContent: builder.mutation({
-  query: ({ matric, db_id, newNote }) => {
-    return {
-      url: 'proposedcontent',
-      method: 'upsert',
-      body: {
-        matric,
-        course_data: mergeCourseContent(matric.course_data, db_id, newNote), // Merge new note with existing course_data
-        proposed_note: newNote,  // Ensure proposed_note is not null
-      },
-    };
-  },
+  query: ({ matric, db_id, newNote, course_data }) => ({
+    url: 'proposedcontent',
+    method: 'upsert',
+    body: {
+      matric,
+      course_data,  // Updated course data with the merged content for db_id
+      proposed_note: newNote  // Optionally store the latest version of proposed_note
+    },
+  }),
   invalidatesTags: ['ProposedContent'],
 }),
+
 // Mutation to upsert (insert or update) proposed content into the proposedcontent table
 addProposedContent: builder.mutation({
   query: ({ proposed_id, s_id, matric, proposed_note, course_data }) => ({

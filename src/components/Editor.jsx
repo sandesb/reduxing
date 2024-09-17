@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import { EDITOR_JS_TOOLS } from './Tool';
-import { useUpdateProposedContentMutation } from '../redux/coursesApi';
+import useSaveCourseContent from '../hooks/useSaveCourseContent';  // Import the new custom hook
 
 // Debounce function to limit how often the save function is called
 function debounce(fn, delay) {
@@ -17,21 +17,19 @@ function debounce(fn, delay) {
 const Editor = ({ data, editorBlock = 'editorjs', db_id, matricNo }) => {
   const editorInstance = useRef(null);
   const editorContainerRef = useRef(null); // Ref for the editor container div
-  const [updateProposedContent] = useUpdateProposedContentMutation();
+
+  // Use the custom hook for saving course content
+  const { saveCourseContent } = useSaveCourseContent();
 
   // Save content function for the proposedcontent table
-  const saveContent = useCallback(
+  const handleSaveContent = useCallback(
     debounce(async (newData) => {
       if (!db_id || !matricNo || matricNo === 'guest') return;
 
-      try {
-        await updateProposedContent({ db_id, matric: matricNo, proposed_note: newData }).unwrap();
-        console.log('Content saved successfully');
-      } catch (saveError) {
-        console.error('Error saving proposed content:', saveError);
-      }
+      // Pass the updated note (newData) to be saved in the proposedcontent table
+      saveCourseContent(matricNo, db_id, newData, data);  // Passing current course data
     }, 1000),
-    [updateProposedContent, db_id, matricNo]
+    [saveCourseContent, db_id, matricNo, data]
   );
 
   useEffect(() => {
@@ -45,7 +43,7 @@ const Editor = ({ data, editorBlock = 'editorjs', db_id, matricNo }) => {
         },
         async onChange(api) {
           const newData = await api.saver.save();
-          saveContent(newData); // Save to proposedcontent
+          handleSaveContent(newData);  // Save changes
         },
       });
     }
@@ -56,7 +54,7 @@ const Editor = ({ data, editorBlock = 'editorjs', db_id, matricNo }) => {
         editorInstance.current = null;
       }
     };
-  }, [data, editorBlock, saveContent]);
+  }, [data, editorBlock, handleSaveContent]);
 
   return (
     <div id={editorBlock} ref={editorContainerRef} />  // Ensures ID and ref are correctly set
