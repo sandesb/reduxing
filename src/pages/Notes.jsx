@@ -14,6 +14,10 @@ const Notes = () => {
 
   const itemName = location.state?.title || 'Unknown Item';
 
+  // Check if matricNo exists in localStorage
+  const matricNo = localStorage.getItem('matricNo');
+  const isGuest = !matricNo; // If matricNo doesn't exist, the user is a guest
+
   useEffect(() => {
     if (isLoading) return;
 
@@ -64,9 +68,16 @@ const Notes = () => {
         Study Notes for {itemName}
       </h1>
 
-      {/* Show "Saving..." or "Saved" messages */}
-      {saving === 'saving' && <p className="text-center text-red-500">Saving...</p>}
-      {saving === 'saved' && <p className="text-center text-green-500">Saved</p>}
+      {/* If the user is not a guest, show "Saving..." or "Saved" messages */}
+      {!isGuest && (
+        <>
+          {saving === 'saving' && <p className="text-center text-red-500">Saving...</p>}
+          {saving === 'saved' && <p className="text-center text-green-500">Saved</p>}
+        </>
+      )}
+
+      {/* If the user is a guest, show a "Cannot Save" message */}
+      {isGuest && <p className="text-center text-red-500">You are in guest mode. Cannot Save.</p>}
 
       <div className="w-full text-left editorjs-container">
         <Editor

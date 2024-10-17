@@ -14,12 +14,22 @@ function debounce(fn, delay) {
   };
 }
 
-const Editor = ({ data, editorBlock, db_id, itemName, setSaving }) => {
+const Editor = ({ data, editorBlock, db_id, itemName, setSaving, readOnly = false }) => {
   const editorInstance = useRef(null);
   const [updateContent] = useUpdateContentMutation();
 
   const saveContent = useCallback(
     debounce(async (newData) => {
+      // Check matricNo directly from localStorage before saving
+      const matricNo = localStorage.getItem('matricNo');
+      console.log('Checking matricNo from localStorage before saving:', matricNo);
+
+      if (!matricNo) {
+        console.warn('Cannot save content. User is in guest mode (no matricNo found in localStorage).');
+        setSaving('Cannot save in guest mode.');
+        return;
+      }
+
       if (!db_id) {
         console.error('db_id is undefined, cannot save content.');
         return;
@@ -44,13 +54,16 @@ const Editor = ({ data, editorBlock, db_id, itemName, setSaving }) => {
         holder: editorBlock,
         data: data,
         tools: EDITOR_JS_TOOLS,
+        readOnly: readOnly, // Pass the readOnly state
 
         onReady: () => {
           editorInstance.current = editor;
         },
         async onChange(api) {
-          const newData = await api.saver.save();
-          saveContent(newData); // Trigger save to Supabase
+          if (!readOnly) {
+            const newData = await api.saver.save();
+            saveContent(newData); // Trigger save to Supabase if allowed
+          }
         },
       });
     }
@@ -61,9 +74,13 @@ const Editor = ({ data, editorBlock, db_id, itemName, setSaving }) => {
         editorInstance.current = null;
       }
     };
-  }, [data, editorBlock, saveContent]);
+  }, [data, editorBlock, saveContent, readOnly]);
 
-  return <div id={editorBlock} />;
+  return (
+    <div>
+      <div id={editorBlock} />
+    </div>
+  );
 };
 
 export default Editor;
