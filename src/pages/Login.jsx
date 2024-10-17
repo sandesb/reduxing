@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import LogInput from "../components/LogInput";
@@ -13,6 +13,15 @@ const Login = () => {
   const dispatch = useDispatch();
   const { data: students } = useGetStudentsQuery();
 
+  // Check authentication status on component load
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated === 'true') {
+      // Redirect the user to the home page if they are already authenticated
+      navigate('/home');
+    }
+  }, [navigate]);
+
   const doLogin = (e) => {
     e.preventDefault();
 
@@ -26,6 +35,7 @@ const Login = () => {
       // Store the session in localStorage for persistence
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('matricNo', student.matric);
+      localStorage.setItem('studentName', student.name); // Store the student's name as well
 
       // Redirect to home page
       navigate('/home');
@@ -34,20 +44,17 @@ const Login = () => {
     }
   };
 
-    // Guest login handler
-    const handleGuestLogin = () => {
-        dispatch(loginSuccess({ matricNo: 'guest', name: 'Guest' })); // Set guest login state
-        navigate('/home'); // Redirect to home page
-      };
+  // Guest login handler
+  const handleGuestLogin = () => {
+    dispatch(loginSuccess({ matricNo: 'guest', name: 'Guest' })); // Set guest login state
+    localStorage.setItem('isAuthenticated', 'true');
+    navigate('/home'); // Redirect to home page
+  };
 
-      const handleAdminLogin = () => {
-        navigate('/admin'); // Redirect to home page
-      };
-    
-        {/* Guest Button */}
-        <button type="button" className="w-full bg-blue-400 text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
-        I'm A Guest
-      </button>
+  const handleAdminLogin = () => {
+    navigate('/admin'); // Redirect to admin page
+  };
+
   return (
     <div className="flex justify-center items-center h-screen bg-primary-bg">
       <div id="login" className="p-8 rounded max-w-sm text-center">
@@ -67,8 +74,8 @@ const Login = () => {
             Sign in
           </button>
 
-            {/* Guest Button */}
-            <button type="button" className="w-full bg-[#7F9CEA] text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
+          {/* Guest Button */}
+          <button type="button" className="w-full bg-[#7F9CEA] text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
             I'm A Guest
           </button>
 

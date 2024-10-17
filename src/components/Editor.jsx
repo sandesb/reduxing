@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import { EDITOR_JS_TOOLS } from './Tool';
-import useSaveCourseContent from '../hooks/useSaveCourseContent';  // Import the new custom hook
+import { useUpdateContentMutation } from '../redux/coursesApi';
 
 // Debounce function to limit how often the save function is called
 function debounce(fn, delay) {
@@ -14,36 +14,43 @@ function debounce(fn, delay) {
   };
 }
 
-const Editor = ({ data, editorBlock = 'editorjs', db_id, matricNo }) => {
+const Editor = ({ data, editorBlock, db_id, itemName, setSaving }) => {
   const editorInstance = useRef(null);
-  const editorContainerRef = useRef(null); // Ref for the editor container div
+  const [updateContent] = useUpdateContentMutation();
 
-  // Use the custom hook for saving course content
-  const { saveCourseContent } = useSaveCourseContent();
-
-  // Save content function for the proposedcontent table
-  const handleSaveContent = useCallback(
+  const saveContent = useCallback(
     debounce(async (newData) => {
-      if (!db_id || !matricNo || matricNo === 'guest') return;
+      if (!db_id) {
+        console.error('db_id is undefined, cannot save content.');
+        return;
+      }
 
-      // Pass the updated note (newData) to be saved in the proposedcontent table
-      saveCourseContent(matricNo, db_id, newData, data);  // Passing current course data
+      setSaving('saving'); // Set status to "Saving..."
+
+      try {
+        const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
+        console.log('Content successfully saved to Supabase:', result);
+        setSaving('saved'); // Set status to "Saved"
+      } catch (saveError) {
+        console.error('Error saving content to Supabase:', saveError);
+      }
     }, 1000),
-    [saveCourseContent, db_id, matricNo, data]
+    [updateContent, db_id, itemName, setSaving]
   );
 
   useEffect(() => {
-    if (!editorInstance.current && editorContainerRef.current && data) {
+    if (!editorInstance.current && data) {
       const editor = new EditorJS({
-        holder: editorBlock,  // Referencing the correct holder ID
+        holder: editorBlock,
         data: data,
         tools: EDITOR_JS_TOOLS,
+
         onReady: () => {
           editorInstance.current = editor;
         },
         async onChange(api) {
           const newData = await api.saver.save();
-          handleSaveContent(newData);  // Save changes
+          saveContent(newData); // Trigger save to Supabase
         },
       });
     }
@@ -54,11 +61,9 @@ const Editor = ({ data, editorBlock = 'editorjs', db_id, matricNo }) => {
         editorInstance.current = null;
       }
     };
-  }, [data, editorBlock, handleSaveContent]);
+  }, [data, editorBlock, saveContent]);
 
-  return (
-    <div id={editorBlock} ref={editorContainerRef} />  // Ensures ID and ref are correctly set
-  );
+  return <div id={editorBlock} />;
 };
 
 export default Editor;

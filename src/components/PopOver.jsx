@@ -17,6 +17,8 @@ const PopOver = ({ open, onClose }) => {
     dispatch(logout()); // Clear Redux state
     localStorage.removeItem('isAuthenticated'); // Remove session from localStorage
     localStorage.removeItem('matricNo'); // Remove matricNo from localStorage
+    localStorage.removeItem('studentName'); // Remove matricNo from localStorage
+
     navigate('/'); // Redirect to the login page
     onClose(); // Close the popover after logout
   };

@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import supabase from '../config/supabaseClient';
 import { showToast } from '../utils/toast';
-import { v4 as uuidv4 } from 'uuid';
 
 const supabaseBaseQuery = async ({ url, method, body , returning}) => {
   let supabaseQuery;
@@ -20,7 +19,7 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
         break;
 
       case 'upsert': // If you need to use UPSERT
-        supabaseQuery = supabase.from(url).upsert(body).select();
+        supabaseQuery = supabase.from(url).upsert(body).eq('db_id', body.db_id).select();
         break;
         
     case 'delete':
@@ -42,31 +41,10 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
 };
 
 
-const mergeCourseContent = (existingData, db_id, newNote) => {
-  const updatedData = existingData ? { ...existingData } : {};
-
-  // Ensure newNote has the correct structure before attempting to access properties
-  if (newNote && newNote.blocks) {
-    // Add or overwrite the note for this db_id
-    updatedData[db_id] = {
-      blocks: newNote.blocks,
-      time: newNote.time || Date.now(),
-      version: newNote.version || '2.0',  // Ensure version is set
-    };
-  } else {
-    console.error('Invalid newNote format: blocks are missing');
-  }
-
-  return updatedData;
-};
-
-
-
-
 export const coursesApi = createApi({
   reducerPath: 'coursesApi',
   baseQuery: supabaseBaseQuery,
-  tagTypes: ['Courses', 'ProposedContent'],
+  tagTypes: ['Courses'],
   endpoints: (builder) => ({
     getCourses: builder.query({
       query: () => ({ url: 'db', method: 'select', body: '*' }),
@@ -173,26 +151,13 @@ export const coursesApi = createApi({
     }),
 
        
-    // Load main content based on db_id
     loadContent: builder.query({
       query: (db_id) => ({
-        url: `content?db_id=eq.${db_id}`,
+        url: `content?db_id=eq.${db_id}`, // Fetch content based on db_id
         method: 'select',
         body: '*',
       }),
       providesTags: ['Courses'],
-    }),
-
-
-    // Load proposed content based on matricNo
-    loadProposedContent: builder.query({
-      query: ({ matricNo }) => ({
-        url: `proposedcontent`,
-        method: 'select',
-        body: '*',
-        filter: `matric=eq.${matricNo}`, // Fetch by matricNo
-      }),
-      providesTags: ['ProposedContent'],
     }),
 
 
@@ -205,53 +170,9 @@ export const coursesApi = createApi({
       }),
       invalidatesTags: ['Content'],
     }),
- // Copy content from the main content table to the proposedcontent table for the first time
- submitProposedContent: builder.mutation({
-  query: ({ matric, db_id, note }) => ({
-    url: 'proposedcontent',
-    method: 'upsert',
-    body: {
-      matric,
-      course_data: { [db_id]: note }, // Store the note under the db_id key in course_data
-    },
+
+    
   }),
-  invalidatesTags: ['ProposedContent'],
-}),
-
-// Update the proposed content (course_data) for a specific user
-// Update proposed content mutation
-updateProposedContent: builder.mutation({
-  query: ({ matric, db_id, newNote, course_data }) => ({
-    url: 'proposedcontent',
-    method: 'upsert',
-    body: {
-      matric,
-      course_data,  // Updated course data with the merged content for db_id
-      proposed_note: newNote  // Optionally store the latest version of proposed_note
-    },
-  }),
-  invalidatesTags: ['ProposedContent'],
-}),
-
-// Mutation to upsert (insert or update) proposed content into the proposedcontent table
-addProposedContent: builder.mutation({
-  query: ({ proposed_id, s_id, matric, proposed_note, course_data }) => ({
-    url: 'proposedcontent',
-    method: 'upsert',  // Use upsert to insert new or update existing records
-    body: {
-      proposed_id,
-      s_id,
-      matric,
-      proposed_note,
-      course_data
-    },
-  }),
-  invalidatesTags: ['ProposedContent'],
-}),
-
-}),
-
-
 
   
 });
@@ -265,13 +186,7 @@ export const {
   useUpdateNoteMutation,
   useLoadNoteQuery,
   useLoadContentQuery,
-  useUpdateContentMutation,
-  useSubmitProposedContentMutation,
-  useUpdateProposedContentMutation,
-  useLoadProposedContentQuery,
-  useAddProposedContentMutation,  // Exporting the mutation
-
-
+  useUpdateContentMutation
 } = coursesApi;
 
 export default coursesApi;

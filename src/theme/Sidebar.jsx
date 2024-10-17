@@ -1,6 +1,5 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from 'react-redux'; // Import useSelector to access Redux state
 import { HomeIcon, Mail, HelpCircle, Book, FolderHeart } from "lucide-react";
 import { motion } from "framer-motion";
 import dp from "../assets/logo/user.png"; // Import the user image
@@ -51,15 +50,25 @@ const ActiveLink = ({ to, icon: Icon, label, isActive }) => {
 const Sidebar = () => {
   const location = useLocation();
   
-   // Manage popover visibility
-   const [popoverOpen, setPopoverOpen] = useState(false);
+  // Manage popover visibility
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
-   // Function to toggle popover
-   const togglePopOver = () => {
-     setPopoverOpen((prev) => !prev);
-   };
-  // Get the user's name from Redux store
-  const { name, isAuthenticated } = useSelector((state) => state.user); // Access both name and authentication status
+  // Local state to store the name retrieved from localStorage
+  const [studentName, setStudentName] = useState('Guest');
+
+  // Function to toggle popover
+  const togglePopOver = () => {
+    setPopoverOpen((prev) => !prev);
+  };
+
+  // Fetch the name from localStorage and update the state
+  useEffect(() => {
+    const storedName = localStorage.getItem('studentName');
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    if (storedName && isAuthenticated) {
+      setStudentName(storedName); // If authenticated, use the stored name
+    }
+  }, []); // Empty dependency array to run only on component mount
 
   return (
     <div className="relative font-lato h-screen flex">
@@ -67,17 +76,16 @@ const Sidebar = () => {
       <div className="absolute top-0 left-0 w-60 h-full bg-primary from-gray-100 to-gray-200 rounded-tr-[60px] rounded-br-[60px] overflow-hidden hidden lg:block">
         <div className="h-full w-full">
           <div className="flex items-center space-x-2 mb-2 p-2 ml-4">
-          <button onClick={togglePopOver} className="focus:outline-none">
-
-            <img src={dp} alt="User" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md" />
+            <button onClick={togglePopOver} className="focus:outline-none">
+              <img src={dp} alt="User" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow-md" />
             </button>
             <div>
               {/* Display the authenticated user's name or "Guest" */}
-              <h2 className="font-semibold text-lg text-gray-700">{isAuthenticated ? name : 'Guest'}</h2>
+              <h2 className="font-semibold text-lg text-gray-700">{studentName}</h2>
               <p className="text-sm text-gray-500">Student</p>
             </div>
-             {/* PopOver */}
-             <PopOver open={popoverOpen} onClose={togglePopOver} />
+            {/* PopOver */}
+            <PopOver open={popoverOpen} onClose={togglePopOver} />
           </div>
 
           <nav className="flex flex-col space-y-1">
