@@ -171,6 +171,17 @@ export const subjectsApi = createApi({
       invalidatesTags: ['Content'],
     }),
 
+    // Add this mutation to your existing subjectsApi in the `endpoints` section
+addContentCopy: builder.mutation({
+  query: (newContent) => ({
+    url: 'content',
+    method: 'insert',
+    body: newContent, // Pass the new content object (subject_id, matric_no, note, etc.)
+  }),
+  invalidatesTags: ['Content'], // Invalidate the cache to reflect new changes
+}),
+
+
     
   }),
 
@@ -186,7 +197,8 @@ export const {
   useUpdateNoteMutation,
   useLoadNoteQuery,
   useLoadContentQuery,
-  useUpdateContentMutation
+  useUpdateContentMutation,
+  useAddContentCopyMutation
 } = subjectsApi;
 
 export default subjectsApi;
