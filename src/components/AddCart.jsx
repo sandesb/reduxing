@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
 import { v4 as uuidv4 } from 'uuid';
-import { useAddCourseMutation } from '../redux/coursesApi';
+import { useAddCourseMutation } from '../redux/subjectsApi';
 
 const AddCart = ({ refetch }) => {
   const [name, setName] = useState('');

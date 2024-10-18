@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Editor from '../components/Editor';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useParams, useLocation } from 'react-router-dom';
-import { useLoadContentQuery } from '../redux/coursesApi';
+import { useLoadContentQuery } from '../redux/subjectsApi';
 
 const Notes = () => {
   const { id } = useParams();  // This is the db_id from the URL

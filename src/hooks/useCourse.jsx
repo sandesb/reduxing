@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useGetCoursesQuery } from '../redux/coursesApi';
-
+import { useGetCoursesQuery } from '../redux/subjectsApi';
 const useCourse = (filterFn) => {
   const { data: courses = [], error, isLoading } = useGetCoursesQuery();
   const [filteredCourses, setFilteredCourses] = useState([]);

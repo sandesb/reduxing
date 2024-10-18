@@ -19,7 +19,7 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
         break;
 
       case 'upsert': // If you need to use UPSERT
-        supabaseQuery = supabase.from(url).upsert(body).eq('db_id', body.db_id).select();
+        supabaseQuery = supabase.from(url).upsert(body).eq('subjects_id', body.subjects_id).select();
         break;
         
     case 'delete':
@@ -41,19 +41,19 @@ const supabaseBaseQuery = async ({ url, method, body , returning}) => {
 };
 
 
-export const coursesApi = createApi({
-  reducerPath: 'coursesApi',
+export const subjectsApi = createApi({
+  reducerPath: 'subjectsApi',
   baseQuery: supabaseBaseQuery,
   tagTypes: ['Courses'],
   endpoints: (builder) => ({
     getCourses: builder.query({
-      query: () => ({ url: 'db', method: 'select', body: '*' }),
+      query: () => ({ url: 'subjects', method: 'select', body: '*' }),
       providesTags: ['Courses'],
     }),
 
     addCourse: builder.mutation({
       query: (course) => ({
-        url: 'db',
+        url: 'subjects',
         method: 'insert',
         body: course,
       }),
@@ -61,7 +61,7 @@ export const coursesApi = createApi({
       async onQueryStarted(course, { dispatch, queryFulfilled }) {
         // Optimistic update
         const patchResult = dispatch(
-          coursesApi.util.updateQueryData('getCourses', undefined, (draft) => {
+          subjectsApi.util.updateQueryData('getCourses', undefined, (draft) => {
             draft.push(course);
           })
         );
@@ -72,14 +72,14 @@ export const coursesApi = createApi({
           patchResult.undo();
           showToast('error', 'Failed to add course');
         } finally {
-          dispatch(coursesApi.util.invalidateTags(['Courses'])); // Refetch courses
+          dispatch(subjectsApi.util.invalidateTags(['Courses'])); // Refetch courses
         }
       },
     }),
 
     updateCourse: builder.mutation({
       query: ({ id, ...course }) => ({
-        url: 'db',
+        url: 'subjects',
         method: 'update',
         body: { id, ...course },
       }),
@@ -87,7 +87,7 @@ export const coursesApi = createApi({
       async onQueryStarted({ id, ...course }, { dispatch, queryFulfilled }) {
         // Optimistic update
         const patchResult = dispatch(
-          coursesApi.util.updateQueryData('getCourses', undefined, (draft) => {
+          subjectsApi.util.updateQueryData('getCourses', undefined, (draft) => {
             const index = draft.findIndex((c) => c.id === id);
             if (index !== -1) {
               draft[index] = { id, ...course };
@@ -101,14 +101,14 @@ export const coursesApi = createApi({
           patchResult.undo();
           showToast('error', 'Failed to update course');
         } finally {
-          dispatch(coursesApi.util.invalidateTags(['Courses'])); // Refetch courses
+          dispatch(subjectsApi.util.invalidateTags(['Courses'])); // Refetch courses
         }
       },
     }),
 
     deleteCourse: builder.mutation({
       query: (id) => ({
-        url: 'db',
+        url: 'subjects',
         method: 'delete',
         body: { id },  // Supabase expects the body for delete to contain the id
       }),
@@ -116,7 +116,7 @@ export const coursesApi = createApi({
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
         // Optimistic update
         const patchResult = dispatch(
-          coursesApi.util.updateQueryData('getCourses', undefined, (draft) => {
+          subjectsApi.util.updateQueryData('getCourses', undefined, (draft) => {
             return draft.filter((course) => course.id !== id);
           })
         );
@@ -127,14 +127,14 @@ export const coursesApi = createApi({
           patchResult.undo();
           showToast('error', 'Failed to delete course');
         } finally {
-          dispatch(coursesApi.util.invalidateTags(['Courses'])); // Refetch courses
+          dispatch(subjectsApi.util.invalidateTags(['Courses'])); // Refetch courses
         }
       },
     }),
 
     loadNote: builder.query({
       query: (id) => ({
-        url: `db?id=eq.${id}`,
+        url: `subjects?id=eq.${id}`,
         method: 'select',
         body: '*',
       }),
@@ -143,7 +143,7 @@ export const coursesApi = createApi({
 
     updateNote: builder.mutation({
       query: ({ id, note }) => ({
-        url: 'db',
+        url: 'subjects',
         method: 'update',
         body: { id, note },
       }),
@@ -152,8 +152,8 @@ export const coursesApi = createApi({
 
        
     loadContent: builder.query({
-      query: (db_id) => ({
-        url: `content?db_id=eq.${db_id}`, // Fetch content based on db_id
+      query: (subjects_id) => ({
+        url: `content?subjects_id=eq.${subjects_id}`, // Fetch content based on subjects_id
         method: 'select',
         body: '*',
       }),
@@ -162,10 +162,10 @@ export const coursesApi = createApi({
 
 
     updateContent: builder.mutation({
-      query: ({ db_id, content, name }) => ({
+      query: ({ subjects_id, content, name }) => ({
         url: `content`,  // Target the `content` table directly
-        method: 'upsert',  // Use UPSERT to insert or update based on db_id
-        body: { db_id, note: content, name },  // Pass db_id and the content (note)
+        method: 'upsert',  // Use UPSERT to insert or update based on subjects_id
+        body: { subjects_id, note: content, name },  // Pass subjects_id and the content (note)
         returning: 'representation', // Request to return the updated record
       }),
       invalidatesTags: ['Content'],
@@ -187,6 +187,6 @@ export const {
   useLoadNoteQuery,
   useLoadContentQuery,
   useUpdateContentMutation
-} = coursesApi;
+} = subjectsApi;
 
-export default coursesApi;
+export default subjectsApi;

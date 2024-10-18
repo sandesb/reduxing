@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Minus } from "lucide-react";
 import { removeFromCart } from "../redux/uiActions";
-import { useGetCoursesQuery } from "../redux/coursesApi";
+import { useGetCoursesQuery } from "../redux/subjectsApi";
 import { showToast } from "../utils/toast";
 import ItemDialog from "./ItemDialog"; // Import the ItemDialog component
 

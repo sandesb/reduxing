@@ -10,7 +10,7 @@ import {
   useAddCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
-} from "../redux/coursesApi";
+} from "../redux/subjectsApi";
 import DeleteDialog from "../components/DeleteDialog";
 
 const HomePage = () => {

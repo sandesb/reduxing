@@ -3,7 +3,7 @@ import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/re
 import clsx from 'clsx';
 import dp from "../assets/dp.jpg"; // Import the image
 import { showPromiseToast } from '../utils/toast'; // Ensure correct import
-import { useUpdateNoteMutation, useLoadNoteQuery } from '../redux/coursesApi';
+import { useUpdateNoteMutation, useLoadNoteQuery } from '../redux/subjectsApi';
 import { useNavigate } from 'react-router-dom';
 
 const ItemDialog = ({ isOpen, onClose, item }) => {

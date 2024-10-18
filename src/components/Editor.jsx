@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import { EDITOR_JS_TOOLS } from './Tool';
-import { useUpdateContentMutation } from '../redux/coursesApi';
+import { useUpdateContentMutation } from '../redux/subjectsApi';
 
 // Debounce function to limit how often the save function is called
 function debounce(fn, delay) {
