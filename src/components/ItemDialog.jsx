@@ -56,12 +56,40 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
 
   const handleStudyClick = async () => {
     const matricNo = localStorage.getItem('matricNo'); // Get matric no from local storage
-    if (!matricNo) {
-      console.error('Matric number not found in local storage');
-      return;
-    }
+    const isGuest = !matricNo; // Check if the user is a guest
   
     try {
+      if (isGuest) {
+        // Guest Mode: Show content where matric is NULL
+        console.log('Guest mode: Fetching content where matric is NULL for subject_id:', item.id);
+  
+        // Fetch the original content where matric is NULL
+        const { data: guestContent, error: guestError } = await supabase
+          .from('content')
+          .select('*')
+          .eq('subjects_id', item.id)
+          .is('matric', null); // Fetch content with NULL matric for guests
+  
+        console.log('Guest Fetch Error:', guestError);
+        console.log('Guest Content:', guestContent);
+  
+        if (guestError) {
+          console.error('Error fetching guest content:', guestError);
+          return;
+        }
+  
+        if (!guestContent || guestContent.length === 0) {
+          console.error('No original content found for guest mode with subject_id:', item.id);
+          return;
+        }
+  
+        // Proceed to navigate to the notes page with guest content
+        console.log('Navigating to notes page with guest content.');
+        navigate(`/notes/${item.id}`, { state: { title: item.title, content: guestContent } });
+        return;
+      }
+  
+      // For logged-in users (i.e., matricNo exists)
       console.log('Checking if content for subject_id:', item.id, 'and matric:', matricNo, 'already exists.');
   
       // Check if content for the current subject and matric_no already exists
@@ -144,6 +172,7 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
       navigate(`/notes/${item.id}`, { state: { title: item.title } });
     }
   };
+  
   
   
   

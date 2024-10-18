@@ -13,7 +13,7 @@ const Notes = () => {
   const matricNo = localStorage.getItem('matricNo');
   const isGuest = !matricNo; // If matricNo doesn't exist, the user is a guest
 
-  // Fetch the content using both subjects_id and matricNo
+  // Fetch the content using subjects_id and either matricNo or NULL for guests
   const { data: loadedContent, isLoading, error } = useLoadContentQuery({ subjects_id: id, matric: matricNo });
 
   const [data, setData] = useState(null);
@@ -82,15 +82,14 @@ const Notes = () => {
       {isGuest && <p className="text-center text-red-500">You are in guest mode. Cannot Save.</p>}
 
       <div className="w-full text-left editorjs-container">
-      <Editor
-  data={data}
-  editorBlock="editorjs-container"
-  subjects_id={id}  // Pass subjects_id from the URL
-  itemName={itemName}
-  content_id={loadedContent?.[0]?.content_id}  // Pass the content_id from the loaded content
-  setSaving={setSaving}
-/>
-
+        <Editor
+          data={data}
+          editorBlock="editorjs-container"
+          subjects_id={id}  // Pass subjects_id from the URL
+          itemName={itemName}
+          content_id={loadedContent?.[0]?.content_id}  // Pass the content_id from the loaded content
+          setSaving={setSaving}
+        />
       </div>
     </div>
   );

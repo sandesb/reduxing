@@ -152,13 +152,19 @@ export const subjectsApi = createApi({
 
        
     loadContent: builder.query({
-      query: ({ subjects_id, matric }) => ({
-        url: `content?subjects_id=eq.${subjects_id}&matric=eq.${matric}`, // Fetch content based on subjects_id and matric
-        method: 'select',
-        body: '*',
-      }),
+      query: ({ subjects_id, matric }) => {
+        // If matric is not found (guest mode), fetch where matric is NULL
+        const matricFilter = matric ? `&matric=eq.${matric}` : `&matric=is.null`;
+    
+        return {
+          url: `content?subjects_id=eq.${subjects_id}${matricFilter}`,  // Fetch based on subjects_id and either matricNo or NULL
+          method: 'select',
+          body: '*',
+        };
+      },
       providesTags: ['Courses'],
     }),
+    
     
 
     updateContent: builder.mutation({
