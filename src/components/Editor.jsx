@@ -14,7 +14,7 @@ function debounce(fn, delay) {
   };
 }
 
-const Editor = ({ data, editorBlock, db_id, itemName, setSaving, readOnly = false }) => {
+const Editor = ({ data, editorBlock, subjects_id, itemName, setSaving, readOnly = false }) => {
   const editorInstance = useRef(null);
   const [updateContent] = useUpdateContentMutation();
 
@@ -30,22 +30,22 @@ const Editor = ({ data, editorBlock, db_id, itemName, setSaving, readOnly = fals
         return;
       }
 
-      if (!db_id) {
-        console.error('db_id is undefined, cannot save content.');
+      if (!subjects_id) {
+        console.error('subjects_id is undefined, cannot save content.');
         return;
       }
 
       setSaving('saving'); // Set status to "Saving..."
 
       try {
-        const result = await updateContent({ db_id, content: newData, name: itemName }).unwrap();
+        const result = await updateContent({ subjects_id, content: newData, name: itemName }).unwrap();
         console.log('Content successfully saved to Supabase:', result);
         setSaving('saved'); // Set status to "Saved"
       } catch (saveError) {
         console.error('Error saving content to Supabase:', saveError);
       }
     }, 1000),
-    [updateContent, db_id, itemName, setSaving]
+    [updateContent, subjects_id, itemName, setSaving]
   );
 
   useEffect(() => {

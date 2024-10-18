@@ -5,9 +5,9 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useLoadContentQuery } from '../redux/subjectsApi';
 
 const Notes = () => {
-  const { id } = useParams();  // This is the db_id from the URL
+  const { id } = useParams();  // This is the subjects_id from the URL
   const location = useLocation();
-  const { data: loadedContent, isLoading, error } = useLoadContentQuery(id);  // Use db_id to load content
+  const { data: loadedContent, isLoading, error } = useLoadContentQuery(id);  // Use subjects_id to load content
   const [data, setData] = useState(null);
   const [saving, setSaving] = useState(null); // State to track saving status ('saving', 'saved', null)
   const hasInitialized = useRef(false);
@@ -83,7 +83,7 @@ const Notes = () => {
         <Editor
           data={data}
           editorBlock="editorjs-container"
-          db_id={id}  // db_id is now passed here
+          subjects_id={id}  // subjects_id is now passed here
           itemName={itemName}
           setSaving={setSaving} // Pass the setSaving function to Editor
         />

@@ -82,7 +82,7 @@ export const loadCourses = () => {
   return async (dispatch) => {
     try {
       // Query the Supabase database to fetch all courses
-      const { data, error } = await supabase.from('db').select('*');
+      const { data, error } = await supabase.from('subjects').select('*');
 
       if (error) {
         console.error('Error loading courses from Supabase:', error);
