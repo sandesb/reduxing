@@ -152,24 +152,29 @@ export const subjectsApi = createApi({
 
        
     loadContent: builder.query({
-      query: (subjects_id) => ({
-        url: `content?subjects_id=eq.${subjects_id}`, // Fetch content based on subjects_id
+      query: ({ subjects_id, matric }) => ({
+        url: `content?subjects_id=eq.${subjects_id}&matric=eq.${matric}`, // Fetch content based on subjects_id and matric
         method: 'select',
         body: '*',
       }),
       providesTags: ['Courses'],
     }),
-
+    
 
     updateContent: builder.mutation({
-      query: ({ subjects_id, content, name }) => ({
-        url: `content`,  // Target the `content` table directly
-        method: 'upsert',  // Use UPSERT to insert or update based on subjects_id
-        body: { subjects_id, note: content, name },  // Pass subjects_id and the content (note)
-        returning: 'representation', // Request to return the updated record
+      query: ({ content_id, subjects_id, matric, content, name }) => ({
+        url: 'content',
+        method: 'upsert',  // Use UPSERT to either insert or update
+        body: { content_id, subjects_id, matric, note: content, name },  // Ensure content_id, subjects_id, and matric are passed
+        returning: 'representation',  // Return the updated or inserted row
       }),
-      invalidatesTags: ['Content'],
+      invalidatesTags: ['Content'],  // Invalidate the cache to refetch content
     }),
+    
+    
+    
+    
+    
 
     // Add this mutation to your existing subjectsApi in the `endpoints` section
 addContentCopy: builder.mutation({

@@ -7,16 +7,18 @@ import { useLoadContentQuery } from '../redux/subjectsApi';
 const Notes = () => {
   const { id } = useParams();  // This is the subjects_id from the URL
   const location = useLocation();
-  const { data: loadedContent, isLoading, error } = useLoadContentQuery(id);  // Use subjects_id to load content
+  const itemName = location.state?.title || 'Unknown Item';
+
+  // Get matricNo from localStorage
+  const matricNo = localStorage.getItem('matricNo');
+  const isGuest = !matricNo; // If matricNo doesn't exist, the user is a guest
+
+  // Fetch the content using both subjects_id and matricNo
+  const { data: loadedContent, isLoading, error } = useLoadContentQuery({ subjects_id: id, matric: matricNo });
+
   const [data, setData] = useState(null);
   const [saving, setSaving] = useState(null); // State to track saving status ('saving', 'saved', null)
   const hasInitialized = useRef(false);
-
-  const itemName = location.state?.title || 'Unknown Item';
-
-  // Check if matricNo exists in localStorage
-  const matricNo = localStorage.getItem('matricNo');
-  const isGuest = !matricNo; // If matricNo doesn't exist, the user is a guest
 
   useEffect(() => {
     if (isLoading) return;
@@ -29,7 +31,7 @@ const Notes = () => {
     if (hasInitialized.current) return;
 
     if (loadedContent && loadedContent.length > 0 && loadedContent[0].note && loadedContent[0].note.blocks.length > 0) {
-      setData(loadedContent[0].note);
+      setData(loadedContent[0].note);  // Set the content data
     } else {
       setData({
         time: new Date().getTime(),
@@ -80,13 +82,15 @@ const Notes = () => {
       {isGuest && <p className="text-center text-red-500">You are in guest mode. Cannot Save.</p>}
 
       <div className="w-full text-left editorjs-container">
-        <Editor
-          data={data}
-          editorBlock="editorjs-container"
-          subjects_id={id}  // subjects_id is now passed here
-          itemName={itemName}
-          setSaving={setSaving} // Pass the setSaving function to Editor
-        />
+      <Editor
+  data={data}
+  editorBlock="editorjs-container"
+  subjects_id={id}  // Pass subjects_id from the URL
+  itemName={itemName}
+  content_id={loadedContent?.[0]?.content_id}  // Pass the content_id from the loaded content
+  setSaving={setSaving}
+/>
+
       </div>
     </div>
   );
