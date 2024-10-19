@@ -20,7 +20,7 @@ import { UserAuthForm } from '../auth/components/user-auth-form';
 import { StudentEntry } from './components/StudentEntry';
 import AddCart from '../../../components/AddCart';
 import {
-  useGetCoursesQuery,
+  useFetchCoursesQuery,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
 } from '../../../redux/subjectsApi';
@@ -28,7 +28,7 @@ import DeleteDialog from '../../../components/DeleteDialog';
 import ItemDialog from '../../../components/ItemDialog';
 
 export default function Dashboard() {
-  const { data: courses = [], error, isLoading, refetch } = useGetCoursesQuery();
+  const { data: courses = [], error, isLoading, refetch } = useFetchCoursesQuery();
 
   const [updateCourse] = useUpdateCourseMutation();
   const [deleteCourse] = useDeleteCourseMutation();

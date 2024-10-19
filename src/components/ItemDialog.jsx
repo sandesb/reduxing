@@ -70,9 +70,6 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
           .eq('subjects_id', item.id)
           .is('matric', null); // Fetch content with NULL matric for guests
   
-        console.log('Guest Fetch Error:', guestError);
-        console.log('Guest Content:', guestContent);
-  
         if (guestError) {
           console.error('Error fetching guest content:', guestError);
           return;
@@ -99,9 +96,6 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
         .eq('subjects_id', item.id)
         .eq('matric', matricNo); // Check if content for this student already exists
   
-      console.log('Check Error:', checkError);
-      console.log('Existing Content:', existingContent);
-  
       if (checkError) {
         console.error('Error checking existing content:', checkError);
         return;
@@ -120,9 +114,6 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
           .select('note')
           .eq('subjects_id', item.id)
           .is('matric', null); // Fetch the admin's original data (where matric is null)
-  
-        console.log('Fetch Error:', fetchError);
-        console.log('Original Content Fetched:', originalContent);
   
         if (fetchError) {
           console.error('Error fetching original content:', fetchError);
@@ -151,9 +142,6 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
         try {
           const { data, error: insertError } = await addContentCopy(newContent).unwrap();
   
-          console.log('Insert Error:', insertError);
-          console.log('Inserted Content:', data);
-  
           if (insertError) {
             console.error('Error copying content:', insertError);
           } else {
@@ -172,6 +160,8 @@ const ItemDialog = ({ isOpen, onClose, item }) => {
       navigate(`/notes/${item.id}`, { state: { title: item.title } });
     }
   };
+  
+  
   
   
   

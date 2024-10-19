@@ -1,49 +1,57 @@
-import React, { useState } from "react";
-import Card from "../components/Card";
-import useCart from "../hooks/useCart";
-import LoadingSpinner from "../components/LoadingSpinner";
-import AddCart from "../components/AddCart";
-import ItemDialog from "../components/ItemDialog"; // Import the ItemDialog
-
+import React, { useState, useEffect } from 'react';
+import Card from '../components/Card';
+import useCart from '../hooks/useCart';
+import LoadingSpinner from '../components/LoadingSpinner';
+import AddCart from '../components/AddCart';
+import ItemDialog from '../components/ItemDialog'; // Import the ItemDialog
 import {
   useGetCoursesQuery,
   useAddCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
-} from "../redux/subjectsApi";
-import DeleteDialog from "../components/DeleteDialog";
+} from '../redux/subjectsApi';
+import DeleteDialog from '../components/DeleteDialog';
 
 const HomePage = () => {
   const { handlePlusClick } = useCart();
-  const {
-    data: courses = [],
-    error,
-    isLoading,
-    refetch,
-  } = useGetCoursesQuery();
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
 
+  // Get values from localStorage
+  const adminIsAuthenticated = localStorage.getItem('adminIsAuthenticated') === 'true';
+  const matricNo = localStorage.getItem('matricNo');
+
+  console.log("LocalStorage adminIsAuthenticated:", adminIsAuthenticated);
+  console.log("LocalStorage matricNo:", matricNo);
+
+  // Determine matric value based on conditions
+  const matricValue = adminIsAuthenticated ? null : matricNo || 'GUEST';
+  console.log("matricValue:", matricValue);
+
+  // Pass the matricValue as an object to avoid destructuring issues
+  const { data: courses = [], error, isLoading, refetch } = useGetCoursesQuery({ matric: matricValue });
+
+  // Log query response for debugging
+  console.log("Courses Data:", courses);
+  console.log("Query Error:", error);
+  console.log("Is Loading:", isLoading);
+
+  // Other logic remains the same...
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [addCourse] = useAddCourseMutation();
   const [updateCourse] = useUpdateCourseMutation();
   const [deleteCourse] = useDeleteCourseMutation();
-
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleEditClick = async (updatedCourse) => {
     try {
-      console.log("Updating course:", updatedCourse);
-
+      console.log('Updating course:', updatedCourse);
       const { data, error } = await updateCourse(updatedCourse).unwrap();
-
       if (error) throw error;
-
-      console.log("Course updated successfully:", data);
-
+      console.log('Course updated successfully:', data);
       refetch(); // Refetch courses to reflect the update
     } catch (error) {
-      console.error("Failed to update course:", error);
+      console.error('Failed to update course:', error);
     }
   };
 
@@ -55,13 +63,11 @@ const HomePage = () => {
   const handleDelete = async () => {
     try {
       await deleteCourse(selectedCourseId).unwrap();
-      console.log("Deleted course with id:", selectedCourseId);
+      console.log('Deleted course with id:', selectedCourseId);
       setDeleteDialogOpen(false);
-
       refetch();
     } catch (error) {
-      console.error("Failed to delete course:", error);
-      showToast("error", "Failed to delete course. Please try again.");
+      console.error('Failed to delete course:', error);
     }
   };
 
@@ -79,10 +85,12 @@ const HomePage = () => {
   };
 
   if (isLoading) {
+    console.log("Loading Spinner active");
     return <LoadingSpinner />;
   }
 
   if (error) {
+    console.error("Error occurred:", error);
     return <div>Error: {error.message}</div>;
   }
 
