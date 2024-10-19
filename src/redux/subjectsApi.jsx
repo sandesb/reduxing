@@ -154,6 +154,14 @@ export const subjectsApi = createApi({
       },
       providesTags: ['Courses'],
     }),
+
+    viewContent: builder.query({
+      query: ({ content_id }) => {
+        console.log(`Fetching note for content_id: ${content_id}`); // Debugging log
+        return `content?content_id=eq.${content_id}`;
+      },
+      providesTags: ['Notes'],
+    }),
     
 
     // Update Content Mutation
@@ -167,24 +175,26 @@ export const subjectsApi = createApi({
       invalidatesTags: ['Content'],
     }),
 
-    // Fetch Content
-    getContent: builder.query({
-      query: ({ subject_id, matric }) => {
-        let filterQuery = '';
-        if (subject_id) {
-          filterQuery += `subjects_id=eq.${subject_id}`;
-        }
-        if (matric) {
-          filterQuery += (filterQuery ? '&' : '') + `matric=eq.${matric}`;
-        }
-        return {
-          url: `content${filterQuery ? '?' + filterQuery : ''}`,
-          method: 'select',
-          body: 'content_id, name, matric',
-        };
-      },
-      providesTags: ['Content'],
-    }),
+ // Fetch Content
+getContent: builder.query({
+  query: ({ subject_id, matric }) => {
+    let filterQuery = '';
+    if (subject_id) {
+      filterQuery += `subjects_id=eq.${subject_id}`;
+    }
+    // Only include the matric filter if matric is not null
+    if (matric) {
+      filterQuery += (filterQuery ? '&' : '') + `matric=eq.${matric}`;
+    }
+    return {
+      url: `content${filterQuery ? '?' + filterQuery : ''}`, // Add filters to URL if any exist
+      method: 'select',
+      body: 'content_id, name, matric, note', // Ensure the body fetches content_id, name, matric, and note
+    };
+  },
+  providesTags: ['Content'],
+}),
+
 
     // Add Content Copy Mutation
     addContentCopy: builder.mutation({
@@ -209,6 +219,7 @@ export const {
   useUpdateContentMutation,
   useAddContentCopyMutation,
   useGetContentQuery,
+  useViewContentQuery,
 } = subjectsApi;
 
 export default subjectsApi;

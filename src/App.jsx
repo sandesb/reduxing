@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess as adminLoginSuccess } from './redux/adminSlice'; // Admin login success action
 import { loginSuccess as userLoginSuccess } from './redux/userSlice'; // Client-side login success action
@@ -20,6 +20,9 @@ import AdminLayout from './admin/theme/AdminLayout'; // Admin Layout with Sideba
 import Tasks from './admin/pages/tasks';
 import { StudentEntry } from './admin/pages/dashboard/components/StudentEntry';
 import Content from './admin/pages/content/page';
+import CompareNotes from './admin/pages/content/compare/compareNotes'; // Import CompareNotes component
+import NotesBox from './admin/pages/content/compare/notesBox';
+
 function App() {
   const dispatch = useDispatch();
   
@@ -70,7 +73,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="tasks" element={<Tasks />} />
           <Route path="student-edit/:id" element={<StudentEntry />} /> {/* Add Student Edit Route */}
-          <Route path="content" element={<Content/>} />
+          <Route path="content" element={<Content />} />
+          <Route path="content/compare" element={<NotesBox />} /> {/* Add Compare Notes Route */}
           <Route path="settings" element={<div>Settings Page</div>} />
         </Route>
 

@@ -40,6 +40,9 @@ export function DataTable<TData>({
   data,
   onToggleFilterSidebar,
 }: DataTableProps<TData>) {
+
+      console.log("Data passed to DataTable:", data); // Log data for debugging
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

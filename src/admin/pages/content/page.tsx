@@ -14,6 +14,8 @@ export type Content = {
 // ContentTable Component
 export default function ContentTable({ subject_id, matric }) {
   const { data: contentData, error: contentError, isLoading: isLoadingContent } = useGetContentQuery({ subject_id, matric });
+ 
+ 
   const { data: studentsData, isLoading: isLoadingStudents, error: studentsError } = useGetStudentsQuery();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState({ name: '', studentName: '' });
