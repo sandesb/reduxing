@@ -17,13 +17,13 @@ export const sidelinks = [
   {
     title: 'Tasks',
     label: '3',
-    to: 'tasks', // Use "to" instead of "href"
+    to: '/admin/tasks', // Use "to" instead of "href"
     icon: <CheckSquare size={18} />,
   },
   {
-    title: 'Apps',
+    title: 'Content',
     label: '',
-    to: '/admin/apps', // Use "to" instead of "href"
+    to: '/admin/content', // Use "to" instead of "href"
     icon: <AppWindowIcon size={18} />,
   },
   {

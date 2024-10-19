@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess as adminLoginSuccess } from './redux/adminSlice'; // Admin login success action
 import { loginSuccess as userLoginSuccess } from './redux/userSlice'; // Client-side login success action
@@ -19,7 +19,7 @@ import Dashboard from './admin/pages/dashboard';
 import AdminLayout from './admin/theme/AdminLayout'; // Admin Layout with Sidebar
 import Tasks from './admin/pages/tasks';
 import { StudentEntry } from './admin/pages/dashboard/components/StudentEntry';
-
+import Content from './admin/pages/content/page';
 function App() {
   const dispatch = useDispatch();
   
@@ -63,17 +63,19 @@ function App() {
         </Route>
 
         {/* Admin routes */}
-        <Route path="/admin" element={adminIsAuthenticated ? <AdminLayout /> : <SignIn />}>
-          {/* These routes are under the AdminLayout */}
-          <Route index element={<Navigate to="/admin/dashboard" />} />
-          <Route path="dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={adminIsAuthenticated ? <AdminLayout /> : <Navigate to="/admin/sign-in" />}>
+          <Route index element={<Navigate to="/admin/dashboard" />} /> {/* Default redirect to dashboard */}
           
-          <Route path="tasks" element={<Tasks/> }/>
+          {/* These routes will render inside the AdminLayout */}
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="tasks" element={<Tasks />} />
           <Route path="student-edit/:id" element={<StudentEntry />} /> {/* Add Student Edit Route */}
-
-          <Route path="apps" element={<div>Apps Page</div>} />
+          <Route path="content" element={<Content/>} />
           <Route path="settings" element={<div>Settings Page</div>} />
         </Route>
+
+        {/* Admin sign-in page */}
+        <Route path="/admin/sign-in" element={<SignIn />} />
 
         {/* Catch-all route to redirect to home */}
         <Route path="*" element={<Navigate to="/" />} />
