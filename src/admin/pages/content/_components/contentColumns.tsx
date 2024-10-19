@@ -23,7 +23,7 @@ export const contentColumns = [
   },
   {
     accessorKey: 'studentName',
-    header: 'Student',
+    header: 'User',
     id: 'studentName',
   },
 ];
