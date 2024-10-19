@@ -21,6 +21,10 @@ const supabaseBaseQuery = async ({ url, method, body, returning }) => {
     case 'upsert':
       supabaseQuery = supabase.from(url).upsert(body).eq('subjects_id', body.subjects_id).select();
       break;
+      case 'upserting':
+  supabaseQuery = supabase.from(url).upsert(body, { onConflict: 'content_id' }).select(); // Use POST for upsert
+  break;
+
     case 'delete':
       supabaseQuery = supabase.from(url).delete().eq('id', body.id);
       break;
@@ -175,6 +179,27 @@ export const subjectsApi = createApi({
       invalidatesTags: ['Content'],
     }),
 
+// Edit Content Mutation with POST (for upsert)
+// Update Content Mutation (for client-side with subjects_id)
+// Edit Content Mutation for admin (updating content based on content_id)
+editContent: builder.mutation({
+  query: ({ content_id, content, name }) => ({
+    url: `content?content_id=eq.${content_id}`, // Only use content_id for admin updates
+    method: 'upserting', // Use PATCH for updates
+    body: { note: content, name }, // Only send note and name
+    returning: 'representation', // Return the updated row
+  }),
+  invalidatesTags: ['Content'],
+}),
+
+
+
+
+
+
+
+
+
  // Fetch Content
 getContent: builder.query({
   query: ({ subject_id, matric }) => {
@@ -217,6 +242,7 @@ export const {
   useLoadNoteQuery,
   useLoadContentQuery,
   useUpdateContentMutation,
+  useEditContentMutation,
   useAddContentCopyMutation,
   useGetContentQuery,
   useViewContentQuery,

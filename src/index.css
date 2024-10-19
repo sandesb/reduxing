@@ -14,11 +14,22 @@
   z-index: 2; /* Ensure it stays on top */
   overflow: hidden;
 }
-.editorjs-container {
-  text-align: left !important;
-  width: 100% !important;
-  max-width: none !important;
+.editor-wrapper {
+  display: flex;
+  justify-content: space-between; /* Ensure space between editors */
+  width: 100%; /* Full width for the container */
 }
+
+.editor-container {
+  flex: 1; /* Each editor takes up half of the space */
+  margin-right: 10px; /* Optional margin between the editors */
+}
+
+.editorjs-container-1,
+.editorjs-container-2 {
+  width: 100%; /* Ensure editors take up full width within their containers */
+}
+
 
 .editorjs-container .ce-block__content {
   justify-content: flex-start !important;
