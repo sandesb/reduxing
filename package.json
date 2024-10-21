@@ -45,6 +45,7 @@
     "cloudinary": "^2.4.0",
     "cloudinary-core": "^2.13.1",
     "cmdk": "^1.0.0",
+    "compromise": "^14.14.2",
     "dotenv": "^16.4.5",
     "editorjs-alert": "^1.1.4",
     "editorjs-comment": "^1.0.3",

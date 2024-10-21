@@ -1,38 +1,69 @@
 import React from 'react';
-import Card from '../components/Card';
-import useCourse from '../hooks/useCourse';
-import useCart from '../hooks/useCart';
-import LoadingSpinner from '../components/LoadingSpinner'; // Import the reusable loading spinner
+import { useNavigate } from 'react-router-dom';
+import RepoCard from '../components/RepoCard';
+import { useGetReposQuery } from '../redux/repoApi'; // Import the query to fetch repositories
+import nlp from 'compromise'; // Import NLP library
 
 const Repositories = () => {
+  const navigate = useNavigate();
+  
+  // Fetch repositories from Supabase
+  const { data: repositories, error, isLoading } = useGetReposQuery();
 
-  const filterFn = (course) => course.id >= 6 && course.id <= 9;
-  const { courses, loading, error } = useCourse(filterFn);
+  // Function to shorten the abstract using NLP
+  const getShortDescription = (abstract) => {
+    if (!abstract) return '';
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+    // Log the original abstract for debugging
+    console.log('Original Abstract:', abstract);
+    
+    // Use NLP to break abstract into sentences and extract relevant parts
+    const doc = nlp(abstract);
+    const sentences = doc.sentences().out('text'); // Get sentences text
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+    // Log the NLP processed sentences
+    console.log('NLP Processed Sentences:', sentences);
+    
+    // If abstract is already short, return it as is
+    if (sentences.split(' ').length <= 12) {
+      console.log('Short Abstract:', sentences);
+      return sentences;
+    }
+
+    // Otherwise, truncate to 12 words
+    const truncatedText = sentences.split(' ').slice(0, 12).join(' ') + '...';
+    
+    // Log the truncated result
+    console.log('Truncated Abstract:', truncatedText);
+    
+    return truncatedText;
+  };
+
+  const handleCardClick = (id) => {
+    navigate(`/repo/${id}`);
+  };
+
+  if (isLoading) return <p>Loading repositories...</p>;
+  if (error) return <p>Error fetching repositories: {error.message}</p>;
 
   return (
-    <div>
-    <h1 className="text-2xl font-medium mb-6 text-gray-700 text-center">Repositories</h1>
-
     <div className="min-h-screen flex flex-col justify-center items-center p-6">
-      <div className="flex justify-center items-center">
-        <div className="text-center">
-          <h1 className="font-lato text-4xl lg:text-6xl mt-2 mb-2 font-semibold text-primary-bg tracking-widest relative">
-            <span className="block lg:inline lg:pl-4">Coming Soon...</span>
-            <span className="absolute top-0 left-0 w-full h-full text-[#a2b5ea] transform translate-x-0.5 translate-y-0 -z-10 tracking-widest">
-              <span className="block lg:inline lg:pl-4">Coming Soon...</span>
-            </span>
-          </h1>
-        </div>
+      <h1 className="text-2xl font-medium mb-6 text-gray-700 text-center">Repositories</h1>
+
+      {/* Render RepoCards horizontally using flex */}
+      <div className="flex justify-center space-x-6">
+        {repositories?.map((repo, index) => (
+          <RepoCard
+            key={index}
+            title={repo.title}
+            description={getShortDescription(repo.abstract)}  // Get the short description
+            creator={repo.source_name}
+            imageUrl={repo.image_url}
+            onCardClick={() => handleCardClick(repo.id)}  // Pass the repo ID on click
+          />
+        ))}
       </div>
-    </div></div>
+    </div>
   );
 };
 

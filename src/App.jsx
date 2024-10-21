@@ -22,7 +22,8 @@ import { StudentEntry } from './admin/pages/dashboard/components/StudentEntry';
 import Content from './admin/pages/content/page';
 import CompareNotes from './admin/pages/content/compare/compareNotes'; // Import CompareNotes component
 import NotesBox from './admin/pages/content/compare/notesBox';
-
+import AddRepositories from './pages/AddRepositories';
+import RepoDetails from './pages/RepoDetails';
 function App() {
   const dispatch = useDispatch();
   
@@ -60,6 +61,9 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/my-courses" element={<MyCourses />} />
           <Route path="/repositories" element={<Repositories />} />
+          <Route path="/add-repo" element={<AddRepositories />} />
+          <Route path="/repo/:id" element={<RepoDetails/>} />
+
           <Route path="/messages" element={<Messages />} />
           <Route path="/help-center" element={<HelpCenter />} />
           <Route path="/notes/:id" element={<Notes />} />

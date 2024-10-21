@@ -6,16 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner'; // Import the reusabl
 
 const Messages = () => {
 
-  const filterFn = (course) => course.id >= 6 && course.id <= 9;
-  const { courses, loading, error } = useCourse(filterFn);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <div>

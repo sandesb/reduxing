@@ -1,13 +1,12 @@
-// src/redux/store.js
 import { configureStore } from '@reduxjs/toolkit';
 import uiReducer from './uiReducer';
 import subjectsApi from './subjectsApi';
 import contentAdminApi from './contentAdminApi';
-
 import studentsApi from './studentsApi';
-import adminApi from './adminApi'; // Import adminApi
-import userReducer from './userSlice'; // Client-side user reducer
-import adminReducer from './adminSlice'; // Admin-side user reducer
+import adminApi from './adminApi';
+import repoApi from './repoApi'; // Import repoApi
+import userReducer from './userSlice';
+import adminReducer from './adminSlice';
 
 export const store = configureStore({
   reducer: {
@@ -15,16 +14,16 @@ export const store = configureStore({
     [subjectsApi.reducerPath]: subjectsApi.reducer,
     [studentsApi.reducerPath]: studentsApi.reducer,
     [contentAdminApi.reducerPath]: contentAdminApi.reducer,
-
-    [adminApi.reducerPath]: adminApi.reducer, // Add adminApi reducer
-    user: userReducer, // Client-side
-    admin: adminReducer, // Admin-side
+    [adminApi.reducerPath]: adminApi.reducer,
+    [repoApi.reducerPath]: repoApi.reducer, // Add repoApi reducer
+    user: userReducer,
+    admin: adminReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(subjectsApi.middleware)
       .concat(studentsApi.middleware)
       .concat(contentAdminApi.middleware)
-
-      .concat(adminApi.middleware), // Add adminApi middleware
+      .concat(adminApi.middleware)
+      .concat(repoApi.middleware), // Add repoApi middleware
 });
