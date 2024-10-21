@@ -40,11 +40,20 @@ export const repoApi = createApi({
   tagTypes: ['Repositories'],
   endpoints: (builder) => ({
     getRepos: builder.query({
-      query: () => ({ url: 'repositories', method: 'select', body: 'matric, id, title, source_name, image_url, abstract, project_report_url' }),
+      query: () => ({
+        url: 'repositories',
+        method: 'select',
+        body: 'matric, id, title, source_name, image_url, abstract, project_report_url, tech_stack',
+      }),
       providesTags: ['Repositories'],
     }),
     getRepoById: builder.query({
-      query: (id) => ({ url: 'repositories', method: 'select', body: 'matric, title, abstract, source_name, image_url, project_source_code_url, project_report_url', params: { id } }),
+      query: (id) => ({
+        url: 'repositories',
+        method: 'select',
+        body: 'id, matric, title, abstract, source_name, image_url, project_source_code_url, project_report_url, tech_stack',
+        params: { id },
+      }),
       providesTags: ['Repositories'],
     }),
     addRepo: builder.mutation({
@@ -55,8 +64,32 @@ export const repoApi = createApi({
       }),
       invalidatesTags: ['Repositories'],
     }),
+    updateRepo: builder.mutation({
+      query: ({ id, repo }) => ({
+        url: 'repositories',
+        method: 'update',
+        body: repo,
+        params: { id },
+      }),
+      invalidatesTags: ['Repositories'],
+    }),
+    deleteRepo: builder.mutation({
+      query: (id) => ({
+        url: 'repositories',
+        method: 'delete',
+        params: { id },
+      }),
+      invalidatesTags: ['Repositories'],
+    }),
   }),
 });
 
-export const { useGetReposQuery, useGetRepoByIdQuery, useAddRepoMutation } = repoApi;
+export const {
+  useGetReposQuery,
+  useGetRepoByIdQuery,
+  useAddRepoMutation,
+  useUpdateRepoMutation,
+  useDeleteRepoMutation,
+} = repoApi;
+
 export default repoApi;

@@ -62,6 +62,8 @@ function App() {
           <Route path="/my-courses" element={<MyCourses />} />
           <Route path="/repositories" element={<Repositories />} />
           <Route path="/add-repo" element={<AddRepositories />} />
+          <Route path="/edit-repo/:id" element={<AddRepositories />} />
+
           <Route path="/repo/:id" element={<RepoDetails/>} />
 
           <Route path="/messages" element={<Messages />} />

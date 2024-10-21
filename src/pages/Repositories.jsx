@@ -1,47 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RepoCard from '../components/RepoCard';
 import { useGetReposQuery } from '../redux/repoApi'; // Import the query to fetch repositories
-import nlp from 'compromise'; // Import NLP library
+import Filter from '../components/Filter'; // Import the Filter component
 
 const Repositories = () => {
   const navigate = useNavigate();
-  
-  // Fetch repositories from Supabase
   const { data: repositories, error, isLoading } = useGetReposQuery();
+  
+  // Define the filter state for frontend, backend, database, and search term
+  const [filterState, setFilterState] = useState({
+    frontend: [],
+    backend: [],
+    database: [],
+    searchTerm: '', // State for search input
+  });
 
-  // Function to shorten the abstract using NLP
+  // Handle tech stack filter selection and search input change
+  const handleFilterSelect = (key, selectedOptions) => {
+    setFilterState((prevState) => ({
+      ...prevState,
+      [key]: selectedOptions,
+    }));
+  };
+
+  const handleSearchChange = (e) => {
+    setFilterState((prevState) => ({
+      ...prevState,
+      searchTerm: e.target.value,
+    }));
+  };
+
   const getShortDescription = (abstract) => {
     if (!abstract) return '';
-
-    // Log the original abstract for debugging
-    console.log('Original Abstract:', abstract);
-    
-    // Use NLP to break abstract into sentences and extract relevant parts
-    const doc = nlp(abstract);
-    const sentences = doc.sentences().out('text'); // Get sentences text
-
-    // Log the NLP processed sentences
-    console.log('NLP Processed Sentences:', sentences);
-    
-    // If abstract is already short, return it as is
-    if (sentences.split(' ').length <= 12) {
-      console.log('Short Abstract:', sentences);
-      return sentences;
+    const words = abstract.split(' ');
+    if (words.length <= 12) {
+      return abstract;
     }
-
-    // Otherwise, truncate to 12 words
-    const truncatedText = sentences.split(' ').slice(0, 12).join(' ') + '...';
-    
-    // Log the truncated result
-    console.log('Truncated Abstract:', truncatedText);
-    
-    return truncatedText;
+    return words.slice(0, 12).join(' ') + '...';
   };
 
   const handleCardClick = (id) => {
     navigate(`/repo/${id}`);
   };
+
+  // Filtering logic based on tech stack and search term
+  const filteredRepositories = repositories?.filter((repo) => {
+    const { frontend, backend, database, searchTerm } = filterState;
+    const techStack = repo.tech_stack || {};
+
+    // Check if the repository matches the selected tech stack
+    const matchesFrontend = frontend.length === 0 || frontend.includes(techStack.frontend);
+    const matchesBackend = backend.length === 0 || backend.includes(techStack.backend);
+    const matchesDatabase = database.length === 0 || database.includes(techStack.database);
+
+    // Check if the repository title matches the search term
+    const matchesSearchTerm = repo.title.toLowerCase().includes(searchTerm.toLowerCase());
+
+    // Return true if it matches both the tech stack filters and the search term
+    return matchesFrontend && matchesBackend && matchesDatabase && matchesSearchTerm;
+  });
 
   if (isLoading) return <p>Loading repositories...</p>;
   if (error) return <p>Error fetching repositories: {error.message}</p>;
@@ -50,9 +68,45 @@ const Repositories = () => {
     <div className="min-h-screen flex flex-col justify-center items-center p-6">
       <h1 className="text-2xl font-medium mb-6 text-gray-700 text-center">Repositories</h1>
 
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search by title..."
+        value={filterState.searchTerm}
+        onChange={handleSearchChange}
+        className="mb-4 p-2 border border-gray-300 rounded-md w-full max-w-md"
+      />
+
+      {/* Tech Stack Filters */}
+      <div className="flex mb-4 space-x-4">
+        {/* Frontend Tech Filter */}
+        <Filter
+          title="Frontend Tech Stack"
+          options={['React', 'Angular', 'Vue.js', 'Svelte', 'Tailwind CSS', 'Bootstrap']}
+          selectedOptions={filterState.frontend}
+          onSelect={(selectedOptions) => handleFilterSelect('frontend', selectedOptions)}
+        />
+
+        {/* Backend Tech Filter */}
+        <Filter
+          title="Backend Tech Stack"
+          options={['Node.js', 'Django', 'Flask', 'Express', 'Ruby on Rails', 'Spring Boot']}
+          selectedOptions={filterState.backend}
+          onSelect={(selectedOptions) => handleFilterSelect('backend', selectedOptions)}
+        />
+
+        {/* Database Filter */}
+        <Filter
+          title="Database"
+          options={['MySQL', 'PostgreSQL', 'MongoDB', 'Firebase', 'SQLite']}
+          selectedOptions={filterState.database}
+          onSelect={(selectedOptions) => handleFilterSelect('database', selectedOptions)}
+        />
+      </div>
+
       {/* Render RepoCards horizontally using flex */}
-      <div className="flex justify-center space-x-6">
-        {repositories?.map((repo, index) => (
+      <div className="flex justify-center space-x-6 flex-wrap">
+        {filteredRepositories?.map((repo, index) => (
           <RepoCard
             key={index}
             title={repo.title}
@@ -63,6 +117,10 @@ const Repositories = () => {
           />
         ))}
       </div>
+      
+      {filteredRepositories?.length === 0 && (
+        <p>No repositories match the selected tech stack or search criteria.</p>
+      )}
     </div>
   );
 };
