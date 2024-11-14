@@ -28,7 +28,7 @@ const RepoCard = ({ title, description, creator, imageUrl, onCardClick }) => {
         <div className="flex justify-end mt-4">
           <button
             onClick={onCardClick}
-            className="text-purple-500 bg-white border border-purple-500 hover:bg-purple-500 hover:text-white rounded-full h-10 w-10 flex justify-center items-center"
+            className="text-blue-400 bg-white border border-primary-bg hover:bg-blue-400 hover:text-white rounded-full h-10 w-10 flex justify-center items-center"
           >
             <ChevronRight size={24} />
           </button>

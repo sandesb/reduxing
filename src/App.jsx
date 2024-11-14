@@ -12,6 +12,7 @@ import Notes from './pages/Notes';
 import Repositories from './pages/Repositories';
 import Login from './pages/Login';
 import { Toaster } from 'react-hot-toast';
+import Chat from './pages/Chat';
 
 // Admin Imports
 import SignIn from './admin/pages/auth/sign-in';
@@ -24,6 +25,7 @@ import CompareNotes from './admin/pages/content/compare/compareNotes'; // Import
 import NotesBox from './admin/pages/content/compare/notesBox';
 import AddRepositories from './pages/AddRepositories';
 import RepoDetails from './pages/RepoDetails';
+import Index from './landing-page/Index';
 function App() {
   const dispatch = useDispatch();
   
@@ -53,45 +55,78 @@ function App() {
 
   return (
     <>
+       
+
       <Toaster position="bottom-center" />
       <Routes>
-        {/* Client-side routes */}
-        <Route path="/" element={userIsAuthenticated ? <Navigate to="/home" /> : <Login />} />
+        {/* Root route now points to the Index component */}
+        <Route
+          path="/"
+          element={
+            userIsAuthenticated ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Index />
+            )
+          }
+        />
+        
+        {/* Login Route */}
+        <Route path="/login" element={<Login />} />
+
         <Route element={<BodyLayout />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/my-courses" element={<MyCourses />} />
           <Route path="/repositories" element={<Repositories />} />
           <Route path="/add-repo" element={<AddRepositories />} />
           <Route path="/edit-repo/:id" element={<AddRepositories />} />
-
-          <Route path="/repo/:id" element={<RepoDetails/>} />
-
+          <Route path="/repo/:id" element={<RepoDetails />} />
           <Route path="/messages" element={<Messages />} />
+          <Route path="/ai" element={<Chat />} />
+
           <Route path="/help-center" element={<HelpCenter />} />
           <Route path="/notes/:id" element={<Notes />} />
         </Route>
 
         {/* Admin routes */}
-        <Route path="/admin" element={adminIsAuthenticated ? <AdminLayout /> : <Navigate to="/admin/sign-in" />}>
-          <Route index element={<Navigate to="/admin/dashboard" />} /> {/* Default redirect to dashboard */}
-          
-          {/* These routes will render inside the AdminLayout */}
+        <Route
+          path="/admin"
+          element={
+            adminIsAuthenticated ? (
+              <AdminLayout />
+            ) : (
+              <Navigate to="/admin/sign-in" replace />
+            )
+          }
+        >
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="tasks" element={<Tasks />} />
-          <Route path="student-edit/:id" element={<StudentEntry />} /> {/* Add Student Edit Route */}
+          <Route path="student-edit/:id" element={<StudentEntry />} />
           <Route path="content" element={<Content />} />
-          <Route path="content/compare" element={<NotesBox />} /> {/* Add Compare Notes Route */}
+          <Route path="content/compare" element={<NotesBox />} />
           <Route path="settings" element={<div>Settings Page</div>} />
         </Route>
 
         {/* Admin sign-in page */}
-        <Route path="/admin/sign-in" element={<SignIn />} />
+        <Route
+          path="/admin/sign-in"
+          element={
+            adminIsAuthenticated ? (
+              <Navigate to="/admin/dashboard" replace />
+            ) : (
+              <SignIn />
+            )
+          }
+        />
 
         {/* Catch-all route to redirect to home */}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
     </>
   );
 }
 
 export default App;
+

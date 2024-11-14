@@ -105,6 +105,14 @@ const HomePage = () => {
         </span>
       </h1>
 
+       {/* Conditionally display SVGs if no courses are available */}
+       {courses.length === 0 && (
+          <div className="flex justify-center py-4">
+            <img src="/src/assets/team.svg" alt="Illustration" className="w-full max-w-sm" />
+            <img src="/src/assets/undraw.svg" alt="Illustration" className="w-full max-w-xs" />
+          </div>
+        )}
+
       <div className="py-2 px-6">
         <AddCart refetch={refetch} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { HomeIcon, Mail, HelpCircle, Book, FolderHeart } from "lucide-react";
+import { HomeIcon, Mail, HelpCircle, Book, FolderHeart, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import dp from "../assets/logo/user.png"; // Import the user image
 import PopOver from '../components/PopOver'; // Import the PopOver component
@@ -94,6 +94,8 @@ const Sidebar = () => {
             <ActiveLink to="/repositories" icon={FolderHeart} label="Repositories" isActive={location.pathname === "/repositories"} />
             <ActiveLink to="/messages" icon={Mail} label="Messages" isActive={location.pathname === "/messages"} />
             <ActiveLink to="/help-center" icon={HelpCircle} label="Help Center" isActive={location.pathname === "/help-center"} />
+            <ActiveLink to="/ai" icon={Sparkles} label="Chat with AI" isActive={location.pathname === "/ai"} />
+          
           </nav>
         </div>
       </div>

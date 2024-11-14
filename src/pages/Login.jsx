@@ -3,8 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import LogInput from "../components/LogInput";
 import { useGetStudentsQuery } from '../redux/studentsApi';
-import { loginSuccess } from '../redux/userSlice'; // Import the loginSuccess action
-import dp from "../assets/logo/colorized.png"; // Import the image
+import { loginSuccess } from '../redux/userSlice';
+import dp from "../assets/logo/colorized.png";
+
+// Random placeholder images
+const profileImages = [
+  "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp",
+  "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp",
+  "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp",
+  "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp",
+  "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
+];
 
 const Login = () => {
   const [matricNo, setMatricNo] = useState('');
@@ -13,76 +22,89 @@ const Login = () => {
   const dispatch = useDispatch();
   const { data: students } = useGetStudentsQuery();
 
-  // Check authentication status on component load
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     if (isAuthenticated === 'true') {
-      // Redirect the user to the home page if they are already authenticated
       navigate('/home');
     }
   }, [navigate]);
 
   const doLogin = (e) => {
     e.preventDefault();
-
-    // Find the student based on matricNo
     const student = students?.find((s) => s.matric === matricNo);
 
     if (student) {
-      // Dispatch loginSuccess to store matricNo, name, and mark the user as authenticated
       dispatch(loginSuccess({ matricNo: student.matric, name: student.name, semester: student.semester }));
-
-      // Store the session in localStorage for persistence
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('matricNo', student.matric);
-      localStorage.setItem('studentName', student.name); // Store the student's name as well
-
-      // Redirect to home page
+      localStorage.setItem('studentName', student.name);
       navigate('/home');
     } else {
       setError('Matric No. not available');
     }
   };
 
-  // Guest login handler
   const handleGuestLogin = () => {
-    dispatch(loginSuccess({ matricNo: 'guest', name: 'Guest' })); // Set guest login state
+    dispatch(loginSuccess({ matricNo: 'guest', name: 'Guest' }));
     localStorage.setItem('isAuthenticated', 'true');
-    navigate('/home'); // Redirect to home page
-  };
-
-  const handleAdminLogin = () => {
-    navigate('/admin'); // Redirect to admin page
+    navigate('/home');
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-primary-bg">
-      <div id="login" className="p-8 rounded max-w-sm text-center">
-        <img className="logo1 mb-4 inline-flex w-20" src={dp} alt="Logo" />
-        <h1 className="text-2xl font-semibold mb-6 text-center text-gray-700">Sign In</h1>
-        <form onSubmit={doLogin}>
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <div className="bg-primary-bg bg-opacity-90 p-8 rounded-xl shadow-xl max-w-xs w-full text-center">
+        <img className="mb-6 w-12 mx-auto" src={dp} alt="Logo" />
+        <h1 className="text-3xl font-semibold mb-6 text-blue-500">Academix</h1>
+        
+        <form onSubmit={doLogin} className="space-y-4">
           <LogInput
             title="Matric No."
             name="matricNo"
             placeholder="Enter your Matric No."
             value={matricNo}
             onChange={(e) => setMatricNo(e.target.value)}
-            className="mb-4 p-2 w-full border rounded bg-slate-50"
+            className="w-full p-2  rounded-md focus:outline-none"
           />
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-500 mb-4">
+          {error && <p className="text-red-400 text-sm">{error}</p>}
+          <button
+            type="submit"
+            className="w-full bg-blue-400 text-white py-2 rounded-md hover:bg-blue-700 transition"
+          >
             Sign in
           </button>
 
-          {/* Guest Button */}
-          <button type="button" className="w-full bg-[#7F9CEA] text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleGuestLogin}>
+          <button
+            type="button"
+            className="w-full bg-[#7F9CEA] text-white py-2 rounded-md hover:bg-[#6a87d5] transition"
+            onClick={handleGuestLogin}
+          >
             I'm A Guest
           </button>
-
-          <button type="button" className="w-full mt-4 bg-[#4f4f4f] text-white p-2 rounded hover:bg-[#6a87d5]" onClick={handleAdminLogin}>
-            I'm Admin
-          </button>
         </form>
+
+        <p className="text-gray-400 mt-6 text-sm">
+          Don’t have an account?{' '}
+          <span className="text-blue-400 ">
+            Contact Admin
+          </span>
+        </p>
+
+        {/* User count section */}
+        <div className="mt-8 text-center">
+          <p className="text-gray-500 text-sm mb-2">
+            Join over <span className="font-semibold text-blue-500">20</span> users
+          </p>
+          <div className="flex justify-center space-x-2">
+            {profileImages.map((src, index) => (
+              <img
+                key={index}
+                src={src}
+                alt={`Profile ${index + 1}`}
+                className="w-8 h-8 rounded-full border border-gray-300"
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

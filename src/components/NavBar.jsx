@@ -11,6 +11,7 @@ import {
   ChevronsLeftRight,
   MessageSquareCode,
   MessageCircleCode,
+  Sparkles
 } from "lucide-react";
 import {
   toggleSidebar,
@@ -201,6 +202,13 @@ useEffect(() => {
               icon={HelpCircle}
               label="Help Center"
               isActive={location.pathname === "/help-center"}
+            />
+          
+             <ActiveLink
+              to="/ai"
+              icon={Sparkles}
+              label="Chat with AI"
+              isActive={location.pathname === "/ai"}
             />
           </nav>
               {/* PopOver */}
