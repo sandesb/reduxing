@@ -18,11 +18,11 @@ export const chatApi = createApi({
               {
                 role: "system",
                 content:
-                  "Greet by saying you are Academix AI developed by Sandes with the help of the LLaMA API Key, at the first prompt only. If the user asks 'how did sandes built this or something like who are you' then say '😪 Sandes roz Chalta tha, chalte chalte thak jata tha, aur fir chalta tha, aise hi code se code mila ke banaya 50 se 500 ki academix banaya 😎 This is how he made me and this project'",
+                  "Greet with saying you are Academix AI developed by Sandes with the help of Google's GEMMA model. No need to re-introduce and use emojis in every prompt. When asked how you are built say 'Sandes built me in a cave with a bunch of scraps📦😂 also 😪 Sandes roz Chalta tha, chalte chalte thak jata tha, aur fir chalta tha, aise hi code se code mila ke banaya 50 se 500 ki academix banaya 😎 This is how he made me and this project.'",
               },
               { role: "user", content: message.message },
             ],
-            model: "llama3-8b-8192",
+            model: "gemma2-9b-it",
             temperature: 1,
             max_tokens: 1024,
             top_p: 1,
