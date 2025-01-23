@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import LogInput from "../components/LogInput";
 import { useGetStudentsQuery } from '../redux/studentsApi';
 import { loginSuccess } from '../redux/userSlice';
+import { showToast } from '../utils/toast';
 import dp from "../assets/logo/colorized.png";
 
 // Random placeholder images
@@ -17,6 +18,7 @@ const profileImages = [
 
 const Login = () => {
   const [matricNo, setMatricNo] = useState('');
+  const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,13 +36,21 @@ const Login = () => {
     const student = students?.find((s) => s.matric === matricNo);
 
     if (student) {
-      dispatch(loginSuccess({ matricNo: student.matric, name: student.name, semester: student.semester }));
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('matricNo', student.matric);
-      localStorage.setItem('studentName', student.name);
-      navigate('/home');
+      if (student.pin === otp) {
+        dispatch(loginSuccess({ matricNo: student.matric, name: student.name, semester: student.semester }));
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('matricNo', student.matric);
+        localStorage.setItem('studentName', student.name);
+        localStorage.setItem('email', student.email);
+        localStorage.setItem('semester', student.semester);
+        showToast('success', 'Login successful!');
+        navigate('/home');
+      } else {
+        showToast('error', 'Incorrect OTP. Please try again.');
+      }
     } else {
       setError('Matric No. not available');
+      showToast('error', 'Matric No. not found.');
     }
   };
 
@@ -63,9 +73,21 @@ const Login = () => {
             placeholder="Enter your Matric No."
             value={matricNo}
             onChange={(e) => setMatricNo(e.target.value)}
-            className="w-full p-2  rounded-md focus:outline-none"
+            className="w-full p-2 rounded-md focus:outline-none"
           />
+
+          <LogInput
+            title="OTP"
+            name="otp"
+            placeholder="Enter your OTP"
+            type="password"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            className="w-full p-2 rounded-md focus:outline-none"
+          />
+
           {error && <p className="text-red-400 text-sm">{error}</p>}
+
           <button
             type="submit"
             className="w-full bg-blue-400 text-white py-2 rounded-md hover:bg-blue-700 transition"
@@ -84,9 +106,7 @@ const Login = () => {
 
         <p className="text-gray-400 mt-6 text-sm">
           Don’t have an account?{' '}
-          <span className="text-blue-400 ">
-            Contact Admin
-          </span>
+          <span className="text-blue-400 ">Contact Admin</span>
         </p>
 
         {/* User count section */}

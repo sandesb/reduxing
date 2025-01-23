@@ -11,6 +11,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/adminSlice';
+import newLogo from '../../assets/logo/new.png';  // Adjust the path accordingly
 
 export function UserNav() {
   const dispatch = useDispatch();
@@ -27,8 +28,9 @@ export function UserNav() {
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-8 w-8'>
             <AvatarImage src='/avatars/01.png' alt='@shadcn' />
-            <AvatarFallback>SN</AvatarFallback>
-          </Avatar>
+            <AvatarFallback>
+              <img src={newLogo} alt="Logo" className="h-full w-full object-contain" />
+            </AvatarFallback>          </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end' forceMount>
@@ -36,13 +38,12 @@ export function UserNav() {
           <div className='flex flex-col space-y-1'>
             <p className='text-sm font-medium leading-none'>Admin</p>
             <p className='text-xs leading-none text-muted-foreground'>
-              admin@example.com
+              bajracharyasandeshh@gmail.com
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuItem onClick={handleLogout}>
           Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

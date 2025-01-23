@@ -49,8 +49,9 @@ const Card = ({
   };
 
   const handleEditClick = (event) => {
-    event.stopPropagation(); // Stop propagation to parent click
+    event.stopPropagation();  // Allow button clicks without triggering the card click
     console.log("Edit clicked:", id);
+  
     if (isEditing) {
       const updatedCourse = {
         id,
@@ -129,13 +130,24 @@ const Card = ({
           title
         )}
       </h2>
-      <div className="mt-2 text-sm text-gray-600">
-        {isEditing ? (
-          <ChapterSlider progress={editedProgress} maxChapters={parseInt(progress.split(' / ')[1])} onChange={handleSliderChange} />
-        ) : (
-          "Chapters: " + progress
-        )}
-      </div>
+      <div 
+  className="mt-2 text-sm text-gray-600"
+  onMouseDown={(e) => e.stopPropagation()}
+  onClick={(e) => e.stopPropagation()}
+  onTouchStart={(e) => e.stopPropagation()}  // Handles mobile touches too
+>
+  {isEditing ? (
+    <ChapterSlider 
+      progress={editedProgress} 
+      maxChapters={parseInt(progress.split(' / ')[1])} 
+      onChange={handleSliderChange} 
+    />
+  ) : (
+    "Chapters: " + progress
+  )}
+</div>
+
+
 
       {!isEditing && (
         <div className="w-full h-2 bg-gray-200 rounded-full mt-4">

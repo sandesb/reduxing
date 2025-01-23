@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '../../../components/ui/input';
 import { cn } from '../../../lib/utils';
 import { useAddStudentMutation, useGetStudentByIdQuery, useUpdateStudentMutation } from '../../../../redux/studentsApi';
+import emailjs from 'emailjs-com';
 
 // Define form validation schema using Zod
 const formSchema = z.object({
@@ -57,30 +58,69 @@ export function StudentEntry({ className, ...props }) {
   // Form submission handler
   const onSubmit = async (data) => {
     setIsLoading(true);
+  
+    // Debug: Ensure email field is correctly populated
+    console.log("Form data submitted:", data);
+  
+    if (!data.email) {
+      alert('Email is required to send the PIN.');
+      setIsLoading(false);
+      return;
+    }
+  
+    // Generate a random 4-digit PIN
+    const pin = Math.floor(1000 + Math.random() * 9000).toString();
+    console.log("Generated PIN:", pin);
+  
+    // Prepare student data with the PIN
+    const studentData = {
+      ...data,
+      pin, // Add generated PIN to the student data
+    };
+  
     try {
       if (isEditMode) {
-        // Update the student
-        await updateStudent({ id, student: data }).unwrap();
+        await updateStudent({ id, student: studentData }).unwrap();
         alert('Student data updated successfully!');
       } else {
-        // Add new student
-        await addStudent(data).unwrap();
-        alert('Student data submitted successfully!');
+        await addStudent(studentData).unwrap();
+  
+        // Debug: Check if email is being passed correctly
+        console.log("Sending email to:", data.email);
+  
+        // Send email with the generated PIN using EmailJS
+        const emailParams = {
+          email: data.email,  // Matches the template placeholder `{{email}}`
+          username: data.name,  // Matches `{{username}}`
+          message: `Your OTP is: ${pin}`,  // Matches `{{message}}`
+        };
+  
+        await emailjs.send(
+          'service_nc5kslw',   // Replace with your EmailJS service ID
+          'template_p2geton',  // Replace with your EmailJS template ID
+          emailParams,
+          'SxZKgo5_QuOXxPK9c'     // Replace with your EmailJS public key
+        );
+  
+        alert('Student data submitted successfully! PIN has been sent via email.');
       }
+  
       navigate('/admin/tasks');
     } catch (err) {
       console.error('Failed to submit student data:', err);
-      alert('Failed to submit student data.');
+      alert('Failed to submit student data. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid gap-2">
+          <div className="grid gap-2 ml-5 mt-5">
             {/* Matric Field */}
             <FormField
               control={form.control}

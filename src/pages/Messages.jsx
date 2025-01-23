@@ -101,9 +101,9 @@ const newMessage = {
       
        <div className="text-2xl font-medium mb-6 text-gray-700 text-center">
        <h1 className="font-lato text-4xl lg:text-6xl mt-2 mb-2 font-semibold text-blue-400 tracking-widest relative">
-            <span className="block lg:inline lg:pl-4">What's  Your  Sandes? 🕊</span>
+            <span className="block lg:inline lg:pl-4">What's  Your  सन्देश ? 🕊</span>
             <span className="absolute top-0 left-0 w-full h-full text-[#a2b5ea] transform translate-x-0.5 translate-y-0 -z-10 tracking-widest">
-              <span className="block lg:inline lg:pl-4">What's  Your  Sandes? 🕊</span>
+              <span className="block lg:inline lg:pl-4">What's  Your  सन्देश ? 🕊</span>
             </span>
             </h1>
         </div>

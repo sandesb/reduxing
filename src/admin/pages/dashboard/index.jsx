@@ -85,7 +85,7 @@ export default function Dashboard() {
     setSelectedItem(null);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className='ml-10 mt-5'>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
@@ -103,9 +103,7 @@ export default function Dashboard() {
       <Layout.Body>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
-          </div>
+      
         </div>
         <Tabs
           orientation='vertical'
@@ -115,91 +113,15 @@ export default function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics'>Analytics</TabsTrigger>
-              <TabsTrigger value='reports'>Reports</TabsTrigger>
-              <TabsTrigger value='notifications'>Notifications</TabsTrigger>
+              <TabsTrigger value='Catalog'>Catalog</TabsTrigger>
+              <TabsTrigger value='Register'>Register</TabsTrigger>
+              <TabsTrigger value='Notes'>Notes</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               {/* Static Cards */}
-              <Cardy>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Total Revenue
-                  </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +20.1% from last month
-                  </p>
-                </CardContent>
-              </Cardy>
-              {/* Other static cards here */}
-              <Cardy>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Total Revenue
-                  </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +20.1% from last month
-                  </p>
-                </CardContent>
-              </Cardy>
-
-                <Cardy>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Total Revenue
-                  </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +20.1% from last month
-                  </p>
-                </CardContent>
-              </Cardy>
+          
             </div>
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Cardy className='col-span-1 lg:col-span-4'>
@@ -224,7 +146,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value='analytics' className='space-y-4'>
+          <TabsContent value='Catalog' className='space-y-4'>
             <AddCart />
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               {courses.map((course) => (
@@ -257,7 +179,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value='reports' className='space-y-4'>
+          <TabsContent value='Register' className='space-y-4'>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <Cardy>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -279,7 +201,7 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className='text-md font-medium'>
-                    Please login to access the reports dashboard.
+                    Students can login with these credentials.
                   </div>
                 </CardContent>
               </Cardy>
@@ -291,10 +213,10 @@ export default function Dashboard() {
 
 
 
- {/* ===== Notifications Tab ===== */}
-          <TabsContent value='notifications' className='space-y-4'>
+ {/* ===== Notes Tab ===== */}
+          <TabsContent value='Notes' className='space-y-4'>
               <div>
-                <h2 className='text-2xl font-bold tracking-tight'>Notifications</h2>
+                <h2 className='text-2xl font-bold tracking-tight'>Notes</h2>
                 <p className='text-muted-foreground'>
                   Here's a list of your courses.
                 </p>

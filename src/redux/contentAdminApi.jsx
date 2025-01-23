@@ -49,6 +49,15 @@ export const contentAdminApi = createApi({
       providesTags: ['Content'],
     }),
 
+    getAllContent: builder.query({
+      query: () => ({
+        url: 'content',
+        method: 'select',
+        body: 'matric, name',
+      }),
+      providesTags: ['Content'],
+    }),
+
     // Upsert Content by content_id (without subjects_id)
     upsertContentById: builder.mutation({
       query: ({ content_id, content, name }) => ({
@@ -77,6 +86,7 @@ export const {
   useGetContentByIdQuery,
   useUpsertContentByIdMutation,
   useDeleteContentByIdMutation,
+  useGetAllContentQuery
 } = contentAdminApi;
 
 export default contentAdminApi;

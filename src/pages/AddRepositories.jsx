@@ -8,6 +8,7 @@ import {
   useGetRepoByIdQuery,
 } from "../redux/repoApi";
 import { uploadImageToCloudinary } from "../utils/uploadImageToCloudinary";
+import { showToast, showPromiseToast } from '../utils/toast';
 
 const AddRepositories = () => {
   const { id } = useParams();
@@ -98,6 +99,22 @@ const AddRepositories = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoadingAction(true);
+      // Form validation
+  if (
+    !formData.title ||
+    !formData.abstract ||
+    !formData.source_name ||
+    (!formData.image_file && !formData.image_url) ||
+    (!formData.project_report_file && !formData.project_report_url) ||
+    !formData.project_source_code_url ||
+    formData.frontend_tech.length === 0 ||
+    formData.backend_tech.length === 0 ||
+    formData.database_tech.length === 0
+  ) {
+    showToast('error', 'Please fill in all required fields before submitting.');
+    setIsLoadingAction(false);
+    return;
+  }
   
     try {
       const imageUrl = formData.image_file
@@ -116,16 +133,30 @@ const AddRepositories = () => {
         matric: formData.matric,
         project_report_url: projectReportUrl,
         project_source_code_url: formData.project_source_code_url,
+        tech_stack: JSON.stringify({
+
         frontend: formData.frontend_tech.join(", ") || null,
         backend: formData.backend_tech.join(", ") || null,
         database: formData.database_tech.join(", ") || null,
+      }),
+
       };
   
       console.log("Payload being sent:", repoPayload); // Check payload structure
   
       if (id) {
+        await showPromiseToast(updateRepo({ id, repo: repoPayload }), {
+          loading: 'Updating project...',
+          success: 'Project updated successfully!',
+          error: 'Failed to update project!',
+        });
         await updateRepo({ id, repo: repoPayload });
       } else {
+        await showPromiseToast(addRepo(repoPayload), {
+          loading: 'Submitting project...',
+          success: 'Project added successfully!',
+          error: 'Failed to submit project!',
+        });
         await addRepo(repoPayload);
       }
   
@@ -361,6 +392,7 @@ const AddRepositories = () => {
                     onChange={handleFileChange}
                     accept="application/pdf"
                     className="hidden" // Hide default file input
+                    required
                   />
                 </label>
                 {projectReportFileName ? (
