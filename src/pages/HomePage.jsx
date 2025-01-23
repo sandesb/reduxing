@@ -11,6 +11,8 @@ import {
   useDeleteCourseMutation,
 } from '../redux/subjectsApi';
 import DeleteDialog from '../components/DeleteDialog';
+import TeamImage from '../assets/team.svg';
+import UndrawImage from '../assets/undraw.svg';
 
 const HomePage = () => {
   const { handlePlusClick } = useCart();
@@ -107,10 +109,11 @@ const HomePage = () => {
 
        {/* Conditionally display SVGs if no courses are available */}
        {courses.length === 0 && (
-          <div className="flex justify-center py-4">
-            <img src="/src/assets/team.svg" alt="Illustration" className="w-full max-w-sm" />
-            <img src="/src/assets/undraw.svg" alt="Illustration" className="w-full max-w-xs" />
-          </div>
+      <div className="flex justify-center py-4">
+      <img src={TeamImage} alt="Illustration" className="w-full max-w-sm" />
+      <img src={UndrawImage} alt="Illustration" className="w-full max-w-xs" />
+    </div>
+    
         )}
 
       <div className="py-2 px-6">

@@ -9,7 +9,7 @@ import { Input } from '../../../components/ui/input';
 import { cn } from '../../../lib/utils';
 import { useAddStudentMutation, useGetStudentByIdQuery, useUpdateStudentMutation } from '../../../../redux/studentsApi';
 import emailjs from 'emailjs-com';
-
+import { showToast } from '../../../../utils/toast';
 // Define form validation schema using Zod
 const formSchema = z.object({
   matric: z.string().min(1, { message: 'Matric number is required' }),
@@ -63,7 +63,7 @@ export function StudentEntry({ className, ...props }) {
     console.log("Form data submitted:", data);
   
     if (!data.email) {
-      alert('Email is required to send the PIN.');
+      showToast('error', 'Email is required to send the PIN.');
       setIsLoading(false);
       return;
     }
@@ -81,7 +81,7 @@ export function StudentEntry({ className, ...props }) {
     try {
       if (isEditMode) {
         await updateStudent({ id, student: studentData }).unwrap();
-        alert('Student data updated successfully!');
+        showToast('success', 'Student data updated successfully!');
       } else {
         await addStudent(studentData).unwrap();
   
@@ -102,13 +102,13 @@ export function StudentEntry({ className, ...props }) {
           'SxZKgo5_QuOXxPK9c'     // Replace with your EmailJS public key
         );
   
-        alert('Student data submitted successfully! PIN has been sent via email.');
+        showToast('success', 'Student data submitted successfully! PIN has been sent via email.');
       }
   
       navigate('/admin/tasks');
     } catch (err) {
       console.error('Failed to submit student data:', err);
-      alert('Failed to submit student data. Please try again.');
+      showToast('error', 'Failed to submit student data. Please try again.');
     } finally {
       setIsLoading(false);
     }
