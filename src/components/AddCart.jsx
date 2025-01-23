@@ -98,7 +98,6 @@ const AddCart = ({ refetch }) => {
       setEmoji("");
       setWork("");
     } catch (error) {
-      showToast('error', 'Failed to add course. Please try again.');
       console.error("Failed to add course:", error);
     }
   };
